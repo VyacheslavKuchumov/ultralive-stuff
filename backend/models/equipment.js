@@ -29,7 +29,7 @@ const equipment = sequelize.define(
 
 async function get_equipment_table() {
     await equipment.sync()
-    console.log('Синхрон equipment');
+    console.log('Синхрон equipment 👍');
 }
 
 module.exports = { equipment, get_equipment_table }

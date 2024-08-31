@@ -35,7 +35,7 @@ const auth = sequelize.define(
 )
 async function get_auth_table(){
     await auth.sync()
-    console.log('Синхрон auths');
+    console.log('Синхрон auths 👍');
 }
 
 module.exports = {auth, get_auth_table}

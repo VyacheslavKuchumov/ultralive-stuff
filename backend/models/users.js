@@ -33,7 +33,7 @@ user.belongsTo(auth, {
 
 async function get_users_table() {
     await user.sync()
-    console.log('Синхрон users');
+    console.log('Синхрон users 👍');
 }
 
 module.exports = { user, get_users_table }
