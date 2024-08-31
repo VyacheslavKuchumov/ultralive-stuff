@@ -2,7 +2,7 @@
   
     
     <div class="window">
-      <a href="">Оборудование</a>
+      test
     </div>
   
 </template>

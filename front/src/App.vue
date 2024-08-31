@@ -1,12 +1,14 @@
 <template>
   <nav>
     <router-link to="/">Home</router-link>
-    <router-link v-if="isAuth" to="/card">My card</router-link> 
+    <router-link to="/equipment">Оборудование</router-link>
+    <router-link to="/shooting">Съёмка</router-link>
+    <!-- <router-link v-if="isAuth" to="/card">My card</router-link>  -->
     <!-- <router-link to="/about">About</router-link>  -->
-     <router-link  to="/search">Look up someone else's card</router-link> 
+    <!-- <router-link  to="/search">Look up someone else's card</router-link>  -->
     <!-- <router-link v-if="!isAuth" to="/register">Register</router-link>  -->
-    <router-link v-if="!isAuth" to="/login">Login</router-link>
-    <a v-if="isAuth" @click="logout()">Logout</a>
+    <!-- <router-link v-if="!isAuth" to="/login">Login</router-link>
+    <a v-if="isAuth" @click="logout()">Logout</a> -->
   </nav>
   <router-view/>
 </template>

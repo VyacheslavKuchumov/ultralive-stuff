@@ -9,6 +9,7 @@ const port = process.env.PORT
 
 const auth_routes = require ('./routes/auth')
 const users_routes = require ('./routes/users')
+const equipment_routes = require ('./routes/equipment')
 
 
 app.use(cors({
@@ -17,6 +18,7 @@ app.use(cors({
 
 app.use('/api/auth', auth_routes)
 app.use('/api/users', users_routes)
+app.use('/api/equipment', equipment_routes)
 
 
 app.use((error, request, response, next) => {
@@ -32,8 +34,8 @@ const {get_equipment_table} = require('./models/equipment')
 
 
 app.listen(port, () => {
-    get_auth_table()
-    get_users_table()
-    get_equipment_table()
+    // get_auth_table()
+    // get_users_table()
+    // get_equipment_table()
     console.log(`server started on port ${port}`);
 })
