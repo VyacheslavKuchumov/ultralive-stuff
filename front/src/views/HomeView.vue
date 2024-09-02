@@ -110,7 +110,5 @@ export default {
 .dislike {
   color: brown;
 }
-body{
-  background-color:#CCF0D3; 
-}
+
 </style>

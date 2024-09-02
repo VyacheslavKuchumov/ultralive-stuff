@@ -16,7 +16,8 @@ const addOneEquipment = async (req, res) => {
     try {
         const { equipment_name,  serial_number} = req.body; // Example equipment fields
         const newEquipment = await equipment.create({ equipment_name,  serial_number });
-        return res.status(201).json(newEquipment);
+        const data = await equipment.findAll({});
+        return res.status(201).json(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });
     }
@@ -32,7 +33,8 @@ const editEquipmentById = async (req, res) => {
         if (!equipmentToUpdate) return res.status(404).send({ message: 'Equipment not found' });
 
         await equipmentToUpdate.update({ equipment_name,  serial_number });
-        return res.json(equipmentToUpdate);
+        const data = await equipment.findAll({});
+        return res.json(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });
     }
@@ -41,13 +43,15 @@ const editEquipmentById = async (req, res) => {
 // Function to delete equipment by ID
 const deleteEquipmentById = async (req, res) => {
     try {
+        console.log(req.body)
         const { id } = req.body;
         const equipmentToDelete = await equipment.findByPk(id);
-
+        
         if (!equipmentToDelete) return res.status(404).send({ message: 'Equipment not found' });
 
         await equipmentToDelete.destroy();
-        return res.status(204).send({message: "deleted succesfully"}); // No content
+        const data = await equipment.findAll({});
+        return res.status(200).send(data); 
     } catch (error) {
         return res.status(500).send({ message: error.message });
     }

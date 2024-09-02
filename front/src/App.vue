@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar color="primary" dark >
+    <v-app-bar color="primary">
       <v-toolbar-title>Ultralive Test</v-toolbar-title>
       <v-spacer></v-spacer>
 
