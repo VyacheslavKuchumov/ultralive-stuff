@@ -16,7 +16,7 @@ const shooting_equipment = sequelize.define(
         shooting_id:{
             type:DataTypes.BIGINT,
             references: {
-                model: equipment,
+                model: shooting,
                 key: 'id'
             },
             onDelete: 'CASCADE', 
@@ -24,11 +24,15 @@ const shooting_equipment = sequelize.define(
         equipment_id:{
             type:DataTypes.BIGINT,
             references: {
-                model: shooting,
+                model: equipment,
                 key: 'id'
             },
             onDelete: 'CASCADE', 
         },
+        flag:{
+            type:DataTypes.BOOLEAN,
+            defaultValue: false
+        }
                 
     },
     {
