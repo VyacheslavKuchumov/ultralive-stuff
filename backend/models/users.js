@@ -26,10 +26,10 @@ const user = sequelize.define(
     }
 )
 
-user.belongsTo(auth, {
-    as: 'Uid',
-    foreignKey: 'uid'
-})
+// user.belongsTo(auth, {
+//     as: 'Uid',
+//     foreignKey: 'uid'
+// })
 
 async function get_users_table() {
     await user.sync()

@@ -27,7 +27,7 @@ export default {
           },
           async updateEquipment({ commit }, equipment) {
             try {
-              const response = await instance.put(`/api/equipment/`, equipment);
+              const response = await instance.put(`/api/equipment/${equipment.id}`, equipment);
               if (response) return commit('setEquipment', response.data)
             } catch (error) {
               console.error('Error updating equipment:', error);
@@ -35,8 +35,8 @@ export default {
           },
           async deleteEquipment({ commit }, equipment) {
             try {
-                console.log(equipment)
-                const response = await instance.delete(`/api/equipment/`, { data: { id: equipment.id } });
+                console.log(equipment.id)
+                const response = await instance.delete(`/api/equipment/${equipment.id}`);
                 if (response) return commit('setEquipment', response.data)
             } catch (error) {
               console.error('Error deleting equipment:', error);
