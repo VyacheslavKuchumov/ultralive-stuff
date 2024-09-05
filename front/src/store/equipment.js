@@ -17,6 +17,7 @@ export default {
             if (equipment) return commit('setEquipment', equipment.data)
             console.log(equipment.message);
         },
+        
         async createEquipment({ commit }, equipment) {
             try {
               const response = await instance.post('/api/equipment', equipment);

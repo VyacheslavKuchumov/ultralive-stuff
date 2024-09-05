@@ -1,6 +1,8 @@
 const { sequelize } = require('../connection')
 const { DataTypes } = require('sequelize')
 
+const { shooting } = require('./shootings');
+const { shooting_equipment } = require('./shooting_equipment');
 
 const equipment = sequelize.define(
     'equipment',
@@ -22,7 +24,8 @@ const equipment = sequelize.define(
     {
         tableName: 'equipment',
         timestamps: false
-    }
+    },
+    
 )
 
 

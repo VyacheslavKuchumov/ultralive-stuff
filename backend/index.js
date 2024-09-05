@@ -37,13 +37,16 @@ const {get_users_table} = require('./models/users')
 const {get_equipment_table} = require('./models/equipment')
 const {get_shootings_table} = require('./models/shootings')
 const {get_shooting_equipment_table} = require('./models/shooting_equipment')
+const {initializeDatabase} = require('./models/index')
+
 
 
 app.listen(port, () => {
-    get_auth_table()
-    get_users_table()
-    get_equipment_table()
-    get_shootings_table()
-    get_shooting_equipment_table()
+    // initializeDatabase()
+    // get_auth_table()
+    // get_users_table()
+    // get_equipment_table()
+    // get_shootings_table()
+    // get_shooting_equipment_table()
     console.log(`server started on port ${port}`);
 })

@@ -23,7 +23,18 @@
         </v-btn>
       </v-form>
     </v-card>
-
+    <v-card>
+      <v-data-table v-if="shooting_equipment" :headers="headers" :items="shooting_equipment">
+        <template v-slot:item.actions="{ item }">
+          <v-btn color="red" @click="deleteRow(item.id)">
+            Delete
+          </v-btn>
+        </template>
+        <template v-slot:no-data>
+        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      </template>
+    </v-data-table>
+    </v-card>
     
   </v-card>
 </template>
@@ -44,14 +55,32 @@ export default {
     computed: {
       // Map the state to fetch equipment from Vuex store
       ...mapState('equipment', ['equipment']),
-
+      ...mapState('shooting_equipment', ['shooting_equipment']),
+      headers() {
+        return [
+          { title: 'ID', key: 'id' },
+          { title: 'НАЗВАНИЕ', key: 'equipment.equipment_name' },
+          { title: 'СЕРИЙНЫЙ НОМЕР', key: 'equipment.serial_number' },
+          { title: 'ПОДТВЕРЖДЕН', key: 'flag', sortable: false },
+          { title: '', key: 'actions', sortable: false },
+        ];
+      },
     },
     methods: {
       ...mapActions('equipment', ['getAllEquipment']), // Action to load equipment
-
+      ...mapActions('shooting_equipment', ['addEquipmentInShootingByID', 'getAllEquipmentInShootingByID', 'deleteEquipmentInShootingByID']),
       addEquipmentToShooting(){
-        console.log(this.selection)
+        Object.values(this.selection).forEach(element => {
+          this.addEquipmentInShootingByID({ "equipment_id": element,
+          "shooting_id": "1"}) // HARDCODED NEEDS TO BE CHANGED
+        });
+        this.getAllEquipmentInShootingByID(1) // HARDCODED NEEDS TO BE CHANGED
         this.selection = []
+      },
+      deleteRow(id){
+        this.deleteEquipmentInShootingByID({id:id, shooting_id: 1})
+        this.getAllEquipmentInShootingByID(1) // HARDCODED NEEDS TO BE CHANGED
+        
       }
     
 
@@ -59,6 +88,7 @@ export default {
     },
     beforeMount() {
       this.getAllEquipment()
+      this.getAllEquipmentInShootingByID(1)
     },
   };
 </script>
