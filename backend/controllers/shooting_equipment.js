@@ -61,9 +61,28 @@ const deleteEquipmentFromShooting = async (req, res) => {
     }
 }
 
+// Function to delete equipment by ID
+const changeFlag = async (req, res) => {
+    try {
+        const input_id = req.params.id
+        const stuffToUpdate = await shooting_equipment.findByPk(input_id);
+        
+        if (!stuffToUpdate) return res.status(404).send({ message: 'not found' });
+        await stuffToUpdate.update({ flag:true });
+        
+        
+        return res.status(200).send({message: "all good"}); 
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
+
+
+
 // Exporting the functions
 module.exports = {
     getAllEquipmentInShooting,
     addEquipmentToShooting,
-    deleteEquipmentFromShooting
+    deleteEquipmentFromShooting,
+    changeFlag
 }
