@@ -42,11 +42,8 @@ const {initializeDatabase} = require('./models/index')
 
 
 app.listen(port, () => {
+    //###############################
     // initializeDatabase()
-    // get_auth_table()
-    // get_users_table()
-    // get_equipment_table()
-    // get_shootings_table()
-    // get_shooting_equipment_table()
+    //###############################
     console.log(`server started on port ${port}`);
 })

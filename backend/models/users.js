@@ -10,14 +10,11 @@ const user = sequelize.define(
             autoIncrement: true,
             primaryKey: true
         },
-        //uid: {
-        //      type: DataTypes.UUID
-        //  },
+        user_uid: {
+             type: DataTypes.UUID
+         },
         name: {
             type: DataTypes.TEXT
-        },
-        likes: {
-            type: DataTypes.INTEGER
         }
     },
     {
@@ -26,10 +23,7 @@ const user = sequelize.define(
     }
 )
 
-// user.belongsTo(auth, {
-//     as: 'Uid',
-//     foreignKey: 'uid'
-// })
+
 
 async function get_users_table() {
     await user.sync()

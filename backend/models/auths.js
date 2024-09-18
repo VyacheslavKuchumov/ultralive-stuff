@@ -9,8 +9,9 @@ const auth = sequelize.define(
             autoIncrement: true,
             primaryKey: true
         },
-        uid: {
-            type: DataTypes.UUID
+        auth_uid: {
+            type: DataTypes.UUID,
+            unique: true
         },
         role: {
             type: DataTypes.TEXT

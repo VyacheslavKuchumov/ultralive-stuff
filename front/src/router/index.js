@@ -12,17 +12,20 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: {auth:true}
   },
   {
     path: '/equipment',
     name: 'equipment',
-    component: EquipmentView
+    component: EquipmentView,
+    meta: {auth:true}
   },
   {
     path: '/shooting',
     name: 'shooting',
-    component: ShootingView
+    component: ShootingView,
+    meta: {auth:true}
   },
   {
     path: '/about',
@@ -40,16 +43,7 @@ const routes = [
     name: 'login',
     component: Login
   },
-  {
-    path: '/card',
-    name: 'card',
-    component: Card
-  },
-  {
-    path: '/search',
-    name: 'search',
-    component: Search
-  }
+ 
 ]
 
 const router = createRouter({
@@ -65,7 +59,9 @@ router.beforeEach(async(to, from, next) => {
       const uid = localStorage.getItem('uid')
       const response = await instance.get(`/api/users/${uid}`)
       if (response.status ==200){
+        
         return next ()
+
       } else if (response.status == 403){
         return next ('/login')
       }

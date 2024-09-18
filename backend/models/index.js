@@ -3,6 +3,8 @@ const { sequelize } = require('../connection');
 const { equipment } = require('./equipment');
 const { shooting_equipment } = require('./shooting_equipment');
 const { shooting } = require('./shootings');
+const { auth } = require('./auths');
+const { user } = require('./users');
 require('./associations');  // Import the associations after models are loaded
 
 

@@ -69,9 +69,11 @@ export default {
             if (!checkStatuses(response.status)) return
             const result = await response.json()
             commit('setAuth', true)
+            console.log(result)
             localStorage.setItem('accessToken', result.accessToken)
             localStorage.setItem('refreshToken', result.refreshToken)
-            localStorage.setItem('uid', result.uid)
+            localStorage.setItem('uid', result.auth_uid)
+            localStorage.setItem('username', result.username)
             router.push('/')
             return
         },
@@ -91,7 +93,8 @@ export default {
             localStorage.removeItem ('uid')
             localStorage.removeItem ('accessToken')
             localStorage.removeItem ('refreshToken')
-            router.push('/')
+            localStorage.removeItem ('username')
+            router.push('/login')
             return
         }
     },

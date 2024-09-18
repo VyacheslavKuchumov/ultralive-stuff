@@ -14,7 +14,12 @@ export default {
         async getUserByUid({ commit }) {
             const uid = localStorage.getItem('uid')
             const user = await instance.get(`/api/users/${uid}`)
+            if (user){
+                console.log(user.data)
+                localStorage.setItem('username', user.data.name)
+            }
             if (user) return commit('setUser', user.data)
+            
             console.log(user.message);
         },
         async updateLikes({}, {likes}){

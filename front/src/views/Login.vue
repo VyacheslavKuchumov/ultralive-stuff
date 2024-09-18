@@ -1,62 +1,76 @@
 <template>
-    <div class="home">
-        <form @submit.prevent="go_login">
-            <my-input type="email" class="form-input" placeholder="Введите email" v-model:value="email"></my-input>
-            <my-input type="password" class="form-input" placeholder="Введите пароль" v-model:value="password"></my-input>
-            <my-button type="submit" class="form-btn">Войти</my-button>
-            <span>Нет аккаунта? <a href="/register">Зарегистрироваться</a></span>
-        </form>
-    </div>
-</template>
-
-<script>
-import { mapActions } from 'vuex';
-
-
-export default {
-    name: 'login',
+    <v-container class="home" fluid>
+        <v-card-title>Войти</v-card-title>
+        <v-form @submit.prevent="go_login" ref="loginForm" v-model="valid" lazy-validation>
+            <v-text-field
+            label="Введите email"
+            v-model="email"
+            :rules="emailRules"
+            required
+            type="email"
+            ></v-text-field>
+            <v-text-field
+            label="Введите пароль"
+            v-model="password"
+            :rules="passwordRules"
+            required
+            type="password"
+            ></v-text-field>
+            <v-btn type="submit" :disabled="!valid" class="form-btn" color="primary">
+            Войти
+            </v-btn>
+            
+            <v-btn class="mt-5" variant="plain" text to="/register">Нет аккаунта?</v-btn>
+            
+        </v-form>
+    </v-container>
+  </template>
+  
+  <script>
+  import { mapActions } from "vuex";
+  
+  export default {
+    name: "login",
     data() {
-        return {
-            
-            email: '',
-            password: '',
-            
-            
-        }
+      return {
+        email: "",
+        password: "",
+        valid: false,
+        emailRules: [(v) => !!v || "Email обязателен", (v) => /.+@.+\..+/.test(v) || "Email должен быть действительным"],
+        passwordRules: [(v) => !!v || "Пароль обязателен"],
+      };
     },
     methods: {
-        ...mapActions({
-            login: 'auth/login'
-        }),
-        go_login() {
-            console.log("email: " + this.email)
-            console.log("password: " + this.password)
-            const formData = {
-                email: this.email,
-                password: this.password
-            }
-            this.login(formData)
+      ...mapActions({
+        login: "auth/login",
+      }),
+      go_login() {
+        if (this.$refs.loginForm.validate()) {
+          const formData = {
+            email: this.email,
+            password: this.password,
+          };
+          this.login(formData);
         }
-
-    }
-}
-</script>
-
-<style>
-.home {
-    position: relative;
+      },
+    },
+  };
+  </script>
+  
+  <style>
+  .home {
     display: flex;
     flex-direction: column;
-    height: 100svh;
     justify-content: center;
     align-items: center;
-}
-
-form {
-    display: flex;
-    padding: 20px;
-    flex-direction: column;
-    width: 400px;
-    row-gap: 20px;
-}
-</style>
+    height: 100vh;
+  }
+  .v-form {
+    max-width: 400px;
+    width: 100%;
+  }
+  .form-btn {
+    width: 100%;
+  }
+  </style>
+  
