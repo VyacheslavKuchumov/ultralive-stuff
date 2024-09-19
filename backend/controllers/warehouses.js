@@ -11,7 +11,16 @@ const getAllWarehouses = async (req, res) => {
     }
 };
 
-
+// Function to get a warehouse by ID
+const getWarehouseById = async (req, res) => {
+    try {
+        const data = await warehouse.findOne({ where: { warehouse_id: req.params.id } });
+        if (!data) return res.status(404).send({ message: 'Warehouse not found' });
+        return res.json(data);
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+};
 
 // Function to add one warehouse
 const addOneWarehouse = async (req, res) => {
@@ -70,4 +79,5 @@ module.exports = {
     addOneWarehouse,
     editWarehouseById,
     deleteWarehouseById,
+    getWarehouseById
 };

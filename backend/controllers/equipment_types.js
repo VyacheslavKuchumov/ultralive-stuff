@@ -11,7 +11,16 @@ const getAllEquipmentTypes = async (req, res) => {
     }
 };
 
-
+// Function to get an equipment type by ID
+const getEquipmentTypeById = async (req, res) => {
+    try {
+        const data = await equipment_type.findOne({ where: { equipment_type_id: req.params.id } });
+        if (!data) return res.status(404).send({ message: 'Equipment type not found' });
+        return res.json(data);
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+};
 
 // Function to add a new equipment type
 const addOneEquipmentType = async (req, res) => {
@@ -68,4 +77,5 @@ module.exports = {
     addOneEquipmentType,
     editEquipmentTypeById,
     deleteEquipmentTypeById,
+    getEquipmentTypeById
 };

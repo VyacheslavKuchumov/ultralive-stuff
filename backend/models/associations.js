@@ -1,7 +1,7 @@
 const { equipment } = require('./equipment');
 const { equipment_type } = require('./equipment_types');
 const { warehouse } = require('./warehouses')
-
+const { set_of_equipment } = require('./set_of_equipment')
 const { auth } = require('./auths');
 const { user } = require('./users');
 const { shooting } = require('./shootings');
@@ -30,3 +30,10 @@ shooting.belongsTo(user, {
   as: 'shootingToUser',
   foreignKey: 'chief_engineer_id'
 })
+
+equipment.belongsToMany(set_of_equipment, {through: "equipment_set_contents", timestamps: false})
+set_of_equipment.belongsToMany(equipment, {through: "equipment_set_contents", timestamps: false})
+
+set_of_equipment.belongsTo(equipment_type, {
+  as: 'setOfEquipmentToEquipmentType',
+  foreignKey: 'set_of_equipment_type'})

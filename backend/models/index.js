@@ -6,6 +6,7 @@ const { auth } = require('./auths');
 const { user } = require('./users');
 const { warehouse } = require('./warehouses');
 const { equipment_type } = require('./equipment_types');
+const { set_of_equipment } = require('./set_of_equipment')
 
 require('./associations');  // Import the associations after models are loaded
 

@@ -12,7 +12,7 @@ const users_routes = require ('./routes/users')
 const equipment_routes = require ('./routes/equipment')
 const warehouses_routes = require ('./routes/warehouses')
 const equipment_types_routes = require ('./routes/equipment_types')
-
+const set_of_equipment_routes = require ('./routes/set_of_equipment')
 
 
 app.use(cors({
@@ -24,7 +24,7 @@ app.use('/api/users', users_routes)
 app.use('/api/equipment', equipment_routes)
 app.use('/api/warehouse', warehouses_routes)
 app.use('/api/equipment_type', equipment_types_routes)
-
+app.use('/api/set_of_equipment', set_of_equipment_routes)
 
 
 app.use((error, request, response, next) => {
@@ -41,7 +41,7 @@ const {initializeDatabase} = require('./models/index')
 
 app.listen(port, () => {
     //###############################
-    // initializeDatabase()
+    initializeDatabase()
     //###############################
     console.log(`server started on port ${port}`);
 })
