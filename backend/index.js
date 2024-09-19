@@ -10,7 +10,7 @@ const port = process.env.PORT
 const auth_routes = require ('./routes/auth')
 const users_routes = require ('./routes/users')
 const equipment_routes = require ('./routes/equipment')
-const shooting_equipment_routes = require ('./routes/shooting_equipment')
+
 
 
 
@@ -21,7 +21,7 @@ app.use(cors({
 app.use('/api/auth', auth_routes)
 app.use('/api/users', users_routes)
 app.use('/api/equipment', equipment_routes)
-app.use('/api/shooting_equipment', shooting_equipment_routes)
+
 
 
 
@@ -36,7 +36,6 @@ const {get_auth_table} = require('./models/auths')
 const {get_users_table} = require('./models/users')
 const {get_equipment_table} = require('./models/equipment')
 const {get_shootings_table} = require('./models/shootings')
-const {get_shooting_equipment_table} = require('./models/shooting_equipment')
 const {initializeDatabase} = require('./models/index')
 
 

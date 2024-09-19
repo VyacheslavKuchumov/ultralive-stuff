@@ -25,11 +25,12 @@ const getEquipmentById = async (req, res) => {
 // Function to add one equipment
 const addOneEquipment = async (req, res) => {
     try {
-        const { equipment_name, serial_number, place_of_storage, current_place_of_storage, needs_maintenance, date_of_purchase, cost_of_purchase } = req.body; // Add all required fields
+        const { equipment_name, serial_number, equipment_type, place_of_storage, current_place_of_storage, needs_maintenance, date_of_purchase, cost_of_purchase } = req.body; // Add all required fields
         console.log
         const newEquipment = await equipment.create({
             equipment_name,
             serial_number,
+            equipment_type: parseInt(equipment_type),
             place_of_storage: parseInt(place_of_storage),
             current_place_of_storage: parseInt(current_place_of_storage) || null,
             needs_maintenance,

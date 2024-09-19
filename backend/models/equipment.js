@@ -19,7 +19,10 @@ const equipment = sequelize.define(
             type:DataTypes.TEXT,
             allowNull: false
         },
-        
+        equipment_type:{
+            type:DataTypes.BIGINT,
+            allowNull: false
+        },
         place_of_storage:{
             type:DataTypes.BIGINT,
             allowNull: false
@@ -33,7 +36,7 @@ const equipment = sequelize.define(
             defaultValue: false
         },
         date_of_purchase:{
-            type:DataTypes.TEXT,
+            type:DataTypes.DATEONLY,
             allowNull: false
         },
         cost_of_purchase:{

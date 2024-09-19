@@ -6,16 +6,22 @@ const { equipment } = require('./equipment');
 const shooting = sequelize.define(
     'shootings',
     {
-        id: {
+        shooting_id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true
         },
         shooting_date:{
-            type:DataTypes.DATEONLY
+            type:DataTypes.DATEONLY,
+            allowNull: false
         },
         shooting_name:{
-            type:DataTypes.TEXT
+            type:DataTypes.TEXT,
+            allowNull: false
+        },
+        chief_engineer_id:{
+            type:DataTypes.BIGINT,
+            allowNull: false
         },
                 
     },
