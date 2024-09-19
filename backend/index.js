@@ -10,7 +10,8 @@ const port = process.env.PORT
 const auth_routes = require ('./routes/auth')
 const users_routes = require ('./routes/users')
 const equipment_routes = require ('./routes/equipment')
-
+const warehouses_routes = require ('./routes/warehouses')
+const equipment_types_routes = require ('./routes/equipment_types')
 
 
 
@@ -21,7 +22,8 @@ app.use(cors({
 app.use('/api/auth', auth_routes)
 app.use('/api/users', users_routes)
 app.use('/api/equipment', equipment_routes)
-
+app.use('/api/warehouse', warehouses_routes)
+app.use('/api/equipment_type', equipment_types_routes)
 
 
 
@@ -32,10 +34,7 @@ app.use((error, request, response, next) => {
         next()
 })
 
-const {get_auth_table} = require('./models/auths')
-const {get_users_table} = require('./models/users')
-const {get_equipment_table} = require('./models/equipment')
-const {get_shootings_table} = require('./models/shootings')
+
 const {initializeDatabase} = require('./models/index')
 
 
