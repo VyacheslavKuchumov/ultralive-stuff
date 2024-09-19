@@ -1,25 +1,46 @@
 const { sequelize } = require('../connection')
 const { DataTypes } = require('sequelize')
 
-const { shooting } = require('./shootings');
-const { shooting_equipment } = require('./shooting_equipment');
+
 
 const equipment = sequelize.define(
     'equipment',
     {
-        id: {
+        equipment_id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true
         },
         equipment_name:{
-            type:DataTypes.TEXT
+            type:DataTypes.TEXT,
+            allowNull: false
         },
         serial_number:{
-            type:DataTypes.TEXT
+            type:DataTypes.TEXT,
+            allowNull: false
         },
-
         
+        place_of_storage:{
+            type:DataTypes.BIGINT,
+            allowNull: false
+        },
+        current_place_of_storage:{
+            type:DataTypes.BIGINT,
+            allowNull: true
+        },
+        needs_maintenance:{
+            type:DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        date_of_purchase:{
+            type:DataTypes.TEXT,
+            allowNull: false
+        },
+        cost_of_purchase:{
+            type:DataTypes.DECIMAL,
+            allowNull: false
+        }
+
     },
     {
         tableName: 'equipment',

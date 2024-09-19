@@ -13,9 +13,7 @@ const auth = sequelize.define(
             type: DataTypes.UUID,
             unique: true
         },
-        role: {
-            type: DataTypes.TEXT
-        },
+        
         AccessToken:{
             type: DataTypes.TEXT
         },

@@ -1,7 +1,6 @@
 const { sequelize } = require('../connection')
 const { DataTypes, DATEONLY } = require('sequelize');
-const { equipment } = require('./equipment');
-const { shooting } = require('./shootings');
+
 
 
 
@@ -15,19 +14,11 @@ const shooting_equipment = sequelize.define(
         },
         shooting_id:{
             type:DataTypes.BIGINT,
-            references: {
-                model: shooting,
-                key: 'id'
-            },
-            onDelete: 'CASCADE', 
+            
         },
         equipment_id:{
             type:DataTypes.BIGINT,
-            references: {
-                model: equipment,
-                key: 'id'
-            },
-            onDelete: 'CASCADE', 
+            
         },
         flag:{
             type:DataTypes.BOOLEAN,

@@ -15,8 +15,7 @@ createRefresh = (uid) => createToken(uid, REFRESH_LIFETIME)
 exports.signup = async (req, res) => {
     try {
         const authed = await auth.create({
-            email: req.body.email.toLowerCase(),
-            role: 'user',
+            email: req.body.email.toLowerCase(),         
             password: bcrypt.hashSync(req.body.password, 8),
             auth_uid: uuidv4(),
 
@@ -24,7 +23,7 @@ exports.signup = async (req, res) => {
         const cur_user = await user.create({
             user_uid: authed.auth_uid,
             name: req.body.name,
-            
+            role: 'user',            
         })
         return res.status(201).send({ message: 'registered', uid: cur_user.user_uid })
     } catch (error) {

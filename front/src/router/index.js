@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import EquipmentView from '../views/EquipmentView.vue'
+import CreateEquipment from '../views/CreateEquipment.vue'
+import EditEquipment from '../views/EditEquipment.vue'
 import ShootingView from '../views/ShootingView.vue'
 import AboutView from '../views/AboutView.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import instance from '@/middlewares'
-import Card from '@/views/Card.vue'
-import Search from '@/views/Search.vue'
+
 const routes = [
   {
     path: '/',
@@ -20,6 +21,19 @@ const routes = [
     name: 'equipment',
     component: EquipmentView,
     meta: {auth:true}
+  },
+  {
+    path: '/equipment/create',
+    name: 'create-equipment',
+    component: CreateEquipment,
+    meta: { auth: true },
+  },
+  {
+    path: '/equipment/edit/:id',
+    name: 'edit-equipment',
+    component: EditEquipment,
+    meta: { auth: true },
+    props: true, // Pass route params as props to component
   },
   {
     path: '/shooting',
