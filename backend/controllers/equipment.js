@@ -1,9 +1,26 @@
 const { equipment } = require('../models/equipment');
+const { warehouse } = require('../models/warehouses');
+const { equipment_type } = require('../models/equipment_types');
+const { where } = require('sequelize');
+
 
 // Function to get all equipment
 const getAllEquipment = async (req, res) => {
     try {
-        const data = await equipment.findAll({});
+        const data = await equipment.findAll({
+            include: [
+            {
+              model: equipment_type,
+              as: 'equipmentToEquipmentType',
+              attributes: ['name'] // Specify the fields to fetch from `equipment_type`
+            },
+            {
+              model: warehouse,
+              as: 'equipmentToPlaceOfStorage',
+              attributes: ['location'] // Specify the fields to fetch from `warehouse`
+            }
+          ]
+        });
         if (!data) return res.status(404).send({ message: 'Equipment not found' });
         return res.json(data);
     } catch (error) {
@@ -14,7 +31,19 @@ const getAllEquipment = async (req, res) => {
 // Function to get equipment by ID
 const getEquipmentById = async (req, res) => {
     try {
-        const data = await equipment.findOne({ where: { equipment_id: req.params.id } });
+        const data = await equipment.findOne({ where: { equipment_id: req.params.id }, include: [
+            {
+              model: equipment_type,
+              as: 'equipmentToEquipmentType',
+              attributes: ['equipment_type_name'] // Specify the fields to fetch from `equipment_type`
+            },
+            {
+              model: warehouse,
+              as: 'equipmentToPlaceOfStorage',
+              attributes: ['warehouse_name'] // Specify the fields to fetch from `warehouse`
+            }
+          ]
+        });
         if (!data) return res.status(404).send({ message: 'Equipment not found' });
         return res.json(data);
     } catch (error) {
@@ -25,19 +54,33 @@ const getEquipmentById = async (req, res) => {
 // Function to add one equipment
 const addOneEquipment = async (req, res) => {
     try {
-        const { equipment_name, serial_number, equipment_type, place_of_storage, current_place_of_storage, needs_maintenance, date_of_purchase, cost_of_purchase } = req.body; // Add all required fields
-        console.log
+        const { equipment_name, serial_number, equipment_type_name, warehouse_name, needs_maintenance, date_of_purchase, cost_of_purchase } = req.body; // Add all required fields
+        
+        const foundWarehouse = warehouse.findOne({where: {warehouse_name: warehouse_name}})
+        const foundEquipmentType = equipment_type.findOne({where: {equipment_type_name: equipment_type_name}})
+
         const newEquipment = await equipment.create({
             equipment_name,
             serial_number,
-            equipment_type: parseInt(equipment_type),
-            place_of_storage: parseInt(place_of_storage),
-            current_place_of_storage: parseInt(current_place_of_storage) || null,
+            equipment_type: foundEquipmentType.equipment_type_id,
+            place_of_storage: foundWarehouse.warehouse_id,
             needs_maintenance,
             date_of_purchase,
             cost_of_purchase,
         });
-        const data = await equipment.findAll({});
+        const data = await equipment.findAll({include: [
+            {
+              model: equipment_type,
+              as: 'equipmentToEquipmentType',
+              attributes: ['name'] // Specify the fields to fetch from `equipment_type`
+            },
+            {
+              model: warehouse,
+              as: 'equipmentToPlaceOfStorage',
+              attributes: ['location'] // Specify the fields to fetch from `warehouse`
+            }
+          ]
+        });
         return res.status(201).json(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });
