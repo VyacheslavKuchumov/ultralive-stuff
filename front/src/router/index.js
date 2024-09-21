@@ -3,11 +3,11 @@ import HomeView from '../views/HomeView.vue'
 import EquipmentView from '../views/EquipmentView.vue'
 import CreateEquipment from '../views/CreateEquipment.vue'
 import EditEquipment from '../views/EditEquipment.vue'
-import ShootingView from '../views/ShootingView.vue'
 import AboutView from '../views/AboutView.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import instance from '@/middlewares'
+import OneShootingView from '@/views/OneShootingView.vue'
 
 const routes = [
   {
@@ -36,9 +36,9 @@ const routes = [
     props: true, // Pass route params as props to component
   },
   {
-    path: '/shooting',
+    path: '/shooting/:id',
     name: 'shooting',
-    component: ShootingView,
+    component: OneShootingView,
     meta: {auth:true}
   },
   {

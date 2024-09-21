@@ -7,7 +7,7 @@
 
       <v-btn v-if="isAuth" text to="/">Главная</v-btn>
       <v-btn v-if="isAuth" text to="/equipment">Оборудование</v-btn>
-      <v-btn v-if="isAuth" text to="/shooting">Съёмка</v-btn>
+      <v-btn v-if="isAuth" text to="/shootings">Съёмки</v-btn>
       <v-btn v-if="isAuth" @click="logout()">Выйти</v-btn>
     </v-app-bar>
     <v-main>

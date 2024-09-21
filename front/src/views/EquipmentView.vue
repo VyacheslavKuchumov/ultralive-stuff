@@ -1,6 +1,11 @@
 <template>
   <v-card class="elevation-5 mt-5">
-    <v-data-table v-if="equipment" :headers="headers" :items="equipment">
+    <v-data-table
+      v-if="equipment"
+      :group-by="groupBy"
+      :headers="headers"
+      :items="equipment"
+    >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Оборудование</v-toolbar-title>
@@ -11,45 +16,65 @@
           </v-btn>
         </v-toolbar>
       </template>
+
+      <!-- Group header template -->
+      <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
+        <tr>
+          <td :colspan="columns.length">
+            <v-btn
+              :icon="isGroupOpen(item) ? '$expand' : '$next'"
+              size="small"
+              variant="text"
+              @click="toggleGroup(item)"
+            ></v-btn>
+            {{ item.value }}
+          </td>
+        </tr>
+      </template>
+
+      <!-- Row templates -->
       <template v-slot:item.action_edit="{ item }">
-        
-          <v-btn class="mr-5" size="small" color="blue-darken-1" @click="goToEditPage(item)">
+        <v-btn class="mr-5" size="small" color="blue-darken-1" @click="goToEditPage(item)">
           <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-
+        </v-btn>
       </template>
+
       <template v-slot:item.action_delete="{ item }">
-
         <v-btn size="small" color="red-darken-1" @click="deleteItem(item)">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-    </template>
-      <template v-slot:no-data>
-        Нет данных
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
       </template>
+
+      <template v-slot:no-data>Нет данных</template>
     </v-data-table>
   </v-card>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { useRouter } from 'vue-router';
 
 export default {
   computed: {
     ...mapState('equipment', ['equipment']),
     headers() {
       return [
-        
-        { title: 'Название оборудования', key: 'equipment_name' },
+        { title: 'Название', key: 'equipment_name' },
         { title: 'Серийный номер', key: 'serial_number' },
-        { title: 'Место хранения', key: 'place_of_storage' },
+        { title: 'Место хранения', key: 'equipmentToPlaceOfStorage.warehouse_name' },
         { title: 'Текущее место хранения', key: 'current_place_of_storage' },
         { title: 'Требует обслуживания', key: 'needs_maintenance' },
         { title: 'Дата покупки', key: 'date_of_purchase' },
         { title: 'Стоимость покупки', key: 'cost_of_purchase' },
         { title: 'Изменить', key: 'action_edit', sortable: false },
         { title: 'Удалить', key: 'action_delete', sortable: false },
+      ];
+    },
+    groupBy() {
+      return [
+        {
+          key: 'equipmentToEquipmentType.equipment_type_name',
+          order: 'asc',
+        },
       ];
     },
   },
@@ -65,8 +90,8 @@ export default {
       this.$router.push(`/equipment/edit/${item.equipment_id}`);
     },
     deleteItem(item) {
-      console.log(item)
-      this.deleteEquipment(item); // Pass the entire object, including `id`
+      console.log(item);
+      this.deleteEquipment(item);
     },
   },
   beforeMount() {
