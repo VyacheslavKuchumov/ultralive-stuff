@@ -35,9 +35,9 @@
                 
               />
             </v-col>
-            <v-col cols="12" md="6" sm="6">
+            <!-- <v-col cols="12" md="6" sm="6">
               <v-switch v-model="newEquipment.needs_maintenance" label="Требует обслуживания" />
-            </v-col>
+            </v-col> -->
             <v-col cols="12" md="6" sm="6">
               <v-text-field
                 prepend-icon="mdi-calendar"
@@ -45,7 +45,7 @@
                 v-model="newEquipment.date_of_purchase"
                 @click="dialog = true"
               />
-              <v-dialog v-model="dialog" width="290px">
+              <v-dialog v-model="dialog" width="400px">
                 <v-card>
                   <v-date-picker v-model="datePickerDate" />
                   <v-card-actions>

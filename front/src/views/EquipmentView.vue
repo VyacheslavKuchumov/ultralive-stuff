@@ -20,12 +20,12 @@
       <!-- Group header template -->
       <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
         <tr>
-          <td :colspan="columns.length">
+          <td :colspan="columns.length" @click="toggleGroup(item)">
             <v-btn
               :icon="isGroupOpen(item) ? '$expand' : '$next'"
               size="small"
               variant="text"
-              @click="toggleGroup(item)"
+              
             ></v-btn>
             {{ item.value }}
           </td>
