@@ -8,6 +8,7 @@ import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import instance from '@/middlewares'
 import OneShootingView from '@/views/OneShootingView.vue'
+import EquipmentTypesView from '@/views/EquipmentTypesView.vue'
 
 const routes = [
   {
@@ -26,6 +27,12 @@ const routes = [
     path: '/equipment/create',
     name: 'create-equipment',
     component: CreateEquipment,
+    meta: { auth: true },
+  },
+  {
+    path: '/equipment/equipment_types',
+    name: 'equipment_types',
+    component: EquipmentTypesView,
     meta: { auth: true },
   },
   {

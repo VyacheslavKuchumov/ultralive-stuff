@@ -36,4 +36,5 @@ set_of_equipment.belongsToMany(equipment, {through: "equipment_set_contents", ti
 
 set_of_equipment.belongsTo(equipment_type, {
   as: 'setOfEquipmentToEquipmentType',
-  foreignKey: 'set_of_equipment_type'})
+  foreignKey: 'set_of_equipment_type'
+})

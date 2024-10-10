@@ -5,12 +5,22 @@
       :group-by="groupBy"
       :headers="headers"
       :items="equipment"
+      :items-per-page="-1"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Оборудование</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
+          <v-btn class="mb-2" color="primary" dark @click="">
+            Склады
+          </v-btn>
+          <v-btn class="mb-2" color="primary" dark @click="goEquipmentTypesPage">
+            Виды оборудования
+          </v-btn>
+          <v-btn class="mb-2" color="primary" dark @click="">
+            Комплекты
+          </v-btn>
           <v-btn class="mb-2" color="primary" dark @click="goToCreatePage">
             Новое оборудование
           </v-btn>
@@ -92,6 +102,10 @@ export default {
     deleteItem(item) {
       console.log(item);
       this.deleteEquipment(item);
+    },
+
+    goEquipmentTypesPage() {
+      this.$router.push('/equipment/equipment_types');
     },
   },
   beforeMount() {
