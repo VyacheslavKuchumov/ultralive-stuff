@@ -14,6 +14,7 @@ export default {
     async getAllWarehouses({ commit }) {
       try {
         const warehouses = await instance.get(`/api/warehouse`);
+        console.log(warehouses.data)
         if (warehouses) return commit('setWarehouses', warehouses.data);
       } catch (error) {
         console.error('Error fetching warehouses:', error);

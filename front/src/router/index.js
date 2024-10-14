@@ -1,14 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import EquipmentView from '../views/EquipmentView.vue'
-import CreateEquipment from '../views/CreateEquipment.vue'
-import EditEquipment from '../views/EditEquipment.vue'
-import AboutView from '../views/AboutView.vue'
-import Register from '../views/Register.vue'
-import Login from '../views/Login.vue'
+import HomeView from '@/views/HomeView.vue'
+import EquipmentView from '@/views/Equipment/EquipmentView.vue'
+import CreateEquipmentView from '@/views/Equipment/CreateEquipmentView.vue'
+import EditEquipmentView from '@/views/Equipment/EditEquipmentView.vue'
+import AboutView from '@/views/AboutView.vue'
+import Register from '@/views/Auth/Register.vue'
+import Login from '@/views/Auth/Login.vue'
 import instance from '@/middlewares'
 import OneShootingView from '@/views/OneShootingView.vue'
-import EquipmentTypesView from '@/views/EquipmentTypesView.vue'
+import EquipmentTypesView from '@/views/Dictionaries/EquipmentTypesView.vue'
+
+import auth from '@/store/auth'
+import WarehousesView from '@/views/Dictionaries/WarehousesView.vue'
 
 const routes = [
   {
@@ -17,31 +20,44 @@ const routes = [
     component: HomeView,
     meta: {auth:true}
   },
+  
   {
     path: '/equipment',
     name: 'equipment',
     component: EquipmentView,
-    meta: {auth:true}
+    meta: {auth:true},
   },
+  
   {
     path: '/equipment/create',
     name: 'create-equipment',
-    component: CreateEquipment,
+    component: CreateEquipmentView,
     meta: { auth: true },
   },
+  
   {
-    path: '/equipment/equipment_types',
+    path: '/equipment/edit/:id',
+    name: 'edit-equipment',
+    component: EditEquipmentView,
+    meta: { auth: true },
+    props: true, // Pass route params as props to component
+  },
+
+  {
+    path: '/equipment_types',
     name: 'equipment_types',
     component: EquipmentTypesView,
     meta: { auth: true },
   },
+
   {
-    path: '/equipment/edit/:id',
-    name: 'edit-equipment',
-    component: EditEquipment,
+    path: '/warehouses',
+    name: 'warehouses',
+    component: WarehousesView,
     meta: { auth: true },
     props: true, // Pass route params as props to component
   },
+
   {
     path: '/shooting/:id',
     name: 'shooting',

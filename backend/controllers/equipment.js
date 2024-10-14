@@ -11,12 +11,12 @@ const getAllEquipment = async (req, res) => {
             include: [
             {
               model: equipment_type,
-              as: 'equipmentToEquipmentType',
+              as: 'type',
               attributes: ['equipment_type_name'] // Specify the fields to fetch from `equipment_type`
             },
             {
               model: warehouse,
-              as: 'equipmentToPlaceOfStorage',
+              as: 'storage',
               attributes: ['warehouse_name'] // Specify the fields to fetch from `warehouse`
             }
           ]
@@ -72,13 +72,13 @@ const addOneEquipment = async (req, res) => {
             const data = await equipment.findAll({include: [
                 {
                   model: equipment_type,
-                  as: 'equipmentToEquipmentType',
-                  attributes: ['name'] // Specify the fields to fetch from `equipment_type`
+                  as: 'type',
+                  attributes: ['equipment_type_name'] // Specify the fields to fetch from `equipment_type`
                 },
                 {
                   model: warehouse,
-                  as: 'equipmentToPlaceOfStorage',
-                  attributes: ['location'] // Specify the fields to fetch from `warehouse`
+                  as: 'storage',
+                  attributes: ['warehouse_name'] // Specify the fields to fetch from `warehouse`
                 }
               ]
             });

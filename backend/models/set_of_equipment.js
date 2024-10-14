@@ -15,10 +15,10 @@ const set_of_equipment = sequelize.define(
             type:DataTypes.TEXT,
             allowNull: false
         },
-        set_of_equipment_type:{
-            type:DataTypes.BIGINT,
-            allowNull: false
-        }
+        // set_of_equipment_type:{
+        //     type:DataTypes.BIGINT,
+        //     allowNull: false
+        // }
 
     },
     {

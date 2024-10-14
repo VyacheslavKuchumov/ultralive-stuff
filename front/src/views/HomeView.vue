@@ -10,14 +10,36 @@
       <span class="font-black">Пользователь {{ user().name }}</span>
     </template>
     <template v-slot:subtitle>
-      {{user().role}}
+      {{user().role}} 
     </template>
 
-    <v-card-text class="bg-surface-light pt-4">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione debitis quis est labore voluptatibus! Eaque cupiditate minima, at placeat totam, magni doloremque veniam neque porro libero rerum unde voluptatem!
-      
-    </v-card-text>
+    
+    <v-card-title class="d-flex justify-center align-center">
+      Справочники
+    </v-card-title>
+    <v-container class="d-flex justify-center align-center">
+    
+      <v-row class="d-flex flex-column align-center">
+        <v-btn color="primary" class="mb-2" to="/equipment_types" width="200">
+          Виды оборудования
+        </v-btn>
+        <v-btn color="primary" class="mb-2" to="/warehouses" width="200">
+          Склады
+        </v-btn>
+        <v-btn color="primary" class="mb-2" to="" width="200">
+          Виды проектов
+        </v-btn>
+        <v-btn disabled color="primary" class="mb-2" to="" width="200">
+          Клиенты
+        </v-btn>
+        <v-btn disabled color="primary" class="mb-2" to="" width="200">
+          Виды клиентов
+        </v-btn>
+      </v-row>
+    </v-container>
   </v-card>
+  
+
     
     
   

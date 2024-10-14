@@ -4,21 +4,26 @@
       v-if="equipment"
       :group-by="groupBy"
       :headers="headers"
-      :items="equipment"
+      :items="filteredEquipment"
       :items-per-page="-1"
+      height="400"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Оборудование</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-btn class="mb-2" color="primary" dark @click="">
-            Склады
-          </v-btn>
+          
+          <!-- Search Input -->
+          <v-text-field
+            v-model="search"
+            label="Поиск"
+            prepend-icon="mdi-magnify"
+            class="mb-2"
+            clearable
+          ></v-text-field>
+
           <v-btn class="mb-2" color="primary" dark @click="goEquipmentTypesPage">
-            Виды оборудования
-          </v-btn>
-          <v-btn class="mb-2" color="primary" dark @click="">
             Комплекты
           </v-btn>
           <v-btn class="mb-2" color="primary" dark @click="goToCreatePage">
@@ -35,7 +40,6 @@
               :icon="isGroupOpen(item) ? '$expand' : '$next'"
               size="small"
               variant="text"
-              
             ></v-btn>
             {{ item.value }}
           </td>
@@ -64,13 +68,18 @@
 import { mapActions, mapState } from 'vuex';
 
 export default {
+  data() {
+    return {
+      search: '',
+    };
+  },
   computed: {
     ...mapState('equipment', ['equipment']),
     headers() {
       return [
         { title: 'Название', key: 'equipment_name' },
         { title: 'Серийный номер', key: 'serial_number' },
-        { title: 'Место хранения', key: 'equipmentToPlaceOfStorage.warehouse_name' },
+        { title: 'Место хранения', key: 'storage.warehouse_name' },
         { title: 'Текущее место хранения', key: 'current_place_of_storage' },
         { title: 'Требует обслуживания', key: 'needs_maintenance' },
         { title: 'Дата покупки', key: 'date_of_purchase' },
@@ -82,10 +91,21 @@ export default {
     groupBy() {
       return [
         {
-          key: 'equipmentToEquipmentType.equipment_type_name',
+          key: 'type.equipment_type_name',
           order: 'asc',
         },
       ];
+    },
+    filteredEquipment() {
+      if (!this.search) {
+        return this.equipment;
+      }
+      const searchTerm = this.search.toLowerCase();
+      return this.equipment.filter((item) =>
+        Object.values(item).some((value) =>
+          String(value).toLowerCase().includes(searchTerm)
+        )
+      );
     },
   },
   methods: {
@@ -103,7 +123,6 @@ export default {
       console.log(item);
       this.deleteEquipment(item);
     },
-
     goEquipmentTypesPage() {
       this.$router.push('/equipment/equipment_types');
     },

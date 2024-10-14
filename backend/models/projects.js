@@ -1,22 +1,22 @@
 const { sequelize } = require('../connection')
 const { DataTypes, DATEONLY } = require('sequelize');
-const { equipment } = require('./equipment');
 
 
-const shooting = sequelize.define(
+
+const project = sequelize.define(
     'shootings',
     {
-        shooting_id: {
+        project_id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true
         },
-        shooting_date:{
-            type:DataTypes.DATEONLY,
+        project_name:{
+            type:DataTypes.TEXT,
             allowNull: false
         },
-        shooting_name:{
-            type:DataTypes.TEXT,
+        shooting_date:{
+            type:DataTypes.DATEONLY,
             allowNull: false
         },
         chief_engineer_id:{
@@ -33,9 +33,6 @@ const shooting = sequelize.define(
 
 
 
-async function get_shootings_table() {
-    await shooting.sync()
-    console.log('Синхрон shootings 👍');
-}
 
-module.exports = { shooting, get_shootings_table }
+
+module.exports = { project }

@@ -1,7 +1,7 @@
 // models/index.js
 const { sequelize } = require('../connection');
 const { equipment } = require('./equipment');
-const { shooting } = require('./shootings');
+const { shooting } = require('./projects');
 const { auth } = require('./auths');
 const { user } = require('./users');
 const { warehouse } = require('./warehouses');
