@@ -6,6 +6,7 @@
       :headers="headers"
       :items="filteredEquipment"
       :items-per-page="-1"
+      :search="search"
       height="400"
     >
       <template v-slot:top>
@@ -13,16 +14,6 @@
           <v-toolbar-title>Оборудование</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          
-          <!-- Search Input -->
-          <v-text-field
-            v-model="search"
-            label="Поиск"
-            prepend-icon="mdi-magnify"
-            class="mb-2"
-            clearable
-          ></v-text-field>
-
           <v-btn class="mb-2" color="primary" dark @click="goEquipmentTypesPage">
             Комплекты
           </v-btn>
@@ -32,21 +23,8 @@
         </v-toolbar>
       </template>
 
-      <!-- Group header template -->
-      <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
-        <tr>
-          <td :colspan="columns.length" @click="toggleGroup(item)">
-            <v-btn
-              :icon="isGroupOpen(item) ? '$expand' : '$next'"
-              size="small"
-              variant="text"
-            ></v-btn>
-            {{ item.value }}
-          </td>
-        </tr>
-      </template>
+      
 
-      <!-- Row templates -->
       <template v-slot:item.action_edit="{ item }">
         <v-btn class="mr-5" size="small" color="blue-darken-1" @click="goToEditPage(item)">
           <v-icon>mdi-pencil</v-icon>
@@ -60,6 +38,22 @@
       </template>
 
       <template v-slot:no-data>Нет данных</template>
+
+      <template v-slot:bottom>
+        <v-card flat>
+          <v-card-title>Поиск по названию</v-card-title>
+          <v-card-text>
+            <v-text-field
+              v-model="search"
+              label="Поиск"
+              prepend-icon="mdi-magnify"
+              clearable
+              placeholder="Search..."
+              class="mt-2"
+            ></v-text-field>
+          </v-card-text>
+        </v-card>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -93,6 +87,7 @@ export default {
         {
           key: 'type.equipment_type_name',
           order: 'asc',
+          expanded: true,
         },
       ];
     },
@@ -102,9 +97,7 @@ export default {
       }
       const searchTerm = this.search.toLowerCase();
       return this.equipment.filter((item) =>
-        Object.values(item).some((value) =>
-          String(value).toLowerCase().includes(searchTerm)
-        )
+        item.equipment_name.toLowerCase().includes(searchTerm)
       );
     },
   },
@@ -128,7 +121,7 @@ export default {
     },
   },
   beforeMount() {
-    this.getAllEquipment();
+    this.initialize();
   },
 };
 </script>

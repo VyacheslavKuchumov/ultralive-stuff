@@ -34,12 +34,12 @@ const getEquipmentById = async (req, res) => {
         const data = await equipment.findOne({ where: { equipment_id: req.params.id }, include: [
             {
               model: equipment_type,
-              as: 'equipmentToEquipmentType',
+              as: 'type',
               attributes: ['equipment_type_name'] // Specify the fields to fetch from `equipment_type`
             },
             {
               model: warehouse,
-              as: 'equipmentToPlaceOfStorage',
+              as: 'storage',
               attributes: ['warehouse_name'] // Specify the fields to fetch from `warehouse`
             }
           ]
@@ -52,7 +52,7 @@ const getEquipmentById = async (req, res) => {
 };
 
 // Function to add one equipment
-const addOneEquipment = async (req, res) => {
+const createEquipment = async (req, res) => {
     try {
         const { equipment_name, serial_number, equipment_type_name, warehouse_name, needs_maintenance, date_of_purchase, cost_of_purchase } = req.body; // Add all required fields
         
@@ -94,11 +94,23 @@ const addOneEquipment = async (req, res) => {
 const editEquipmentById = async (req, res) => {
     try {
         const id = req.params.id;
-        const { equipment_name, serial_number, equipment_type_name, warehouse_name, needs_maintenance, date_of_purchase, cost_of_purchase } = req.body; 
-        
-        const foundWarehouse = warehouse.findOne({where: {warehouse_name: warehouse_name}})
-        const foundEquipmentType = equipment_type.findOne({where: {equipment_type_name: equipment_type_name}})
+        const { 
+            equipment_name, 
+            serial_number, 
+            equipment_type_name, 
+            warehouse_name, 
+            needs_maintenance, 
+            date_of_purchase, 
+            cost_of_purchase,
+            current_place_of_storage // Make sure to destructure current_place_of_storage from req.body
+        } = req.body; 
+
+        const foundWarehouse = await warehouse.findOne({ where: { warehouse_name } });
+        const foundEquipmentType = await equipment_type.findOne({ where: { equipment_type_name } });
         const equipmentToUpdate = await equipment.findByPk(id);
+
+        // Assuming current_place_of_storage is coming from req.body, if it's null, we will explicitly assign null
+        const currentPlaceOfStorage = current_place_of_storage === undefined ? null : current_place_of_storage;
 
         if (!equipmentToUpdate) return res.status(404).send({ message: 'Equipment not found' });
 
@@ -107,16 +119,19 @@ const editEquipmentById = async (req, res) => {
             serial_number,
             equipment_type: foundEquipmentType.equipment_type_id,
             place_of_storage: foundWarehouse.warehouse_id,
+            current_place_of_storage: currentPlaceOfStorage, // This will be null if current_place_of_storage was not provided
             needs_maintenance,
             date_of_purchase,
             cost_of_purchase,
         });
+
         const data = await equipment.findAll({});
         return res.json(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });
     }
 };
+
 
 // Function to delete equipment by ID
 const deleteEquipmentById = async (req, res) => {
@@ -137,7 +152,7 @@ const deleteEquipmentById = async (req, res) => {
 // Exporting the functions
 module.exports = {
     getAllEquipment,
-    addOneEquipment,
+    createEquipment,
     editEquipmentById,
     deleteEquipmentById,
     getEquipmentById
