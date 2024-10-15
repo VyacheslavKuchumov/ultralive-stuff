@@ -28,7 +28,7 @@ const equipment = sequelize.define(
             allowNull: false
         },
         current_place_of_storage:{
-            type:DataTypes.BIGINT,
+            type:DataTypes.TEXT,
             allowNull: true
         },
         needs_maintenance:{

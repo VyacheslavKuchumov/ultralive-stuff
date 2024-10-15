@@ -82,55 +82,55 @@ const createEquipment = async (req, res) => {
                 }
               ]
             });
+            return res.status(201).json(data);
         }else return res.status(500).send({ message: "something wrong with warehouses and equipment types...." });
         
-        return res.status(201).json(data);
+        
     } catch (error) {
         return res.status(500).send({ message: error.message });
     }
 };
+
 
 // Function to edit equipment by ID
 const editEquipmentById = async (req, res) => {
     try {
         const id = req.params.id;
-        const { 
-            equipment_name, 
-            serial_number, 
-            equipment_type_name, 
-            warehouse_name, 
-            needs_maintenance, 
-            date_of_purchase, 
-            cost_of_purchase,
-            current_place_of_storage // Make sure to destructure current_place_of_storage from req.body
-        } = req.body; 
-
-        const foundWarehouse = await warehouse.findOne({ where: { warehouse_name } });
-        const foundEquipmentType = await equipment_type.findOne({ where: { equipment_type_name } });
+        const {
+            equipment_name,
+            serial_number,
+            equipment_type_id, // Use equipment_type_id
+            place_of_storage, // Use place_of_storage
+            current_place_of_storage,
+            needs_maintenance,
+            date_of_purchase,
+            cost_of_purchase
+        } = req.body;
+  
         const equipmentToUpdate = await equipment.findByPk(id);
-
-        // Assuming current_place_of_storage is coming from req.body, if it's null, we will explicitly assign null
-        const currentPlaceOfStorage = current_place_of_storage === undefined ? null : current_place_of_storage;
-
+  
         if (!equipmentToUpdate) return res.status(404).send({ message: 'Equipment not found' });
-
+  
+  
         await equipmentToUpdate.update({
             equipment_name,
             serial_number,
-            equipment_type: foundEquipmentType.equipment_type_id,
-            place_of_storage: foundWarehouse.warehouse_id,
-            current_place_of_storage: currentPlaceOfStorage, // This will be null if current_place_of_storage was not provided
+            equipment_type_id, // Directly update using IDs
+            place_of_storage,       // Directly update using IDs
+            current_place_of_storage, // Assuming you want to handle this separately
             needs_maintenance,
             date_of_purchase,
-            cost_of_purchase,
+            cost_of_purchase
         });
-
-        const data = await equipment.findAll({});
-        return res.json(data);
+  
+  
+        return res.json(equipmentToUpdate); // Return the updated equipment
     } catch (error) {
+  
         return res.status(500).send({ message: error.message });
     }
-};
+  };
+  
 
 
 // Function to delete equipment by ID
@@ -142,7 +142,19 @@ const deleteEquipmentById = async (req, res) => {
         if (!equipmentToDelete) return res.status(404).send({ message: 'Equipment not found' });
 
         await equipmentToDelete.destroy();
-        const data = await equipment.findAll({});
+        const data = await equipment.findAll({include: [
+            {
+              model: equipment_type,
+              as: 'type',
+              attributes: ['equipment_type_name'] // Specify the fields to fetch from `equipment_type`
+            },
+            {
+              model: warehouse,
+              as: 'storage',
+              attributes: ['warehouse_name'] // Specify the fields to fetch from `warehouse`
+            }
+          ]
+        });
         return res.status(200).send(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });

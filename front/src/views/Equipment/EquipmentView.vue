@@ -23,7 +23,20 @@
         </v-toolbar>
       </template>
 
-      
+      <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
+        <tr>
+          <td :colspan="columns.length" @click="toggleGroup(item)">
+            {{ isGroupOpen(item) ? '' : toggleGroup(item) }}
+            <v-btn
+              :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
+              size="small"
+              variant="text"
+              disabled
+            ></v-btn>
+            {{ item.value }}
+          </td>
+        </tr>
+      </template>
 
       <template v-slot:item.action_edit="{ item }">
         <v-btn class="mr-5" size="small" color="blue-darken-1" @click="goToEditPage(item)">
@@ -87,7 +100,7 @@ export default {
         {
           key: 'type.equipment_type_name',
           order: 'asc',
-          expanded: true,
+          
         },
       ];
     },

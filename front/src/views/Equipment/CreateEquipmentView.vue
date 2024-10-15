@@ -10,36 +10,37 @@
         <v-container>
           <v-row>
             <v-col cols="12" md="6" sm="6">
-              <v-text-field v-model="newEquipment.equipment_name" label="Название оборудования" />
+              <v-text-field clearable v-model="newEquipment.equipment_name" label="Название оборудования" />
             </v-col>
             <v-col cols="12" md="6" sm="6">
-              <v-text-field v-model="newEquipment.serial_number" label="Серийный номер" />
+              <v-text-field clearable v-model="newEquipment.serial_number" label="Серийный номер" />
             </v-col>
             
             <v-col cols="12" md="6" sm="6">
-              <v-select
+              <v-autocomplete
+                clearable
+                label="Тип оборудования"
                 v-model="newEquipment.equipment_type_name"
                 :items="equipmentTypeNames"
-                label="Тип оборудования"
                 
-                
-              />
+              ></v-autocomplete>
             </v-col>
             
             <v-col cols="12" md="6" sm="6">
-              <v-select
+              <v-autocomplete
+                clearable
                 v-model="newEquipment.warehouse_name"
                 :items="warehouseNames"
                 label="Место хранения"
                 
-                
-              />
+              ></v-autocomplete>
             </v-col>
             <!-- <v-col cols="12" md="6" sm="6">
               <v-switch v-model="newEquipment.needs_maintenance" label="Требует обслуживания" />
             </v-col> -->
             <v-col cols="12" md="6" sm="6">
               <v-text-field
+                clearable
                 prepend-icon="mdi-calendar"
                 label="Дата покупки"
                 v-model="newEquipment.date_of_purchase"
@@ -57,7 +58,7 @@
               </v-dialog>
             </v-col>
             <v-col cols="12" md="6" sm="6">
-              <v-text-field v-model="newEquipment.cost_of_purchase" label="Стоимость покупки" />
+              <v-text-field clearable v-model="newEquipment.cost_of_purchase" label="Стоимость покупки" />
             </v-col>
           </v-row>
         </v-container>

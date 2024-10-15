@@ -3,7 +3,8 @@ import instance from "@/middlewares"
 export default {
     name: 'equipment',
     state: () => ({
-        equipment: null
+        equipment: null,
+        
     }),
     mutations: {
         setEquipment(state, equipment) {

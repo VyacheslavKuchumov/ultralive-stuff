@@ -15,7 +15,7 @@
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-select
-                v-model="editedItem.place_of_storage"
+                v-model="editedItem.storage.warehouse_name"
                 :items="warehouseNames"
                 label="Место хранения"
               />
@@ -75,7 +75,8 @@ export default {
       editedItem: null,
       datePickerDate: new Date(),
       warehouseNames: [],
-      equipmentTypeNames: [] 
+      equipmentTypeNames: [] ,
+      
     };
   },
   computed: {
@@ -89,6 +90,7 @@ export default {
     ...mapActions('warehouse', ['getAllWarehouses']),
 
     async save() {
+      console.log(this.editedItem.warehouse_name)
       await this.updateEquipment(this.editedItem);
       this.$router.push('/equipment');
     },
