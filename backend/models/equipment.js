@@ -13,21 +13,22 @@ const equipment = sequelize.define(
         },
         equipment_name:{
             type:DataTypes.TEXT,
-            allowNull: false
+            allowNull: false,
+            unique:true
         },
         serial_number:{
             type:DataTypes.TEXT,
             allowNull: false
         },
-        equipment_type:{
+        equipment_set_id:{
             type:DataTypes.BIGINT,
             allowNull: false
         },
-        place_of_storage:{
+        storage_id:{
             type:DataTypes.BIGINT,
             allowNull: false
         },
-        current_place_of_storage:{
+        current_storage:{
             type:DataTypes.TEXT,
             allowNull: true
         },

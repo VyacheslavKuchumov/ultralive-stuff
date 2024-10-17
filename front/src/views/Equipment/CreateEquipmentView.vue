@@ -19,9 +19,9 @@
             <v-col cols="12" md="6" sm="6">
               <v-autocomplete
                 clearable
-                label="Тип оборудования"
-                v-model="newEquipment.equipment_type_name"
-                :items="equipmentTypeNames"
+                label="Название комплекта"
+                v-model="newEquipment.equipment_set_name"
+                :items="equipmentSetsNames"
                 
               ></v-autocomplete>
             </v-col>
@@ -31,8 +31,7 @@
                 clearable
                 v-model="newEquipment.warehouse_name"
                 :items="warehouseNames"
-                label="Место хранения"
-                
+                label="Место хранения"                
               ></v-autocomplete>
             </v-col>
             <!-- <v-col cols="12" md="6" sm="6">
@@ -83,36 +82,39 @@ export default {
       newEquipment: {
         equipment_name: '',
         serial_number: '',
-        equipment_type_name: '', // Changed to hold the selected equipment type object
+        equipment_set_name: '', // Changed to hold the selected equipment type object
         warehouse_name: '', // Changed to hold the selected warehouse object
         needs_maintenance: false,
         date_of_purchase: '',
         cost_of_purchase: '',
       },
       warehouseNames: [],
-      equipmentTypeNames: [] 
+      equipmentSetsNames: [] 
     };
   },
   computed: {
-    ...mapState('equipment_type', ['equipment_types']),
+    ...mapState('equipment_set', ['equipment_sets']),
     ...mapState('warehouse', ['warehouses']),
   },
   methods: {
     ...mapActions('equipment', ['createEquipment']),
-    ...mapActions('equipment_type', ['getAllEquipmentTypes']),
+    ...mapActions('equipment_set', ['getAllEquipmentSets']),
     ...mapActions('warehouse', ['getAllWarehouses']),
 
     // Updating the date using date picker
     updateDate() {
       const date = new Date(this.datePickerDate);
-      this.newEquipment.date_of_purchase = date.toLocaleDateString('ru-RU'); // Russian formatting
+      this.newEquipment.date_of_purchase = date.toISOString().split('T')[0]; // Converts to 'YYYY-MM-DD'
       this.dialog = false;
     },
 
+
     // Save method
-    async save() {
+    save() {
       
-      await this.createEquipment(this.newEquipment);
+      this.createEquipment(this.newEquipment);
+      console.log(this.newEquipment.equipment_set_name);
+      
       this.$router.push('/equipment');
     },
 
@@ -124,14 +126,15 @@ export default {
   },
   async beforeMount() {
     await this.getAllWarehouses();
-    await this.getAllEquipmentTypes();
+    await this.getAllEquipmentSets();
     
+    // эту хуйню закинуть в стор
     this.warehouses.forEach(element => {
       this.warehouseNames.push(element.warehouse_name)
     });
 
-    this.equipment_types.forEach(element => {
-      this.equipmentTypeNames.push(element.equipment_type_name)
+    this.equipment_sets.forEach(element => {
+      this.equipmentSetsNames.push(element.equipment_set_name)
     });
   },
 };

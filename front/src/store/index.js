@@ -4,8 +4,13 @@ import user from '@/store/user'
 import stuff from '@/store/stuff'
 import equipment from '@/store/equipment'
 import shooting_equipment from '@/store/shooting_equipment'
-import equipment_type from '@/store/equipment_type'
+import equipment_set from '@/store/equipment_set'
 import warehouse from '@/store/warehouse'
+import projects from '@/store/projects'
+import clients from '@/store/clients'
+import project_types from '@/store/project_types'
+
+
 export default createStore({
   state: {
   },
@@ -21,7 +26,10 @@ export default createStore({
     stuff: stuff,
     equipment: equipment,
     shooting_equipment: shooting_equipment,
-    equipment_type: equipment_type,
-    warehouse: warehouse
+    equipment_set: equipment_set,
+    warehouse: warehouse,
+    projects: projects,
+    clients: clients,
+    project_types: project_types,
   }
 })

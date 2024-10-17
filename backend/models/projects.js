@@ -4,7 +4,7 @@ const { DataTypes, DATEONLY } = require('sequelize');
 
 
 const project = sequelize.define(
-    'shootings',
+    'projects',
     {
         project_id: {
             type: DataTypes.BIGINT,
@@ -13,6 +13,14 @@ const project = sequelize.define(
         },
         project_name:{
             type:DataTypes.TEXT,
+            allowNull: false
+        },
+        project_type_id:{
+            type:DataTypes.BIGINT,
+            allowNull: false
+        },
+        client_id:{
+            type:DataTypes.BIGINT,
             allowNull: false
         },
         shooting_date:{
@@ -26,7 +34,7 @@ const project = sequelize.define(
                 
     },
     {
-        tableName: 'shootings',
+        tableName: 'projects',
         timestamps: false
     }
 )

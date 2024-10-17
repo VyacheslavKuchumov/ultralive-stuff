@@ -3,22 +3,23 @@ const { DataTypes } = require('sequelize')
 
 
 
-const equipment_type = sequelize.define(
-    'equipment_type',
+const project_type = sequelize.define(
+    'project_type',
     {
-        equipment_type_id: {
+        project_type_id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true
         },
-        equipment_type_name:{
+        project_type_name:{
             type:DataTypes.TEXT,
-            allowNull: false
+            allowNull: false,
+            unique: true
         }
 
     },
     {
-        tableName: 'equipment_types',
+        tableName: 'project_types',
         timestamps: false
     },
     
@@ -27,4 +28,4 @@ const equipment_type = sequelize.define(
 
 
 
-module.exports = { equipment_type }
+module.exports = { project_type }

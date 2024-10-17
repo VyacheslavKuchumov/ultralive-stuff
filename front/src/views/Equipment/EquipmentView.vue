@@ -14,10 +14,10 @@
           <v-toolbar-title>Оборудование</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-btn class="mb-2" color="primary" dark @click="goEquipmentTypesPage">
+          <v-btn class="mb-2" color="primary" dark to="/equipment_sets">
             Комплекты
           </v-btn>
-          <v-btn class="mb-2" color="primary" dark @click="goToCreatePage">
+          <v-btn class="mb-2" color="primary" dark to="/equipment/create">
             Новое оборудование
           </v-btn>
         </v-toolbar>
@@ -53,7 +53,7 @@
       <template v-slot:no-data>Нет данных</template>
 
       <template v-slot:bottom>
-        <v-card flat>
+        <v-card>
           <v-card-title>Поиск по названию</v-card-title>
           <v-card-text>
             <v-text-field
@@ -63,6 +63,7 @@
               clearable
               placeholder="Search..."
               class="mt-2"
+              width="400"
             ></v-text-field>
           </v-card-text>
         </v-card>
@@ -87,7 +88,7 @@ export default {
         { title: 'Название', key: 'equipment_name' },
         { title: 'Серийный номер', key: 'serial_number' },
         { title: 'Место хранения', key: 'storage.warehouse_name' },
-        { title: 'Текущее место хранения', key: 'current_place_of_storage' },
+        { title: 'Текущее место хранения', key: 'current_storage' },
         { title: 'Требует обслуживания', key: 'needs_maintenance' },
         { title: 'Дата покупки', key: 'date_of_purchase' },
         { title: 'Стоимость покупки', key: 'cost_of_purchase' },
@@ -98,7 +99,7 @@ export default {
     groupBy() {
       return [
         {
-          key: 'type.equipment_type_name',
+          key: 'equipment_set.equipment_set_name',
           order: 'asc',
           
         },
@@ -119,9 +120,7 @@ export default {
     initialize() {
       this.getAllEquipment();
     },
-    goToCreatePage() {
-      this.$router.push('/equipment/create');
-    },
+    
     goToEditPage(item) {
       this.$router.push(`/equipment/edit/${item.equipment_id}`);
     },
@@ -129,9 +128,7 @@ export default {
       console.log(item);
       this.deleteEquipment(item);
     },
-    goEquipmentTypesPage() {
-      this.$router.push('/equipment/equipment_types');
-    },
+    
   },
   beforeMount() {
     this.initialize();

@@ -2,24 +2,20 @@
   <v-container width="600">
     <v-row>
       <v-col cols="12">
-        
         <v-data-table
           :headers="headers"
-          :items="equipmentTypes"
+          :items="equipmentSets"
           item-value="id"
           class="elevation-1"
           style="table-layout: auto; width: auto;"
         >
-
           <template v-slot:top>
             <v-toolbar flat>
-              <v-toolbar-title>Виды оборудования</v-toolbar-title>
+              <v-toolbar-title>Equipment Sets</v-toolbar-title>
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
-              
-              
               <v-btn class="mb-2" color="primary" dark @click="openDialog()">
-                Добавить
+                Add
               </v-btn>
             </v-toolbar>
           </template>
@@ -28,8 +24,7 @@
             <v-btn icon @click="openDialog(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            
-            <v-btn icon @click="deleteItem(item.equipment_type_id)">
+            <v-btn icon @click="deleteItem(item.equipment_set_id)">
               <v-icon color="red">mdi-delete</v-icon>
             </v-btn>
           </template>
@@ -40,10 +35,10 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{ form.equipment_type_id ? 'Edit' : 'Add' }} Equipment Type</span>
+          <span class="headline">{{ form.equipment_set_id ? 'Edit' : 'Add' }} Equipment Set</span>
         </v-card-title>
         <v-card-text>
-          <v-text-field v-model="form.equipment_type_name" label="Equipment Type Name" required></v-text-field>
+          <v-text-field v-model="form.equipment_set_name" label="Equipment Set Name" required></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -62,51 +57,50 @@ export default {
   data() {
     return {
       dialog: false,
-      form: { equipment_type_id: null, equipment_type_name: '' },
+      form: { equipment_set_id: null, equipment_set_name: '' },
       headers: [
-        
-        { title: 'Name', value: 'equipment_type_name', width: 'auto' },
+        { title: 'Name', value: 'equipment_set_name', width: 'auto' },
         { title: 'Actions', value: 'actions', sortable: false, width: 'auto' }
       ]
     };
   },
   computed: {
-    ...mapState('equipment_type', ['equipment_types']),
-    equipmentTypes() {
-      return this.equipment_types || [];
+    ...mapState('equipment_set', ['equipment_sets']),
+    equipmentSets() {
+      return this.equipment_sets || [];
     }
   },
   methods: {
-    ...mapActions('equipment_type', [
-      'getAllEquipmentTypes',
-      'createEquipmentType',
-      'updateEquipmentType',
-      'deleteEquipmentType'
+    ...mapActions('equipment_set', [
+      'getAllEquipmentSets', // Should be renamed to 'getAllEquipmentSets' in the Vuex store
+      'createEquipmentSet', // Should be renamed to 'createEquipmentSet'
+      'updateEquipmentSet', // Should be renamed to 'updateEquipmentSet'
+      'deleteEquipmentSet'  // Should be renamed to 'deleteEquipmentSet'
     ]),
-    
+
     openDialog(item = null) {
-      this.form = item ? { ...item } : { equipment_type_id: null, equipment_type_name: '' };
+      this.form = item ? { ...item } : { equipment_set_id: null, equipment_set_name: '' };
       this.dialog = true;
     },
     closeDialog() {
       this.dialog = false;
     },
     async saveItem() {
-      if (this.form.equipment_type_id) {
-        await this.updateEquipmentType(this.form);
+      if (this.form.equipment_set_id) {
+        await this.updateEquipmentSet(this.form);
       } else {
-        await this.createEquipmentType(this.form);
+        await this.createEquipmentSet(this.form);
       }
-      this.getAllEquipmentTypes();
+      this.getAllEquipmentSets();
       this.closeDialog();
     },
     async deleteItem(id) {
-      await this.deleteEquipmentType({ equipment_type_id: id });
-      this.getAllEquipmentTypes();
+      await this.deleteEquipmentSet({ equipment_set_id: id });
+      this.getAllEquipmentSets();
     }
   },
   beforeMount() {
-    this.getAllEquipmentTypes();
+    this.getAllEquipmentSets();
   }
 };
 </script>

@@ -20,19 +20,19 @@
     <v-container class="d-flex justify-center align-center">
     
       <v-row class="d-flex flex-column align-center">
-        <v-btn color="primary" class="mb-2" to="/equipment_types" width="200">
-          Виды оборудования
+        <v-btn color="primary" class="mb-2" to="/equipment_sets" width="300">
+          Комплекты оборудования
         </v-btn>
-        <v-btn color="primary" class="mb-2" to="/warehouses" width="200">
+        <v-btn color="primary" class="mb-2" to="/warehouses" width="300">
           Склады
         </v-btn>
-        <v-btn color="primary" class="mb-2" to="" width="200">
+        <v-btn color="primary" class="mb-2" to="/project_types" width="300">
           Виды проектов
         </v-btn>
-        <v-btn disabled color="primary" class="mb-2" to="" width="200">
+        <v-btn color="primary" class="mb-2" to="/clients" width="300">
           Клиенты
         </v-btn>
-        <v-btn disabled color="primary" class="mb-2" to="" width="200">
+        <v-btn disabled color="primary" class="mb-2" to="" width="300">
           Виды клиентов
         </v-btn>
       </v-row>

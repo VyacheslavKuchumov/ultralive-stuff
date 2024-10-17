@@ -1,5 +1,17 @@
 const { user } = require('../models/users')
 
+const getAllUsers = async (req, res) => {
+    try {
+        const data = await user.findAll({});
+        if (!data) return res.status(404).send({ message: 'users not found' });
+        return res.status(200).send(data);
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+};
+
+
+
 const getUserByUid = async (req, res) => {
     try {
         const current_user = await user.findOne({ where: { user_uid: req.params?.uid } })
@@ -35,6 +47,7 @@ const updateLike = async (req,res)=>{
 
 }
 module.exports = {
+    getAllUsers,
     getUserByUid,
     updateLike,
     getUserByName

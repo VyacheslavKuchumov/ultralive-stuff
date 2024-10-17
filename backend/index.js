@@ -11,8 +11,10 @@ const auth_routes = require ('./routes/auth')
 const users_routes = require ('./routes/users')
 const equipment_routes = require ('./routes/equipment')
 const warehouses_routes = require ('./routes/warehouses')
-const equipment_types_routes = require ('./routes/equipment_types')
-const set_of_equipment_routes = require ('./routes/set_of_equipment')
+const equipment_sets_routes = require ('./routes/equipment_sets')
+const project_routes = require ('./routes/projects')
+const project_types_routes = require ('./routes/project_types')
+const client_routes = require ('./routes/clients')
 
 
 app.use(cors({
@@ -23,8 +25,11 @@ app.use('/api/auth', auth_routes)
 app.use('/api/users', users_routes)
 app.use('/api/equipment', equipment_routes)
 app.use('/api/warehouse', warehouses_routes)
-app.use('/api/equipment_type', equipment_types_routes)
-app.use('/api/set_of_equipment', set_of_equipment_routes)
+app.use('/api/equipment_set', equipment_sets_routes)
+app.use('/api/projects', project_routes)
+app.use('/api/project_types', project_types_routes)
+app.use('/api/clients', client_routes)
+
 
 
 app.use((error, request, response, next) => {

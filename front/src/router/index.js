@@ -7,11 +7,15 @@ import AboutView from '@/views/AboutView.vue'
 import Register from '@/views/Auth/Register.vue'
 import Login from '@/views/Auth/Login.vue'
 import instance from '@/middlewares'
-import OneShootingView from '@/views/OneShootingView.vue'
-import EquipmentTypesView from '@/views/Dictionaries/EquipmentTypesView.vue'
+
+import EquipmentSetsView from '@/views/Dictionaries/EquipmentSetsView.vue'
 
 import auth from '@/store/auth'
 import WarehousesView from '@/views/Dictionaries/WarehousesView.vue'
+import ProjectsView from '@/views/Project/ProjectsView.vue'
+import ProjectTypesView from '@/views/Dictionaries/ProjectTypesView.vue'
+import ClientsView from '@/views/Dictionaries/ClientsView.vue'
+import CreateProjectView from '@/views/Project/CreateProjectView.vue'
 
 const routes = [
   {
@@ -44,9 +48,9 @@ const routes = [
   },
 
   {
-    path: '/equipment_types',
+    path: '/equipment_sets',
     name: 'equipment_types',
-    component: EquipmentTypesView,
+    component: EquipmentSetsView,
     meta: { auth: true },
   },
 
@@ -59,11 +63,32 @@ const routes = [
   },
 
   {
-    path: '/shooting/:id',
-    name: 'shooting',
-    component: OneShootingView,
+    path: '/project/create',
+    name: 'create-projects',
+    component: CreateProjectView,
     meta: {auth:true}
   },
+  {
+    path: '/projects',
+    name: 'projects',
+    component: ProjectsView,
+    meta: {auth:true}
+  },
+  
+  {
+    path: '/project_types',
+    name: 'project_types',
+    component: ProjectTypesView,
+    meta: {auth:true}
+  },
+
+  {
+    path: '/clients',
+    name: 'clients',
+    component: ClientsView,
+    meta: {auth:true}
+  },
+
   {
     path: '/about',
     name: 'about',

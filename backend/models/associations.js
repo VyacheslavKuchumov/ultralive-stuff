@@ -1,10 +1,12 @@
 const { equipment } = require('./equipment');
-const { equipment_type } = require('./equipment_types');
+const { equipment_set } = require('./equipment_sets');
 const { warehouse } = require('./warehouses');
-const { set_of_equipment } = require('./set_of_equipment');
+
 const { auth } = require('./auths');
 const { user } = require('./users');
 const { project } = require('./projects');
+const { project_type } = require('./project_types');
+const { client } = require('./clients');
 
 // User and Auth
 user.belongsTo(auth, {
@@ -14,15 +16,15 @@ user.belongsTo(auth, {
 });
 
 // Equipment and EquipmentType
-equipment.belongsTo(equipment_type, {
-  as: 'type',
-  foreignKey: 'equipment_type'
+equipment.belongsTo(equipment_set, {
+  as: 'equipment_set',
+  foreignKey: 'equipment_set_id'
 });
 
 // Equipment and Warehouse
 equipment.belongsTo(warehouse, {
   as: 'storage',
-  foreignKey: 'place_of_storage'
+  foreignKey: 'storage_id'
 });
 
 // Equipment and Project (Many-to-Many)
@@ -41,15 +43,17 @@ project.belongsTo(user, {
   foreignKey: 'chief_engineer_id'
 });
 
-// Equipment and SetOfEquipment (Many-to-Many)
-equipment.belongsToMany(set_of_equipment, {
-  through: "equipment_set_contents",
-  timestamps: false
+project.belongsTo(project_type, {
+  as: 'type',
+  foreignKey: 'project_type_id'
 });
-set_of_equipment.belongsToMany(equipment, {
-  through: "equipment_set_contents",
-  timestamps: false
+
+project.belongsTo(client, {
+  as: 'client',
+  foreignKey: 'client_id'
 });
+
+
 
 // Uncomment and rename if needed for EquipmentType association with SetOfEquipment
 // set_of_equipment.belongsTo(equipment_type, {

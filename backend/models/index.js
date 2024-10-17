@@ -1,12 +1,14 @@
 // models/index.js
 const { sequelize } = require('../connection');
 const { equipment } = require('./equipment');
-const { shooting } = require('./projects');
+const { project } = require('./projects');
 const { auth } = require('./auths');
 const { user } = require('./users');
 const { warehouse } = require('./warehouses');
-const { equipment_type } = require('./equipment_types');
-const { set_of_equipment } = require('./set_of_equipment')
+const { equipment_set } = require('./equipment_sets');
+const { client } = require('./clients');
+const { project_type } = require('./project_types');
+
 
 require('./associations');  // Import the associations after models are loaded
 

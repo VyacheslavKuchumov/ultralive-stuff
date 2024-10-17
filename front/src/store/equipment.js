@@ -29,8 +29,13 @@ export default {
             try {
               console.log("creating the equipment...")
               console.log(equipment)
+              console.log(equipment.date_of_purchase);
+              
               const response = await instance.post('/api/equipment', equipment);
-              if (response) return commit('setEquipment', response.data)
+              if (response) {
+                console.log(response.status)
+                return
+              }
             } catch (error) {
               console.error('Error creating equipment:', error);
             }
