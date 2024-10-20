@@ -1,7 +1,7 @@
 const { project } = require("../models/projects");
 
 const { project_type } = require("../models/project_types");
-
+const { user } = require("../models/users");
 // Function to get all projects
 const getAllProjects = async (req, res) => {
   try {
@@ -11,6 +11,11 @@ const getAllProjects = async (req, res) => {
           model: project_type,
           as: "type",
           attributes: ["project_type_name"], // Specify the fields to fetch from `project_types`
+        },
+        {
+          model: user,
+          as: "chiefEngineer",
+          attributes: ["name"],
         },
       ],
     });
@@ -37,6 +42,11 @@ const getProjectById = async (req, res) => {
           as: "type",
           attributes: ["project_type_name"],
         },
+        {
+          model: user,
+          as: "chiefEngineer",
+          attributes: ["name"],
+        },
       ],
     });
 
@@ -52,28 +62,24 @@ const createProject = async (req, res) => {
   try {
     const {
       project_name,
-      client_name,
-      type_name,
-      start_date,
-      end_date,
-      budget,
+      project_type_name,
+      chief_engineer_name,
+      shooting_date,
     } = req.body;
 
-    const foundClient = await client.findOne({
-      where: { client_name: client_name },
-    });
     const foundProjectType = await project_type.findOne({
-      where: { type_name: type_name },
+      where: { project_type_name: project_type_name },
+    });
+    const foundUser = await user.findOne({
+      where: { name: chief_engineer_name },
     });
 
-    if (foundClient && foundProjectType) {
+    if (foundProjectType) {
       const newProject = await project.create({
         project_name,
-        client_id: foundClient.client_id,
-        project_type_id: foundProjectType.type_id, // Associate with the project type ID
-        start_date,
-        end_date,
-        budget,
+        project_type_id: foundProjectType.project_type_id, // Associate with the project type ID
+        shooting_date,
+        chief_engineer_id: foundUser.id,
       });
 
       return res.status(201).json(newProject);
@@ -93,7 +99,7 @@ const editProjectById = async (req, res) => {
     const id = req.params.id;
     const {
       project_name,
-      client_id,
+
       project_type_id,
       start_date,
       end_date,
@@ -107,7 +113,6 @@ const editProjectById = async (req, res) => {
 
     await projectToUpdate.update({
       project_name,
-      client_id,
       project_type_id,
       start_date,
       end_date,
@@ -137,6 +142,11 @@ const deleteProjectById = async (req, res) => {
           model: project_type,
           as: "type",
           attributes: ["project_type_name"],
+        },
+        {
+          model: user,
+          as: "chiefEngineer",
+          attributes: ["name"],
         },
       ],
     });

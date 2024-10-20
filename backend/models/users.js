@@ -1,36 +1,35 @@
-const { sequelize } = require('../connection')
-const { DataTypes } = require('sequelize')
-const { auth } = require('./auths')
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
+const { auth } = require("./auths");
 
 const user = sequelize.define(
-    'user',
-    {
-        id: {
-            type: DataTypes.BIGINT,
-            autoIncrement: true,
-            primaryKey: true
-        },
-        user_uid: {
-             type: DataTypes.UUID
-         },
-        name: {
-            type: DataTypes.TEXT
-        },
-        role: {
-            type: DataTypes.TEXT
-        },
+  "user",
+  {
+    id: {
+      type: DataTypes.BIGINT,
+      autoIncrement: true,
+      primaryKey: true,
     },
-    {
-        tableName: 'users',
-        timestamps: true
-    }
-)
-
-
+    user_uid: {
+      type: DataTypes.UUID,
+    },
+    name: {
+      type: DataTypes.TEXT,
+      unique: true,
+    },
+    role: {
+      type: DataTypes.TEXT,
+    },
+  },
+  {
+    tableName: "users",
+    timestamps: true,
+  },
+);
 
 async function get_users_table() {
-    await user.sync()
-    console.log('Синхрон users 👍');
+  await user.sync();
+  console.log("Синхрон users 👍");
 }
 
-module.exports = { user, get_users_table }
+module.exports = { user, get_users_table };
