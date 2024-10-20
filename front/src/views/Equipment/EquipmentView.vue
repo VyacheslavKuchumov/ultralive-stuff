@@ -23,12 +23,17 @@
         </v-toolbar>
       </template>
 
-      <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
+      <template
+        v-if="search"
+        v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }"
+      >
         <tr>
           <td :colspan="columns.length" @click="toggleGroup(item)">
-            {{ isGroupOpen(item) ? '' : toggleGroup(item) }}
+            {{ isGroupOpen(item) ? "" : toggleGroup(item) }}
             <v-btn
-              :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
+              :icon="
+                isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'
+              "
               size="small"
               variant="text"
               disabled
@@ -38,8 +43,31 @@
         </tr>
       </template>
 
+      <template
+        v-if="!search"
+        v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }"
+      >
+        <tr>
+          <td :colspan="columns.length" @click="toggleGroup(item)">
+            <v-btn
+              :icon="
+                isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'
+              "
+              size="small"
+              variant="text"
+            ></v-btn>
+            {{ item.value }}
+          </td>
+        </tr>
+      </template>
+
       <template v-slot:item.action_edit="{ item }">
-        <v-btn class="mr-5" size="small" color="blue-darken-1" @click="goToEditPage(item)">
+        <v-btn
+          class="mr-5"
+          size="small"
+          color="blue-darken-1"
+          @click="goToEditPage(item)"
+        >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
@@ -73,35 +101,34 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 
 export default {
   data() {
     return {
-      search: '',
+      search: "",
     };
   },
   computed: {
-    ...mapState('equipment', ['equipment']),
+    ...mapState("equipment", ["equipment"]),
     headers() {
       return [
-        { title: 'Название', key: 'equipment_name' },
-        { title: 'Серийный номер', key: 'serial_number' },
-        { title: 'Место хранения', key: 'storage.warehouse_name' },
-        { title: 'Текущее место хранения', key: 'current_storage' },
-        { title: 'Требует обслуживания', key: 'needs_maintenance' },
-        { title: 'Дата покупки', key: 'date_of_purchase' },
-        { title: 'Стоимость покупки', key: 'cost_of_purchase' },
-        { title: 'Изменить', key: 'action_edit', sortable: false },
-        { title: 'Удалить', key: 'action_delete', sortable: false },
+        { title: "Название", key: "equipment_name" },
+        { title: "Серийный номер", key: "serial_number" },
+        { title: "Место хранения", key: "storage.warehouse_name" },
+        { title: "Текущее место хранения", key: "current_storage" },
+        { title: "Требует обслуживания", key: "needs_maintenance" },
+        { title: "Дата покупки", key: "date_of_purchase" },
+        { title: "Стоимость покупки", key: "cost_of_purchase" },
+        { title: "Изменить", key: "action_edit", sortable: false },
+        { title: "Удалить", key: "action_delete", sortable: false },
       ];
     },
     groupBy() {
       return [
         {
-          key: 'equipment_set.equipment_set_name',
-          order: 'asc',
-          
+          key: "equipment_set.equipment_set_name",
+          order: "asc",
         },
       ];
     },
@@ -116,11 +143,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('equipment', ['getAllEquipment', 'deleteEquipment']),
+    ...mapActions("equipment", ["getAllEquipment", "deleteEquipment"]),
     initialize() {
       this.getAllEquipment();
     },
-    
+
     goToEditPage(item) {
       this.$router.push(`/equipment/edit/${item.equipment_id}`);
     },
@@ -128,7 +155,6 @@ export default {
       console.log(item);
       this.deleteEquipment(item);
     },
-    
   },
   beforeMount() {
     this.initialize();
