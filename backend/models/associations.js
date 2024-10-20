@@ -1,59 +1,51 @@
-const { equipment } = require('./equipment');
-const { equipment_set } = require('./equipment_sets');
-const { warehouse } = require('./warehouses');
+const { equipment } = require("./equipment");
+const { equipment_set } = require("./equipment_sets");
+const { warehouse } = require("./warehouses");
 
-const { auth } = require('./auths');
-const { user } = require('./users');
-const { project } = require('./projects');
-const { project_type } = require('./project_types');
-const { client } = require('./clients');
+const { auth } = require("./auths");
+const { user } = require("./users");
+const { project } = require("./projects");
+const { project_type } = require("./project_types");
 
 // User and Auth
 user.belongsTo(auth, {
-  targetKey: 'auth_uid',
-  foreignKey: 'user_uid',
-  as: 'auth'
+  targetKey: "auth_uid",
+  foreignKey: "user_uid",
+  as: "auth",
 });
 
 // Equipment and EquipmentType
 equipment.belongsTo(equipment_set, {
-  as: 'equipment_set',
-  foreignKey: 'equipment_set_id'
+  as: "equipment_set",
+  foreignKey: "equipment_set_id",
 });
 
 // Equipment and Warehouse
 equipment.belongsTo(warehouse, {
-  as: 'storage',
-  foreignKey: 'storage_id'
+  as: "storage",
+  foreignKey: "storage_id",
 });
 
 // Equipment and Project (Many-to-Many)
 equipment.belongsToMany(project, {
   through: "equipment_in_shooting",
-  timestamps: false
+  timestamps: false,
 });
 project.belongsToMany(equipment, {
   through: "equipment_in_shooting",
-  timestamps: false
+  timestamps: false,
 });
 
 // Shooting and User (Chief Engineer)
 project.belongsTo(user, {
-  as: 'chiefEngineer',
-  foreignKey: 'chief_engineer_id'
+  as: "chiefEngineer",
+  foreignKey: "chief_engineer_id",
 });
 
 project.belongsTo(project_type, {
-  as: 'type',
-  foreignKey: 'project_type_id'
+  as: "type",
+  foreignKey: "project_type_id",
 });
-
-project.belongsTo(client, {
-  as: 'client',
-  foreignKey: 'client_id'
-});
-
-
 
 // Uncomment and rename if needed for EquipmentType association with SetOfEquipment
 // set_of_equipment.belongsTo(equipment_type, {
