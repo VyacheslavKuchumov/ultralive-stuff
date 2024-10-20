@@ -3,7 +3,7 @@ const { user } = require('../models/users')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-const secret = process.env.secret
+const secret = process.env.SECRET
 const { v4: uuidv4 } = require('uuid')
 const ACCESS_LIFETIME = 60 * 15;
 const REFRESH_LIFETIME = 60 * 60 * 24 * 60;
