@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar color="primary">
-      <v-toolbar-title>Ultralive test</v-toolbar-title>
+      <v-toolbar-title>UltraliveDatabase</v-toolbar-title>
 
       <v-spacer></v-spacer>
 

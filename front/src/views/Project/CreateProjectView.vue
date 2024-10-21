@@ -115,7 +115,7 @@ export default {
       this.$router.push("/projects");
     },
   },
-  async created() {
+  created() {
     try {
       // Fetch all necessary data
       this.getProjectTypeNames();

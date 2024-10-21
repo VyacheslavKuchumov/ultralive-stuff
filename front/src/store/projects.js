@@ -23,9 +23,11 @@ export default {
     },
     async getProjectByID({ commit }, project_id) {
       try {
-        const response = await instance.get(`/api/projects/${project_id}`);
+        const response = await instance.get(
+          `/api/projects/search/${project_id}`
+        );
         if (response) {
-          commit("setProjects", [response.data]); // Setting as an array to maintain consistency
+          commit("setProjects", response.data); // Setting as an array to maintain consistency
         }
       } catch (error) {
         console.error("Error fetching project by ID:", error);

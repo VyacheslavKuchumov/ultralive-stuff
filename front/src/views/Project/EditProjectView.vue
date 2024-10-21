@@ -1,5 +1,6 @@
 <template>
-  <v-container v-if="editedItem">
+  <v-container>
+    {{ projects }}
     <v-card>
       <v-card-title>
         <span class="text-h5"
@@ -17,18 +18,21 @@
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-select
-                v-model="editedItem.type"
-                :items="projectTypes"
+                v-model="editedItem.project_type"
+                :items="projectTypeNames"
                 item-title="project_type_name"
                 item-value="project_type_id"
                 label="Тип проекта"
               />
             </v-col>
             <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                v-model="editedItem.chief_engineer_id"
-                label="Главный инженер"
-              ></v-text-field>
+              <v-select
+                v-model="editedItem.chiefEngineer"
+                :items="userNames"
+                item-title="project_type_name"
+                item-value="project_type_id"
+                label="Тип проекта"
+              />
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-text-field
@@ -76,26 +80,25 @@ export default {
       dialog: false,
       datePickerDate: new Date(),
       projectTypes: [],
+      userNames: [],
+      editedItem: {},
     };
   },
   computed: {
-    ...mapState("projects", ["project"]),
-    ...mapState("project_type", ["project_types"]),
-    editedItem: {
-      get() {
-        return this.project;
-      },
-      set(value) {
-        this.$store.commit("projects/setProject", value);
-      },
-    },
+    ...mapState("projects", ["projects"]),
+    ...mapState("project_types", ["projectTypes", "projectTypeNames"]),
+    ...mapState("user", ["user", "userNames"]),
   },
   methods: {
     ...mapActions("projects", ["getProjectByID", "updateProject"]),
-    ...mapActions("project_type", ["getAllProjectTypes"]),
+    ...mapActions("project_types", [
+      "getProjectTypeNames",
+      "getAllProjectTypes",
+    ]),
+    ...mapActions("user", ["getAllUserNames"]),
 
-    async save() {
-      await this.updateProject(this.editedItem);
+    save() {
+      this.updateProject(this.editedItem);
       this.$router.push("/projects");
     },
     cancel() {
@@ -107,16 +110,12 @@ export default {
       this.dialog = false;
     },
   },
-  async created() {
+  beforeMount() {
     const route = useRoute();
     const projectId = route.params.id;
-    await this.getProjectByID(projectId);
-
-    await this.getAllProjectTypes();
-    this.projectTypes = this.project_types.map((type) => ({
-      ...type,
-      text: type.project_type_name,
-    }));
+    this.getProjectByID(projectId);
+    this.getProjectTypeNames();
+    this.getAllUserNames();
   },
 };
 </script>
