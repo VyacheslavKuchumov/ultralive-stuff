@@ -1,6 +1,5 @@
 <template>
-  <v-container>
-    {{ projects }}
+  <v-container v-if="projects">
     <v-card>
       <v-card-title>
         <span class="text-h5"
@@ -18,20 +17,16 @@
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-select
-                v-model="editedItem.project_type"
+                v-model="editedItem.project_type_name"
                 :items="projectTypeNames"
-                item-title="project_type_name"
-                item-value="project_type_id"
                 label="Тип проекта"
               />
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-select
-                v-model="editedItem.chiefEngineer"
+                v-model="editedItem.chief_engineer_name"
                 :items="userNames"
-                item-title="project_type_name"
-                item-value="project_type_id"
-                label="Тип проекта"
+                label="Главный инженер"
               />
             </v-col>
             <v-col cols="12" md="6" sm="6">
@@ -81,16 +76,27 @@ export default {
       datePickerDate: new Date(),
       projectTypes: [],
       userNames: [],
-      editedItem: {},
     };
   },
   computed: {
     ...mapState("projects", ["projects"]),
     ...mapState("project_types", ["projectTypes", "projectTypeNames"]),
     ...mapState("user", ["user", "userNames"]),
+    editedItem() {
+      return {
+        project_name: this.projects.project_name,
+        project_type_name: this.projects.type.project_type_name,
+        shooting_date: this.projects.shooting_date,
+        chief_engineer_name: this.projects.chiefEngineer.name,
+      };
+    },
   },
   methods: {
-    ...mapActions("projects", ["getProjectByID", "updateProject"]),
+    ...mapActions("projects", [
+      "getProjectByID",
+      "updateProject",
+      "cleanStore",
+    ]),
     ...mapActions("project_types", [
       "getProjectTypeNames",
       "getAllProjectTypes",
@@ -110,12 +116,17 @@ export default {
       this.dialog = false;
     },
   },
-  beforeMount() {
+  created() {
     const route = useRoute();
     const projectId = route.params.id;
+    this.cleanStore();
     this.getProjectByID(projectId);
+
     this.getProjectTypeNames();
     this.getAllUserNames();
+  },
+  beforeUnmount() {
+    this.cleanStore();
   },
 };
 </script>

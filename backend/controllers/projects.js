@@ -99,12 +99,17 @@ const editProjectById = async (req, res) => {
     const id = req.params.id;
     const {
       project_name,
-
-      project_type_id,
-      start_date,
-      end_date,
-      budget,
+      project_type_name,
+      shooting_date,
+      chief_engineer_name,
     } = req.body;
+
+    const foundProjectType = await project_type.findOne({
+      where: { project_type_name: project_type_name },
+    });
+    const foundUser = await user.findOne({
+      where: { name: chief_engineer_name },
+    });
 
     const projectToUpdate = await project.findByPk(id);
 
@@ -113,10 +118,9 @@ const editProjectById = async (req, res) => {
 
     await projectToUpdate.update({
       project_name,
-      project_type_id,
-      start_date,
-      end_date,
-      budget,
+      project_type_id: foundProjectType.project_type_id,
+      shooting_date,
+      chief_engineer_id: foundUser.id,
     });
 
     return res.status(200).send({ message: "Project updated successfully" });

@@ -11,6 +11,9 @@ export default {
     },
   },
   actions: {
+    cleanStore({ commit }) {
+      commit("setProjects", null);
+    },
     async getAllProjects({ commit }) {
       try {
         const response = await instance.get(`/api/projects`);
