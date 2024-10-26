@@ -18,156 +18,157 @@
           </v-toolbar-title>
         </v-toolbar>
       </template>
-
-      <v-row align="center" justify="center">
-        <v-col cols="auto">
-          <v-container width="500">
-            <v-data-table
-              v-if="equipment"
-              :group-by="groupByInProject"
-              :headers="headers"
-              :items="editedProject.equipment"
-              :items-per-page="-1"
-              height="400"
-            >
-              <template v-slot:top>
-                <v-toolbar flat>
-                  <v-toolbar-title>В съёмке</v-toolbar-title>
-                  <v-divider class="mx-4" inset vertical></v-divider>
-                </v-toolbar>
-              </template>
-
-              <template
-                v-slot:group-header="{
-                  item,
-                  columns,
-                  toggleGroup,
-                  isGroupOpen,
-                }"
+      <v-container>
+        <v-row align="center" justify="center">
+          <v-col cols="auto">
+            <v-container width="500">
+              <v-data-table
+                v-if="equipment"
+                :group-by="groupByInProject"
+                :headers="headers"
+                :items="editedProject.equipment"
+                :items-per-page="-1"
+                height="400"
               >
-                <tr>
-                  <td :colspan="columns.length" @click="toggleGroup(item)">
-                    <v-btn
-                      :icon="
-                        isGroupOpen(item)
-                          ? 'mdi-chevron-down'
-                          : 'mdi-chevron-right'
-                      "
-                      size="small"
-                      variant="text"
-                    ></v-btn>
-                    <span>{{ item.value }}</span>
+                <template v-slot:top>
+                  <v-toolbar flat>
+                    <v-toolbar-title>В съёмке</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                  </v-toolbar>
+                </template>
 
-                    <!-- Button to remove the entire group -->
-                    <v-btn
-                      class="ml-5"
-                      size="small"
-                      color="red-darken-1"
-                      @click.stop="removeGroup(item)"
-                      v-if="
-                        editedProject.equipment.some(
-                          (equip) =>
-                            equip.equipment_set.equipment_set_name ===
-                            item.value
-                        )
-                      "
-                    >
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </td>
-                </tr>
-              </template>
-
-              <template v-slot:item.action_delete="{ item }">
-                <v-btn
-                  class="mr-5"
-                  size="small"
-                  color="red-darken-1"
-                  @click="deleteItem(item)"
+                <template
+                  v-slot:group-header="{
+                    item,
+                    columns,
+                    toggleGroup,
+                    isGroupOpen,
+                  }"
                 >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
+                  <tr>
+                    <td :colspan="columns.length" @click="toggleGroup(item)">
+                      <v-btn
+                        :icon="
+                          isGroupOpen(item)
+                            ? 'mdi-chevron-down'
+                            : 'mdi-chevron-right'
+                        "
+                        size="small"
+                        variant="text"
+                      ></v-btn>
+                      <span>{{ item.value }}</span>
 
-              <template v-slot:no-data>Нет данных</template>
-            </v-data-table>
-          </v-container>
-        </v-col>
+                      <!-- Button to remove the entire group -->
+                      <v-btn
+                        class="ml-5"
+                        size="small"
+                        color="red-darken-1"
+                        @click.stop="removeGroup(item)"
+                        v-if="
+                          editedProject.equipment.some(
+                            (equip) =>
+                              equip.equipment_set.equipment_set_name ===
+                              item.value
+                          )
+                        "
+                      >
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </td>
+                  </tr>
+                </template>
 
-        <v-col cols="auto">
-          <v-container width="500">
-            <v-data-table
-              v-if="equipment"
-              :group-by="groupByAvailable"
-              :headers="headers"
-              :items="filteredEquipment"
-              :items-per-page="-1"
-              height="400"
-            >
-              <template v-slot:top>
-                <v-toolbar flat>
-                  <v-toolbar-title>Доступное оборудование</v-toolbar-title>
-                  <v-divider class="mx-4" inset vertical></v-divider>
-                </v-toolbar>
-              </template>
+                <template v-slot:item.action_delete="{ item }">
+                  <v-btn
+                    class="mr-5"
+                    size="small"
+                    color="red-darken-1"
+                    @click="deleteItem(item)"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
 
-              <template
-                v-slot:group-header="{
-                  item,
-                  columns,
-                  toggleGroup,
-                  isGroupOpen,
-                }"
+                <template v-slot:no-data>Нет данных</template>
+              </v-data-table>
+            </v-container>
+          </v-col>
+
+          <v-col cols="auto">
+            <v-container width="500">
+              <v-data-table
+                v-if="equipment"
+                :group-by="groupByAvailable"
+                :headers="headers"
+                :items="filteredEquipment"
+                :items-per-page="-1"
+                height="400"
               >
-                <tr>
-                  <td :colspan="columns.length" @click="toggleGroup(item)">
-                    <v-btn
-                      :icon="
-                        isGroupOpen(item)
-                          ? 'mdi-chevron-down'
-                          : 'mdi-chevron-right'
-                      "
-                      size="small"
-                      variant="text"
-                    ></v-btn>
-                    <span>{{ item.value }}</span>
+                <template v-slot:top>
+                  <v-toolbar flat>
+                    <v-toolbar-title>Доступное оборудование</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                  </v-toolbar>
+                </template>
 
-                    <!-- Button to add the entire group -->
-                    <v-btn
-                      class="ml-5"
-                      size="small"
-                      color="blue-darken-1"
-                      @click.stop="addGroup(item)"
-                      v-if="
-                        !editedProject.equipment.some(
-                          (equip) =>
-                            equip.equipment_set.equipment_set_name ===
-                            item.value
-                        )
-                      "
-                    >
-                      <v-icon>mdi-plus</v-icon>
-                    </v-btn>
-                  </td>
-                </tr>
-              </template>
-
-              <template v-slot:item.action_add="{ item }">
-                <v-btn
-                  class="mr-5"
-                  size="small"
-                  color="blue-darken-1"
-                  @click="addItem(item)"
+                <template
+                  v-slot:group-header="{
+                    item,
+                    columns,
+                    toggleGroup,
+                    isGroupOpen,
+                  }"
                 >
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </template>
+                  <tr>
+                    <td :colspan="columns.length" @click="toggleGroup(item)">
+                      <v-btn
+                        :icon="
+                          isGroupOpen(item)
+                            ? 'mdi-chevron-down'
+                            : 'mdi-chevron-right'
+                        "
+                        size="small"
+                        variant="text"
+                      ></v-btn>
+                      <span>{{ item.value }}</span>
 
-              <template v-slot:no-data>Нет данных</template>
-            </v-data-table>
-          </v-container>
-        </v-col>
-      </v-row>
+                      <!-- Button to add the entire group -->
+                      <v-btn
+                        class="ml-5"
+                        size="small"
+                        color="blue-darken-1"
+                        @click.stop="addGroup(item)"
+                        v-if="
+                          !editedProject.equipment.some(
+                            (equip) =>
+                              equip.equipment_set.equipment_set_name ===
+                              item.value
+                          )
+                        "
+                      >
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
+                    </td>
+                  </tr>
+                </template>
+
+                <template v-slot:item.action_add="{ item }">
+                  <v-btn
+                    class="mr-5"
+                    size="small"
+                    color="blue-darken-1"
+                    @click="addItem(item)"
+                  >
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </template>
+
+                <template v-slot:no-data>Нет данных</template>
+              </v-data-table>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-table>
   </v-card>
 </template>
