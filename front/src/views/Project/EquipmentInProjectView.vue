@@ -44,15 +44,21 @@
                 <tr>
                   <td :colspan="columns.length" @click="toggleGroup(item)">
                     <v-btn
-                      :icon="
-                        isGroupOpen(item)
-                          ? 'mdi-chevron-down'
-                          : 'mdi-chevron-right'
-                      "
+                      :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
                       size="small"
                       variant="text"
                     ></v-btn>
                     {{ item.value }}
+
+                    <!-- Button to remove the entire group -->
+                    <v-btn
+                      size="small"
+                      color="red-darken-1"
+                      @click.stop="removeGroup(item)"
+                      v-if="editedProject.equipment.some(equip => equip.equipment_set.equipment_set_name === item.value)"
+                    >
+                      Удалить группу
+                    </v-btn>
                   </td>
                 </tr>
               </template>
@@ -79,7 +85,7 @@
               v-if="equipment"
               :group-by="groupByAvailable"
               :headers="headers"
-              :items="equipment"
+              :items="filteredEquipment"
               :items-per-page="-1"
               height="400"
             >
@@ -101,15 +107,21 @@
                 <tr>
                   <td :colspan="columns.length" @click="toggleGroup(item)">
                     <v-btn
-                      :icon="
-                        isGroupOpen(item)
-                          ? 'mdi-chevron-down'
-                          : 'mdi-chevron-right'
-                      "
+                      :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
                       size="small"
                       variant="text"
                     ></v-btn>
                     {{ item.value }}
+
+                    <!-- Button to add the entire group -->
+                    <v-btn
+                      size="small"
+                      color="blue-darken-1"
+                      @click.stop="addGroup(item)"
+                      v-if="!editedProject.equipment.some(equip => equip.equipment_set.equipment_set_name === item.value)"
+                    >
+                      Добавить группу
+                    </v-btn>
                   </td>
                 </tr>
               </template>
@@ -136,7 +148,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 
 export default {
   data() {
@@ -170,6 +182,16 @@ export default {
         },
       ];
     },
+    filteredEquipment() {
+      // Filter equipment that is not already in the edited project
+      return this.equipment.filter(
+        (equip) =>
+          !this.editedProject.equipment.some(
+            (projectEquip) =>
+              projectEquip.equipment_id === equip.equipment_id
+          )
+      );
+    },
   },
   methods: {
     ...mapActions("projects", [
@@ -192,6 +214,34 @@ export default {
         equipment_id: item.equipment_id,
       };
       this.addEquipmentToProject(data);
+    },
+    addGroup(group) {
+      // Add all equipment items from the selected group to the project
+      const equipmentToAdd = this.filteredEquipment.filter(
+        (equip) =>
+          equip.equipment_set.equipment_set_name === group.value
+      );
+      equipmentToAdd.forEach((equip) => {
+        const data = {
+          project_id: this.editedProject.project_id,
+          equipment_id: equip.equipment_id,
+        };
+        this.addEquipmentToProject(data);
+      });
+    },
+    removeGroup(group) {
+      // Remove all equipment items from the selected group from the project
+      const equipmentToRemove = this.editedProject.equipment.filter(
+        (equip) =>
+          equip.equipment_set.equipment_set_name === group.value
+      );
+      equipmentToRemove.forEach((equip) => {
+        const data = {
+          project_id: this.editedProject.project_id,
+          equipment_id: equip.equipment_id,
+        };
+        this.removeEquipmentFromProject(data);
+      });
     },
   },
   created() {
