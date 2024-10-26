@@ -1,5 +1,9 @@
 <template>
-  <v-card class="elevation-5 mt-5 ml-auto mr-auto" v-if="editedProject">
+  <v-card
+    width="1100"
+    class="elevation-5 mt-5 ml-auto mr-auto"
+    v-if="editedProject"
+  >
     <v-table>
       <template v-slot:top>
         <v-toolbar flat>
@@ -44,20 +48,31 @@
                 <tr>
                   <td :colspan="columns.length" @click="toggleGroup(item)">
                     <v-btn
-                      :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
+                      :icon="
+                        isGroupOpen(item)
+                          ? 'mdi-chevron-down'
+                          : 'mdi-chevron-right'
+                      "
                       size="small"
                       variant="text"
                     ></v-btn>
-                    {{ item.value }}
+                    <span>{{ item.value }}</span>
 
                     <!-- Button to remove the entire group -->
                     <v-btn
+                      class="ml-5"
                       size="small"
                       color="red-darken-1"
                       @click.stop="removeGroup(item)"
-                      v-if="editedProject.equipment.some(equip => equip.equipment_set.equipment_set_name === item.value)"
+                      v-if="
+                        editedProject.equipment.some(
+                          (equip) =>
+                            equip.equipment_set.equipment_set_name ===
+                            item.value
+                        )
+                      "
                     >
-                      Удалить группу
+                      <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </td>
                 </tr>
@@ -107,20 +122,31 @@
                 <tr>
                   <td :colspan="columns.length" @click="toggleGroup(item)">
                     <v-btn
-                      :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
+                      :icon="
+                        isGroupOpen(item)
+                          ? 'mdi-chevron-down'
+                          : 'mdi-chevron-right'
+                      "
                       size="small"
                       variant="text"
                     ></v-btn>
-                    {{ item.value }}
+                    <span>{{ item.value }}</span>
 
                     <!-- Button to add the entire group -->
                     <v-btn
+                      class="ml-5"
                       size="small"
                       color="blue-darken-1"
                       @click.stop="addGroup(item)"
-                      v-if="!editedProject.equipment.some(equip => equip.equipment_set.equipment_set_name === item.value)"
+                      v-if="
+                        !editedProject.equipment.some(
+                          (equip) =>
+                            equip.equipment_set.equipment_set_name ===
+                            item.value
+                        )
+                      "
                     >
-                      Добавить группу
+                      <v-icon>mdi-plus</v-icon>
                     </v-btn>
                   </td>
                 </tr>
@@ -187,8 +213,7 @@ export default {
       return this.equipment.filter(
         (equip) =>
           !this.editedProject.equipment.some(
-            (projectEquip) =>
-              projectEquip.equipment_id === equip.equipment_id
+            (projectEquip) => projectEquip.equipment_id === equip.equipment_id
           )
       );
     },
@@ -218,8 +243,7 @@ export default {
     addGroup(group) {
       // Add all equipment items from the selected group to the project
       const equipmentToAdd = this.filteredEquipment.filter(
-        (equip) =>
-          equip.equipment_set.equipment_set_name === group.value
+        (equip) => equip.equipment_set.equipment_set_name === group.value
       );
       equipmentToAdd.forEach((equip) => {
         const data = {
@@ -232,8 +256,7 @@ export default {
     removeGroup(group) {
       // Remove all equipment items from the selected group from the project
       const equipmentToRemove = this.editedProject.equipment.filter(
-        (equip) =>
-          equip.equipment_set.equipment_set_name === group.value
+        (equip) => equip.equipment_set.equipment_set_name === group.value
       );
       equipmentToRemove.forEach((equip) => {
         const data = {

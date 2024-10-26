@@ -11,14 +11,14 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Проекты</v-toolbar-title>
+          <v-toolbar-title>Съёмки</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-btn class="mb-2" color="primary" dark to="/project_types">
-            Виды проектов
+            Площадки
           </v-btn>
           <v-btn class="mb-2" color="primary" dark to="/project/create">
-            Новый проект
+            Новая съёмка
           </v-btn>
         </v-toolbar>
       </template>
@@ -111,7 +111,7 @@ export default {
     headers() {
       return [
         { title: "Название", key: "project_name" },
-        { title: "Тип проекта", key: "type.project_type_name" },
+        { title: "Площадка", key: "type.project_type_name" },
         { title: "Главный инженер", key: "chiefEngineer.name" },
         { title: "Оборудование", key: "action_see_equipment", sortable: false },
         { title: "Изменить", key: "action_edit", sortable: false },

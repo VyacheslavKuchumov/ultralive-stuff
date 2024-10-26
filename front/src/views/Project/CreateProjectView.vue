@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title>
-        <span class="text-h5">Новый проект</span>
+        <span class="text-h5">Новая съёмка</span>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -10,7 +10,7 @@
             <v-col cols="12" md="6" sm="6">
               <v-text-field
                 v-model="newProject.project_name"
-                label="Название проекта"
+                label="Название"
                 clearable
               />
             </v-col>
@@ -18,7 +18,7 @@
               <v-autocomplete
                 v-model="newProject.project_type_name"
                 :items="projectTypeNames"
-                label="Тип проекта"
+                label="Площадка"
                 clearable
               />
             </v-col>

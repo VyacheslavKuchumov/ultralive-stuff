@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>
         <span class="text-h5"
-          >Изменить проект "{{ editedProject.project_name }}"</span
+          >Изменить съёмку "{{ editedProject.project_name }}"</span
         >
       </v-card-title>
       <v-card-text>
@@ -12,14 +12,14 @@
             <v-col cols="12" md="6" sm="6">
               <v-text-field
                 v-model="editedProject.project_name"
-                label="Название проекта"
+                label="Название"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-select
                 v-model="editedProject.project_type_name"
                 :items="projectTypeNames"
-                label="Тип проекта"
+                label="Площадка"
               />
             </v-col>
             <v-col cols="12" md="6" sm="6">

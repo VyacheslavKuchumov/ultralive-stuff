@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-5 mt-5">
+  <v-card width="1200" class="elevation-5 mt-5 mx-auto">
     <v-data-table
       v-if="equipment"
       :group-by="groupBy"
