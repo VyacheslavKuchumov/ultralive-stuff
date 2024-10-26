@@ -116,13 +116,9 @@ export default {
     },
   },
   created() {
-    try {
-      // Fetch all necessary data
-      this.getProjectTypeNames();
-      this.getAllUserNames();
-    } catch (error) {
-      console.error("Error fetching data in beforeMount:", error);
-    }
+    // Fetch all necessary data
+    this.getProjectTypeNames();
+    this.getAllUserNames();
   },
 };
 </script>

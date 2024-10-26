@@ -4,10 +4,14 @@ export default {
   name: "projects",
   state: () => ({
     projects: null,
+    editedProject: null,
   }),
   mutations: {
     setProjects(state, projects) {
       state.projects = projects;
+    },
+    setEditedProject(state, project) {
+      state.editedProject = project;
     },
   },
   actions: {
@@ -30,7 +34,15 @@ export default {
           `/api/projects/search/${project_id}`
         );
         if (response) {
-          commit("setProjects", response.data); // Setting as an array to maintain consistency
+          console.log(response.data);
+          const formattedProject = {
+            project_id: project_id,
+            project_name: response.data.project_name,
+            project_type_name: response.data.type.project_type_name,
+            chief_engineer_name: response.data.chiefEngineer.name,
+            shooting_date: response.data.shooting_date,
+          };
+          commit("setEditedProject", formattedProject); // Setting as an array to maintain consistency
         }
       } catch (error) {
         console.error("Error fetching project by ID:", error);

@@ -116,6 +116,11 @@ const editProjectById = async (req, res) => {
     if (!projectToUpdate)
       return res.status(404).send({ message: "Project not found" });
 
+    if (!foundProjectType || !foundUser)
+      return res
+        .status(400)
+        .send({ message: "something wrong with users or types" });
+
     await projectToUpdate.update({
       project_name,
       project_type_id: foundProjectType.project_type_id,

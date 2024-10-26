@@ -136,7 +136,7 @@ export default {
       this.deleteProject(item.project_id);
     },
   },
-  beforeMount() {
+  created() {
     this.initialize();
   },
 };
