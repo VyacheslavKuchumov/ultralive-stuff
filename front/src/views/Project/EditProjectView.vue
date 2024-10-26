@@ -57,7 +57,7 @@
         <v-btn color="blue-darken-1" variant="text" @click="save">
           Сохранить
         </v-btn>
-        <v-btn color="grey-darken-1" variant="text" @click="cancel">
+        <v-btn color="red-darken-1" variant="text" @click="cancel">
           Отмена
         </v-btn>
       </v-card-actions>
