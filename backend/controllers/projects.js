@@ -1,7 +1,38 @@
 const { project } = require("../models/projects");
+const { equipment } = require("../models/equipment");
+const { equipment_set } = require("../models/equipment_sets");
 
 const { project_type } = require("../models/project_types");
 const { user } = require("../models/users");
+const { Model } = require("sequelize");
+
+const addEquipmentToProject = async (req, res) => {
+  try {
+    const { project_id, equipment_id } = req.body;
+
+    const foundProject = await project.findByPk(project_id);
+    const foundEquipment = await equipment.findByPk(equipment_id);
+
+    await foundProject.addEquipment(foundEquipment);
+    return res.status(200).send({ message: "Success!" });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+const removeEquipmentFromProject = async (req, res) => {
+  try {
+    const { project_id, equipment_id } = req.body;
+    const foundProject = await project.findByPk(project_id);
+    const foundEquipment = await equipment.findByPk(equipment_id);
+
+    await foundProject.removeEquipment(foundEquipment);
+    return res.status(200).send({ message: "Success!" });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
 // Function to get all projects
 const getAllProjects = async (req, res) => {
   try {
@@ -46,6 +77,16 @@ const getProjectById = async (req, res) => {
           model: user,
           as: "chiefEngineer",
           attributes: ["name"],
+        },
+        {
+          model: equipment,
+          include: [
+            {
+              model: equipment_set,
+              as: "equipment_set",
+              attributes: ["equipment_set_name"],
+            },
+          ],
         },
       ],
     });
@@ -173,4 +214,6 @@ module.exports = {
   createProject,
   editProjectById,
   deleteProjectById,
+  addEquipmentToProject,
+  removeEquipmentFromProject,
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-5 mt-5">
+  <v-card class="elevation-5 mt-5 ml-auto mr-auto" width="1100">
     <v-data-table
       v-if="projects"
       :group-by="groupBy"
@@ -64,6 +64,17 @@
         </v-btn>
       </template>
 
+      <template v-slot:item.action_see_equipment="{ item }">
+        <v-btn
+          size="small"
+          color="secondary"
+          @click="goToProjectEquipment(item)"
+          prepend-icon="mdi-camera"
+        >
+          Оборудование
+        </v-btn>
+      </template>
+
       <template v-slot:no-data>Нет данных</template>
 
       <template v-slot:bottom>
@@ -102,6 +113,7 @@ export default {
         { title: "Название", key: "project_name" },
         { title: "Тип проекта", key: "type.project_type_name" },
         { title: "Главный инженер", key: "chiefEngineer.name" },
+        { title: "Оборудование", key: "action_see_equipment", sortable: false },
         { title: "Изменить", key: "action_edit", sortable: false },
         { title: "Удалить", key: "action_delete", sortable: false },
       ];
@@ -134,6 +146,10 @@ export default {
     },
     deleteItem(item) {
       this.deleteProject(item.project_id);
+    },
+
+    goToProjectEquipment(item) {
+      this.$router.push(`/project/${item.project_id}`);
     },
   },
   created() {

@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 const {
@@ -6,14 +6,19 @@ const {
   editProjectById,
   deleteProjectById,
   createProject,
-  getProjectById
-} = require('../controllers/projects');
+  getProjectById,
+  addEquipmentToProject,
+  removeEquipmentFromProject,
+} = require("../controllers/projects");
 
 // Define routes for project operations
-router.get('/', getAllProjects);
-router.get('/search/:id', getProjectById);
-router.post('/', createProject);
-router.delete('/:id', deleteProjectById);
-router.put('/:id', editProjectById);
+router.get("/", getAllProjects);
+router.get("/search/:id", getProjectById);
+router.post("/", createProject);
+router.delete("/:id", deleteProjectById);
+router.put("/:id", editProjectById);
+
+router.post("/equipment", addEquipmentToProject);
+router.put("/equipment/del", removeEquipmentFromProject);
 
 module.exports = router;

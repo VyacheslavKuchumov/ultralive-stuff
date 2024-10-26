@@ -17,6 +17,8 @@ import ProjectTypesView from "@/views/Dictionaries/ProjectTypesView.vue";
 import CreateProjectView from "@/views/Project/CreateProjectView.vue";
 import EditProjectView from "@/views/Project/EditProjectView.vue";
 
+import EquipmentInProjectView from "@/views/Project/EquipmentInProjectView.vue";
+
 const routes = [
   {
     path: "/",
@@ -59,7 +61,6 @@ const routes = [
     name: "warehouses",
     component: WarehousesView,
     meta: { auth: true },
-    props: true, // Pass route params as props to component
   },
 
   {
@@ -81,6 +82,14 @@ const routes = [
     name: "projects",
     component: ProjectsView,
     meta: { auth: true },
+  },
+
+  {
+    path: "/project/:id",
+    name: "equipment-in-project",
+    component: EquipmentInProjectView,
+    meta: { auth: true },
+    props: true,
   },
 
   {
