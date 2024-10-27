@@ -1,6 +1,7 @@
 const { equipment } = require("../models/equipment");
 const { warehouse } = require("../models/warehouses");
 const { equipment_set } = require("../models/equipment_sets");
+const { project } = require("../models/projects");
 
 const getAllEquipment = async (req, res) => {
   try {
@@ -16,6 +17,9 @@ const getAllEquipment = async (req, res) => {
           as: "storage",
           attributes: ["warehouse_name"],
         },
+        {
+          model: project
+        }
       ],
     });
 
