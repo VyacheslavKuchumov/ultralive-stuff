@@ -15,7 +15,7 @@
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
               <v-btn class="mb-2" color="primary" dark @click="openDialog()">
-                Add
+                Добавить
               </v-btn>
             </v-toolbar>
           </template>

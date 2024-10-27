@@ -8,6 +8,7 @@
       :items-per-page="-1"
       :search="search"
       height="400"
+      fixed-header
     >
       <template v-slot:top>
         <v-toolbar flat>

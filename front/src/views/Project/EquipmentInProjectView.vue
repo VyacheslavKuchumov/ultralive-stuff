@@ -29,6 +29,7 @@
                 :items="editedProject.equipment"
                 :items-per-page="-1"
                 height="400"
+                fixed-header
               >
                 <template v-slot:top>
                   <v-toolbar flat>
@@ -103,6 +104,7 @@
                 :items="filteredEquipment"
                 :items-per-page="-1"
                 height="400"
+                fixed-header
               >
                 <template v-slot:top>
                   <v-toolbar flat>

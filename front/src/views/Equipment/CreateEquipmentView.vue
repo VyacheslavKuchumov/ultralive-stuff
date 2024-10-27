@@ -116,6 +116,7 @@ export default {
     // Updating the date using date picker
     updateDate() {
       const date = new Date(this.datePickerDate);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
       this.newEquipment.date_of_purchase = date.toISOString().split("T")[0]; // Converts to 'YYYY-MM-DD'
       this.dialog = false;
     },

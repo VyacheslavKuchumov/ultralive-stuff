@@ -100,9 +100,13 @@ export default {
 
     // Update the date using date picker
     updateDate() {
+      console.log(this.datePickerDate)
       const date = new Date(this.datePickerDate);
+      console.log(this.date)
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
       this.newProject.shooting_date = date.toISOString().split("T")[0]; // Converts to 'YYYY-MM-DD'
       this.dialog = false;
+      console.log(this.newProject.shooting_date)
     },
 
     // Save method

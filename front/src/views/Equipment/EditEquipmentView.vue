@@ -123,6 +123,7 @@ export default {
     },
     updateDate() {
       const date = new Date(this.datePickerDate);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
       this.editedEquipment.date_of_purchase = date.toISOString().split("T")[0]; // Russian formatting
       this.dialog = false;
     },

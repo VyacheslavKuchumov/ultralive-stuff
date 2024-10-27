@@ -98,6 +98,7 @@ export default {
     },
     updateDate() {
       const date = new Date(this.datePickerDate);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
       this.editedProject.shooting_date = date.toISOString().split("T")[0];
       this.dialog = false;
     },
