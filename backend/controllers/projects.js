@@ -48,6 +48,11 @@ const getAllProjects = async (req, res) => {
           as: "chiefEngineer",
           attributes: ["name"],
         },
+        {
+          model: equipment,
+          as: "equipment",
+          attributes: ["equipment_id"],
+        }
       ],
     });
 
