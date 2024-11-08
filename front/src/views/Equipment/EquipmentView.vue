@@ -29,7 +29,7 @@
       </template>
 
       <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
-        <tr :class="groupHeaderClass(item)">
+        <tr>
           <td :colspan="columns.length" @click="toggleGroup(item)">
             <v-btn
               :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
@@ -42,8 +42,13 @@
       </template>
 
       <template v-slot:item="{ item }">
-        <tr :class="rowClass(item)">
+        <tr>
           <td>{{ }}</td>
+          <td align="center">
+            <v-icon v-if="item.needs_maintenance" color="orange">mdi-alert-circle</v-icon>
+            <v-icon v-else-if="item.current_storage" color="yellow">mdi-alert-circle</v-icon>
+            <v-icon v-else color="green">mdi-check-circle</v-icon>
+          </td>
           <td>{{ item.equipment_name }}</td>
           <td>{{ item.serial_number }}</td>
           <td>{{ item.storage?.warehouse_name || 'N/A' }}</td>
@@ -103,6 +108,7 @@ export default {
     ...mapState("equipment", ["equipment"]),
     headers() {
       return [
+        { title: 'Статус', key: 'status', sortable: false },
         { title: "Название", key: "equipment_name", },
         { title: "Серийный номер", key: "serial_number", },
         { title: "Место хранения", key: "storage.warehouse_name",  },
@@ -120,6 +126,9 @@ export default {
           key: "equipment_set.equipment_set_name",
           order: "asc",
         },
+        // {
+        //   key:"storage.warehouse_name"
+        // }
       ];
     },
     filteredEquipment() {
@@ -143,18 +152,7 @@ export default {
     deleteItem(item) {
       this.deleteEquipment(item);
     },
-    rowClass(item) {
-      return {
-        'yellow-background': item.needs_maintenance || item.current_storage,
-      };
-    },
-    groupHeaderClass(item) {
-      return {
-        'yellow-background': item.items.some(
-          (equipment) => equipment.needs_maintenance || equipment.current_storage
-        ),
-      };
-    },
+    
   },
   beforeMount() {
     this.initialize();
@@ -162,9 +160,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.yellow-background {
-  background-color: yellow !important;
-}
-
-</style>

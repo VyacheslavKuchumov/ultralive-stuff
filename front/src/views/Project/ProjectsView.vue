@@ -2,7 +2,7 @@
   <v-card class="elevation-5 mt-5 ml-auto mr-auto" width="1100">
     <v-data-table
       v-if="projects"
-      :group-by="groupBy"
+
       :headers="headers"
       :items="filteredProjects"
       :items-per-page="-1"
@@ -25,28 +25,19 @@
         </v-toolbar>
       </template>
 
-      <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
-        <tr>
-          <td :colspan="columns.length" @click="toggleGroup(item)">
-            <v-btn
-              :icon="isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'"
-              size="small"
-              variant="text"
-            ></v-btn>
-            {{
-              new Date(item.value).toLocaleDateString("ru", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
-            }}
-          </td>
-        </tr>
-      </template>
+      
 
       <template v-slot:item="{ item }">
-        <tr :class="rowClass(item)">
-          <td></td>
+        <tr>
+          
+          <!-- Status Column -->
+          <td align="center">
+            <v-icon v-if="projectsWithSharedEquipment.has(item.project_id)" color="blue">
+              mdi-alert
+            </v-icon>
+            <v-icon v-else color="green">mdi-check-circle</v-icon>
+          </td>
+          <td>{{ item.shooting_date }}</td>
           <td>{{ item.project_name }}</td>
           <td>{{ item.type.project_type_name }}</td>
           <td>{{ item.chiefEngineer.name }}</td>
@@ -117,6 +108,8 @@ export default {
     ...mapState("projects", ["projects"]),
     headers() {
       return [
+        { title: "Статус", key: "status", },
+        { title: "Дата съёмки", key: "shooting_date",},
         { title: "Название", key: "project_name", },
         { title: "Площадка", key: "type.project_type_name",  },
         { title: "Главный инженер", key: "chiefEngineer.name",  },
@@ -125,14 +118,14 @@ export default {
         { title: "Удалить", key: "action_delete", sortable: false, },
       ];
     },
-    groupBy() {
-      return [
-        {
-          key: "shooting_date",
-          order: "desc",
-        },
-      ];
-    },
+    // groupBy() {
+    //   return [
+    //     {
+    //       key: "shooting_date",
+    //       order: "desc",
+    //     },
+    //   ];
+    // },
     filteredProjects() {
       if (!this.search) {
         return this.projects;
@@ -188,11 +181,7 @@ export default {
     goToProjectEquipment(item) {
       this.$router.push(`/project/${item.project_id}`);
     },
-    rowClass(item) {
-      return {
-        'yellow-background': this.projectsWithSharedEquipment.has(item.project_id),
-      };
-    },
+   
   },
   created() {
     this.initialize();
@@ -200,10 +189,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.yellow-background {
-  background-color: yellow !important;
-}
 
-
-</style>

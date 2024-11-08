@@ -4,6 +4,7 @@
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="editedProject"
   >
+  {{ sharedEquipmentInOtherProjects }}
     <v-table>
       <template v-slot:top>
         <v-toolbar flat>
@@ -20,81 +21,7 @@
       </template>
       <v-container>
         <v-row align="center" justify="center">
-          <v-col cols="auto">
-            <v-container width="500">
-              <v-data-table
-                v-if="equipment"
-                :group-by="groupByInProject"
-                :headers="headers"
-                :items="editedProject.equipment"
-                :items-per-page="-1"
-                height="400"
-                fixed-header
-              >
-                <template v-slot:top>
-                  <v-toolbar flat>
-                    <v-toolbar-title>В съёмке</v-toolbar-title>
-                    <v-divider class="mx-4" inset vertical></v-divider>
-                  </v-toolbar>
-                </template>
-
-                <template
-                  v-slot:group-header="{
-                    item,
-                    columns,
-                    toggleGroup,
-                    isGroupOpen,
-                  }"
-                >
-                  <tr>
-                    <td :colspan="columns.length" @click="toggleGroup(item)">
-                      <v-btn
-                        :icon="
-                          isGroupOpen(item)
-                            ? 'mdi-chevron-down'
-                            : 'mdi-chevron-right'
-                        "
-                        size="small"
-                        variant="text"
-                      ></v-btn>
-                      <span>{{ item.value }}</span>
-
-                      <!-- Button to remove the entire group -->
-                      <v-btn
-                        class="ml-5"
-                        size="small"
-                        color="red-darken-1"
-                        @click.stop="removeGroup(item)"
-                        v-if="
-                          editedProject.equipment.some(
-                            (equip) =>
-                              equip.equipment_set.equipment_set_name ===
-                              item.value
-                          )
-                        "
-                      >
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
-                    </td>
-                  </tr>
-                </template>
-
-                <template v-slot:item.action_delete="{ item }">
-                  <v-btn
-                    class="mr-5"
-                    size="small"
-                    color="red-darken-1"
-                    @click="deleteItem(item)"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </template>
-
-                <template v-slot:no-data>Нет данных</template>
-              </v-data-table>
-            </v-container>
-          </v-col>
-
+          
           <v-col cols="auto">
             <v-container width="500">
               <v-data-table
@@ -164,11 +91,114 @@
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
                 </template>
+                <template v-slot:item.status="{ item }">
+                  
+                  <v-icon
+                    v-if="sharedEquipmentInOtherProjects.has(item.equipment_id)"
+                    color="blue"
+                  >
+                    mdi-alert
+                  </v-icon>
+                  <v-icon v-else color="green">mdi-check-circle</v-icon>
+                </template>
 
                 <template v-slot:no-data>Нет данных</template>
               </v-data-table>
             </v-container>
           </v-col>
+
+
+          <v-col cols="auto">
+            <v-container width="500">
+              <v-data-table
+                v-if="equipment"
+                :group-by="groupByInProject"
+                :headers="headers"
+                :items="editedProject.equipment"
+                :items-per-page="-1"
+                height="400"
+                fixed-header
+              >
+              <template v-slot:item="{ item }">
+                <tr>
+                  <td></td>
+                  <td>{{ item.equipment_name }}</td>
+                  <td>
+                    <v-btn
+                      class="mr-5"
+                      size="small"
+                      color="red-darken-1"
+                      @click="deleteItem(item)"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </td>
+                </tr>
+              </template>
+                <template v-slot:top>
+                  <v-toolbar flat>
+                    <v-toolbar-title>В съёмке</v-toolbar-title>
+                    <v-divider class="mx-4" inset vertical></v-divider>
+                  </v-toolbar>
+                </template>
+
+                <template
+                  v-slot:group-header="{
+                    item,
+                    columns,
+                    toggleGroup,
+                    isGroupOpen,
+                  }"
+                >
+                  <tr>
+                    <td :colspan="columns.length" @click="toggleGroup(item)">
+                      <v-btn
+                        :icon="
+                          isGroupOpen(item)
+                            ? 'mdi-chevron-down'
+                            : 'mdi-chevron-right'
+                        "
+                        size="small"
+                        variant="text"
+                      ></v-btn>
+                      <span>{{ item.value }}</span>
+
+                      <!-- Button to remove the entire group -->
+                      <v-btn
+                        class="ml-5"
+                        size="small"
+                        color="red-darken-1"
+                        @click.stop="removeGroup(item)"
+                        v-if="
+                          editedProject.equipment.some(
+                            (equip) =>
+                              equip.equipment_set.equipment_set_name ===
+                              item.value
+                          )
+                        "
+                      >
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </td>
+                  </tr>
+                </template>
+
+                <template v-slot:item.action_delete="{ item }">
+                  <v-btn
+                    class="mr-5"
+                    size="small"
+                    color="red-darken-1"
+                    @click="deleteItem(item)"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+
+                <template v-slot:no-data>Нет данных</template>
+              </v-data-table>
+            </v-container>
+          </v-col>
+
         </v-row>
       </v-container>
     </v-table>
@@ -186,10 +216,11 @@ export default {
     };
   },
   computed: {
-    ...mapState("projects", ["editedProject"]),
+    ...mapState("projects", ["editedProject", "projects"]),
     ...mapState("equipment", ["equipment"]),
     headers() {
       return [
+        { title: "Статус", key: "status", sortable: false },
         { title: "Название", key: "equipment_name" },
         { title: "", key: "action_add", sortable: false },
         { title: "", key: "action_delete", sortable: false },
@@ -220,9 +251,38 @@ export default {
           )
       );
     },
+    sharedEquipmentInOtherProjects() {
+      if (!this.editedProject || !this.projects) return new Set();
+
+      // Создаем объект для хранения оборудования, которое встречается в нескольких проектах
+      const equipmentDateMap = {};
+
+      this.projects.forEach(project => {
+        if (project.shooting_date === this.editedProject.shooting_date) {
+          project.equipment.forEach(eq => {
+            if (!equipmentDateMap[eq.equipment_id]) {
+              equipmentDateMap[eq.equipment_id] = new Set();
+            }
+            equipmentDateMap[eq.equipment_id].add(project.project_id);
+          });
+        }
+      });
+
+      const sharedEquipment = new Set();
+      for (const [equipmentId, projectIds] of Object.entries(equipmentDateMap)) {
+      
+        sharedEquipment.add(Number(equipmentId));
+        
+      }
+
+      return sharedEquipment;
+    },
+
   },
   methods: {
+    
     ...mapActions("projects", [
+      "getAllProjects",
       "getProjectByID",
       "updateProject",
       "addEquipmentToProject",
@@ -269,13 +329,16 @@ export default {
         this.removeEquipmentFromProject(data);
       });
     },
+    
   },
   created() {
     const route = useRoute();
     const projectId = route.params.id;
-
+    this.getAllProjects();
     this.getProjectByID(projectId);
     this.getAllEquipment();
   },
 };
 </script>
+
+
