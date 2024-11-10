@@ -54,6 +54,7 @@ const getAllProjects = async (req, res) => {
           attributes: ["equipment_id"],
         }
       ],
+      order: [['shooting_date', 'DESC']]
     });
 
     if (!data) {

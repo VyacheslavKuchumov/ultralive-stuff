@@ -94,7 +94,7 @@
                 <template v-slot:item.status="{ item }">
                   
                   <v-icon
-                    v-if="sharedEquipmentInOtherProjects.has(item.equipment_id)"
+                    v-if="availableEquipmentInOtherProjects.has(item.equipment_id)"
                     color="blue"
                   >
                     mdi-alert
@@ -251,7 +251,7 @@ export default {
           )
       );
     },
-    sharedEquipmentInOtherProjects() {
+    availableEquipmentInOtherProjects() {
       if (!this.editedProject || !this.projects) return new Set();
 
       // Создаем объект для хранения оборудования, которое встречается в нескольких проектах
@@ -271,7 +271,7 @@ export default {
       const sharedEquipment = new Set();
       for (const [equipmentId, projectIds] of Object.entries(equipmentDateMap)) {
       
-        sharedEquipment.add(Number(equipmentId));
+        sharedEquipment.add(equipmentId);
         
       }
 
