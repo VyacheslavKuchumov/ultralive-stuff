@@ -10,6 +10,7 @@
           multiple
           v-model="files"
           accept=".xlsx, .xls"
+          width="300px"
         >
         </v-file-input>
         <v-btn
