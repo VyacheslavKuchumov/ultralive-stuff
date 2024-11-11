@@ -9,6 +9,7 @@ import warehouse from '@/store/warehouse'
 import projects from '@/store/projects'
 import clients from '@/store/clients'
 import project_types from '@/store/project_types'
+import set_types from '@/store/set_types'
 
 
 export default createStore({
@@ -31,5 +32,6 @@ export default createStore({
     projects: projects,
     clients: clients,
     project_types: project_types,
+    set_types: set_types
   }
 })

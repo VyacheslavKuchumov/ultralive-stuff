@@ -18,6 +18,7 @@ import CreateProjectView from "@/views/Project/CreateProjectView.vue";
 import EditProjectView from "@/views/Project/EditProjectView.vue";
 
 import EquipmentInProjectView from "@/views/Project/EquipmentInProjectView.vue";
+import SetTypesView from "@/views/Dictionaries/SetTypesView.vue";
 
 const routes = [
   {
@@ -53,6 +54,13 @@ const routes = [
     path: "/equipment_sets",
     name: "equipment_types",
     component: EquipmentSetsView,
+    meta: { auth: true },
+  },
+
+  {
+    path: "/set_types",
+    name: "set_types",
+    component: SetTypesView,
     meta: { auth: true },
   },
 

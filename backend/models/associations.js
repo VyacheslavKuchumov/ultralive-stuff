@@ -7,6 +7,8 @@ const { user } = require("./users");
 const { project } = require("./projects");
 const { project_type } = require("./project_types");
 
+const { set_type } = require("./set_types");
+
 // User and Auth
 user.belongsTo(auth, {
   targetKey: "auth_uid",
@@ -19,6 +21,11 @@ equipment.belongsTo(equipment_set, {
   as: "equipment_set",
   foreignKey: "equipment_set_id",
 });
+
+equipment_set.belongsTo(set_type,{
+  as: "type",
+  foreignKey: "set_type_id",
+})
 
 // Equipment and Warehouse
 equipment.belongsTo(warehouse, {

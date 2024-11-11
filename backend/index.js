@@ -14,6 +14,7 @@ const warehouses_routes = require("./routes/warehouses");
 const equipment_sets_routes = require("./routes/equipment_sets");
 const project_routes = require("./routes/projects");
 const project_types_routes = require("./routes/project_types");
+const set_types_routes = require("./routes/set_types");
 
 app.use(
   cors({
@@ -26,6 +27,7 @@ app.use("/api/users", users_routes);
 app.use("/api/equipment", equipment_routes);
 app.use("/api/warehouse", warehouses_routes);
 app.use("/api/equipment_set", equipment_sets_routes);
+app.use("/api/set_types", set_types_routes);
 app.use("/api/projects", project_routes);
 app.use("/api/project_types", project_types_routes);
 

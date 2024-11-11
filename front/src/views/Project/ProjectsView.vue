@@ -108,7 +108,7 @@ export default {
     ...mapState("projects", ["projects"]),
     headers() {
       return [
-        { title: "Статус", key: "status", },
+        { title: "Статус", key: "status", sortable: false,},
         { title: "Дата съёмки", key: "shooting_date",},
         { title: "Название", key: "project_name", },
         { title: "Площадка", key: "type.project_type_name",  },

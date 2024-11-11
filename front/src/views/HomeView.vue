@@ -15,6 +15,9 @@
         <v-btn color="primary" class="mb-2" to="/equipment_sets" width="300">
           Комплекты оборудования
         </v-btn>
+        <v-btn color="primary" class="mb-2" to="/set_types" width="300">
+          Виды комплектов
+        </v-btn>
         <v-btn color="primary" class="mb-2" to="/warehouses" width="300">
           Склады
         </v-btn>

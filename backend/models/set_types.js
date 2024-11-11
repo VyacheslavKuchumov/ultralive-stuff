@@ -3,27 +3,23 @@ const { DataTypes } = require('sequelize')
 
 
 
-const equipment_set = sequelize.define(
-    'equipment_set',
+const set_type = sequelize.define(
+    'set_type',
     {
-        equipment_set_id: {
+        set_type_id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true
         },
-        equipment_set_name:{
+        set_type_name:{
             type:DataTypes.TEXT,
             allowNull: false,
             unique: true
-        },
-        set_type_id:{
-            type: DataTypes.BIGINT,
-            allowNull: false,
         }
 
     },
     {
-        tableName: 'equipment_sets',
+        tableName: 'set_types',
         timestamps: false
     },
     
@@ -32,4 +28,4 @@ const equipment_set = sequelize.define(
 
 
 
-module.exports = { equipment_set }
+module.exports = { set_type }
