@@ -89,8 +89,18 @@ export default {
         set_type_name: "",
       },
       headers: [
-        { title: "Название", value: "equipment_set_name", width: "auto" },
-        { title: "Вид комплекта", value: "type.set_type_name", width: "auto" },
+        {
+          title: "Название",
+          value: "equipment_set_name",
+          width: "auto",
+          sortable: true,
+        },
+        {
+          title: "Вид комплекта",
+          value: "type.set_type_name",
+          width: "auto",
+          sortable: true,
+        },
         {
           title: "Изменить",
           value: "actions_edit",

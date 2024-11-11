@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
+import AdminView from "@/views/AdminView.vue";
 import EquipmentView from "@/views/Equipment/EquipmentView.vue";
 import CreateEquipmentView from "@/views/Equipment/CreateEquipmentView.vue";
 import EditEquipmentView from "@/views/Equipment/EditEquipmentView.vue";
@@ -27,7 +28,12 @@ const routes = [
     component: HomeView,
     meta: { auth: true },
   },
-
+  {
+    path: "/admin",
+    name: "admin",
+    component: AdminView,
+    meta: { auth: false },
+  },
   {
     path: "/equipment",
     name: "equipment",

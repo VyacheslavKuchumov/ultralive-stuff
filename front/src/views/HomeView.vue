@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "HomeView",
@@ -46,6 +46,7 @@ export default {
       name: "",
     };
   },
+  computed: {},
   methods: {
     ...mapActions({
       getUser: "user/getUserByUid",
@@ -65,5 +66,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

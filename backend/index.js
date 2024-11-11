@@ -16,6 +16,8 @@ const project_routes = require("./routes/projects");
 const project_types_routes = require("./routes/project_types");
 const set_types_routes = require("./routes/set_types");
 
+const excel_controller_routes = require("./routes/excel_controller");
+
 app.use(
   cors({
     origin: ["http://localhost:8080"],
@@ -30,6 +32,7 @@ app.use("/api/equipment_set", equipment_sets_routes);
 app.use("/api/set_types", set_types_routes);
 app.use("/api/projects", project_routes);
 app.use("/api/project_types", project_types_routes);
+app.use("/api/admin/excel", excel_controller_routes);
 
 app.use((error, request, response, next) => {
   if (error instanceof SyntaxError)
