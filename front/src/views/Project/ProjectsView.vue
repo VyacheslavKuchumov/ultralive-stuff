@@ -2,7 +2,6 @@
   <v-card class="elevation-5 mt-5 ml-auto mr-auto" width="1100">
     <v-data-table
       v-if="projects"
-
       :headers="headers"
       :items="filteredProjects"
       :items-per-page="-1"
@@ -25,14 +24,14 @@
         </v-toolbar>
       </template>
 
-      
-
       <template v-slot:item="{ item }">
         <tr>
-          
           <!-- Status Column -->
           <td align="center">
-            <v-icon v-if="projectsWithSharedEquipment.has(item.project_id)" color="blue">
+            <v-icon
+              v-if="projectsWithSharedEquipment.has(item.project_id)"
+              color="blue"
+            >
               mdi-alert
             </v-icon>
             <v-icon v-else color="green">mdi-check-circle</v-icon>
@@ -69,11 +68,7 @@
         </tr>
       </template>
 
-      <template v-slot:no-data>
-        <v-alert type="info" color="blue" icon="mdi-information">
-          Нет данных
-        </v-alert>
-      </template>
+      <template v-slot:no-data> Нет данных </template>
 
       <template v-slot:bottom>
         <v-card>
@@ -108,14 +103,14 @@ export default {
     ...mapState("projects", ["projects"]),
     headers() {
       return [
-        { title: "Статус", key: "status", sortable: false,},
-        { title: "Дата съёмки", key: "shooting_date",},
-        { title: "Название", key: "project_name", },
-        { title: "Площадка", key: "type.project_type_name",  },
-        { title: "Главный инженер", key: "chiefEngineer.name",  },
-        { title: "Оборудование", key: "action_see_equipment", sortable: false, },
-        { title: "Изменить", key: "action_edit", sortable: false, },
-        { title: "Удалить", key: "action_delete", sortable: false, },
+        { title: "Статус", key: "status", sortable: false },
+        { title: "Дата съёмки", key: "shooting_date" },
+        { title: "Название", key: "project_name" },
+        { title: "Площадка", key: "type.project_type_name" },
+        { title: "Главный инженер", key: "chiefEngineer.name" },
+        { title: "Оборудование", key: "action_see_equipment", sortable: false },
+        { title: "Изменить", key: "action_edit", sortable: false },
+        { title: "Удалить", key: "action_delete", sortable: false },
       ];
     },
     // groupBy() {
@@ -165,7 +160,6 @@ export default {
 
       return sharedProjectIds;
     },
-
   },
   methods: {
     ...mapActions("projects", ["getAllProjects", "deleteProject"]),
@@ -181,12 +175,9 @@ export default {
     goToProjectEquipment(item) {
       this.$router.push(`/project/${item.project_id}`);
     },
-   
   },
   created() {
     this.initialize();
   },
 };
 </script>
-
-

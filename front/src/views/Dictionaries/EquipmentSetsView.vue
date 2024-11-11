@@ -1,5 +1,5 @@
 <template>
-  <v-container width="700">
+  <v-container width="900">
     <v-row>
       <v-col cols="12">
         <v-data-table
@@ -14,6 +14,9 @@
               <v-toolbar-title>Комплекты оборудования</v-toolbar-title>
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
+              <v-btn class="mb-2" color="primary" dark to="/set_types">
+                Виды комплектов
+              </v-btn>
               <v-btn class="mb-2" color="primary" dark @click="openDialog()">
                 Добавить
               </v-btn>
@@ -52,9 +55,16 @@
         <v-card-text>
           <v-text-field
             v-model="form.equipment_set_name"
-            label="Equipment Set Name"
+            label="Введите название комплекта"
             required
           ></v-text-field>
+          <v-autocomplete
+            v-model="form.set_type_name"
+            label="Введите вид комплекта"
+            :items="setTypeNames"
+            clearable
+            required
+          />
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -73,9 +83,14 @@ export default {
   data() {
     return {
       dialog: false,
-      form: { equipment_set_id: null, equipment_set_name: "" },
+      form: {
+        equipment_set_id: null,
+        equipment_set_name: "",
+        set_type_name: "",
+      },
       headers: [
-        { title: "Name", value: "equipment_set_name", width: "auto" },
+        { title: "Название", value: "equipment_set_name", width: "auto" },
+        { title: "Вид комплекта", value: "type.set_type_name", width: "auto" },
         {
           title: "Изменить",
           value: "actions_edit",
@@ -93,6 +108,7 @@ export default {
   },
   computed: {
     ...mapState("equipment_set", ["equipment_sets"]),
+    ...mapState("set_types", ["setTypeNames"]),
     equipmentSets() {
       return this.equipment_sets || [];
     },
@@ -104,36 +120,36 @@ export default {
       "updateEquipmentSet", // Should be renamed to 'updateEquipmentSet'
       "deleteEquipmentSet", // Should be renamed to 'deleteEquipmentSet'
     ]),
-
+    ...mapActions("set_types", ["getSetTypeNames"]),
     openDialog(item = null) {
       this.form = item
-        ? { ...item }
-        : { equipment_set_id: null, equipment_set_name: "" };
+        ? {
+            equipment_set_id: item.equipment_set_id,
+            equipment_set_name: item.equipment_set_name,
+            set_type_name: item.type.set_type_name,
+          }
+        : { equipment_set_id: null, equipment_set_name: "", set_type_name: "" };
       this.dialog = true;
     },
     closeDialog() {
       this.dialog = false;
     },
-    async saveItem() {
+    saveItem() {
       if (this.form.equipment_set_id) {
-        await this.updateEquipmentSet(this.form);
+        this.updateEquipmentSet(this.form);
       } else {
-        await this.createEquipmentSet(this.form);
+        this.createEquipmentSet(this.form);
       }
-      this.getAllEquipmentSets();
+
       this.closeDialog();
     },
-    async deleteItem(id) {
-      await this.deleteEquipmentSet({ equipment_set_id: id });
-      this.getAllEquipmentSets();
+    deleteItem(id) {
+      this.deleteEquipmentSet({ equipment_set_id: id });
     },
   },
   beforeMount() {
     this.getAllEquipmentSets();
+    this.getSetTypeNames();
   },
 };
 </script>
-
-<style scoped>
-/* Add any required styles here */
-</style>

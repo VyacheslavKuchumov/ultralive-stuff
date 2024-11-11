@@ -12,18 +12,19 @@
     </v-card-title>
     <v-container class="d-flex justify-center align-center">
       <v-row class="d-flex flex-column align-center">
-        <v-btn color="primary" class="mb-2" to="/equipment_sets" width="300">
-          Комплекты оборудования
-        </v-btn>
-        <v-btn color="primary" class="mb-2" to="/set_types" width="300">
-          Виды комплектов
-        </v-btn>
         <v-btn color="primary" class="mb-2" to="/warehouses" width="300">
           Склады
         </v-btn>
         <v-btn color="primary" class="mb-2" to="/project_types" width="300">
           Площадки
         </v-btn>
+        <v-btn color="primary" class="mb-2" to="/set_types" width="300">
+          Виды комплектов
+        </v-btn>
+        <v-btn color="primary" class="mb-2" to="/equipment_sets" width="300">
+          Комплекты оборудования
+        </v-btn>
+
         <v-btn disabled color="primary" class="mb-2" to="" width="300">
           Пресеты оборудования
         </v-btn>
