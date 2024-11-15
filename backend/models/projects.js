@@ -18,7 +18,11 @@ const project = sequelize.define(
       allowNull: false,
     },
 
-    shooting_date: {
+    shooting_start_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    shooting_end_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },

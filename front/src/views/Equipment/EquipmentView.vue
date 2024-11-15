@@ -8,13 +8,22 @@
       :items-per-page="-1"
       :search="search"
       class="elevation-1"
-      height="400"
       fixed-header
+      hide-default-footer
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Оборудование</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
+          <v-text-field
+            v-model="search"
+            label="Поиск"
+            prepend-icon="mdi-magnify"
+            clearable
+            placeholder="Search..."
+            class="mt-2"
+            width="100"
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn class="mb-2" color="primary" dark to="/warehouses">
             Склады
@@ -84,23 +93,6 @@
       </template>
 
       <template v-slot:no-data> Нет данных </template>
-
-      <template v-slot:bottom>
-        <v-card>
-          <v-card-title>Поиск по названию</v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="search"
-              label="Поиск"
-              prepend-icon="mdi-magnify"
-              clearable
-              placeholder="Search..."
-              class="mt-2"
-              width="400"
-            ></v-text-field>
-          </v-card-text>
-        </v-card>
-      </template>
     </v-data-table>
   </v-card>
 </template>

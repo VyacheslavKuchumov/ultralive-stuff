@@ -52,9 +52,9 @@ const getAllProjects = async (req, res) => {
           model: equipment,
           as: "equipment",
           attributes: ["equipment_id"],
-        }
+        },
       ],
-      order: [['shooting_date', 'DESC']]
+      order: [["shooting_start_date", "DESC"]],
     });
 
     if (!data) {
@@ -111,7 +111,8 @@ const createProject = async (req, res) => {
       project_name,
       project_type_name,
       chief_engineer_name,
-      shooting_date,
+      shooting_start_date,
+      shooting_end_date,
     } = req.body;
 
     const foundProjectType = await project_type.findOne({
@@ -125,7 +126,8 @@ const createProject = async (req, res) => {
       const newProject = await project.create({
         project_name,
         project_type_id: foundProjectType.project_type_id, // Associate with the project type ID
-        shooting_date,
+        shooting_start_date,
+        shooting_end_date,
         chief_engineer_id: foundUser.id,
       });
 

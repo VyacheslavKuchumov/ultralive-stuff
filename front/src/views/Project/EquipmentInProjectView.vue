@@ -4,23 +4,54 @@
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="editedProject"
   >
-    {{ sharedEquipmentInOtherProjects }}
     <v-table>
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>
+          <v-toolbar-title
+            v-if="
+              editedProject.shooting_start_date !==
+              editedProject.shooting_end_date
+            "
+          >
             Оборудование в съёмке: "{{ editedProject.project_name }}" ({{
-              new Date(editedProject.shooting_date).toLocaleDateString("ru", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
+              new Date(editedProject.shooting_start_date).toLocaleDateString(
+                "ru",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              )
+            }}
+            -
+            {{
+              new Date(editedProject.shooting_end_date).toLocaleDateString(
+                "ru",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              )
+            }}
+            )
+          </v-toolbar-title>
+          <v-toolbar-title v-else>
+            Оборудование в съёмке: "{{ editedProject.project_name }}" ({{
+              new Date(editedProject.shooting_start_date).toLocaleDateString(
+                "ru",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              )
             }})
           </v-toolbar-title>
         </v-toolbar>
       </template>
       <v-container>
-        <v-row align="center" justify="center">
+        <v-row>
           <v-col cols="auto">
             <v-container width="500">
               <v-data-table
@@ -29,8 +60,8 @@
                 :headers="headers"
                 :items="filteredEquipment"
                 :items-per-page="-1"
-                height="400"
                 fixed-header
+                hide-default-footer
               >
                 <template v-slot:top>
                   <v-toolbar flat>
@@ -50,6 +81,7 @@
                   <tr>
                     <td :colspan="columns.length" @click="toggleGroup(item)">
                       <v-btn
+                        :class="groupClassify(item)"
                         :icon="
                           isGroupOpen(item)
                             ? 'mdi-chevron-down'
@@ -58,7 +90,7 @@
                         size="small"
                         variant="text"
                       ></v-btn>
-                      <span>{{ item.value }}</span>
+                      <span :class="groupClassify(item)">{{ item.value }}</span>
 
                       <!-- Button to add the entire group -->
                       <v-btn
@@ -71,7 +103,7 @@
                             (equip) =>
                               equip.equipment_set.equipment_set_name ===
                               item.value
-                          )
+                          ) && groupClassify(item) === 'second-group'
                         "
                       >
                         <v-icon>mdi-plus</v-icon>
@@ -115,8 +147,8 @@
                 :headers="headers"
                 :items="editedProject.equipment"
                 :items-per-page="-1"
-                height="400"
                 fixed-header
+                hide-default-footer
               >
                 <template v-slot:item="{ item }">
                   <tr>
@@ -152,6 +184,7 @@
                   <tr>
                     <td :colspan="columns.length" @click="toggleGroup(item)">
                       <v-btn
+                        :class="groupClassify(item)"
                         :icon="
                           isGroupOpen(item)
                             ? 'mdi-chevron-down'
@@ -160,7 +193,7 @@
                         size="small"
                         variant="text"
                       ></v-btn>
-                      <span>{{ item.value }}</span>
+                      <span :class="groupClassify(item)">{{ item.value }}</span>
 
                       <!-- Button to remove the entire group -->
                       <v-btn
@@ -226,18 +259,16 @@ export default {
     },
     groupByAvailable() {
       return [
-        {
-          key: "equipment_set.equipment_set_name",
-          order: "asc",
-        },
+        // Define your grouping criteria here
+        { key: "equipment_set.type.set_type_name", order: "asc" },
+        { key: "equipment_set.equipment_set_name", order: "asc" },
       ];
     },
     groupByInProject() {
       return [
-        {
-          key: "equipment_set.equipment_set_name",
-          order: "asc",
-        },
+        // Define your grouping criteria here
+        { key: "equipment_set.type.set_type_name", order: "asc" },
+        { key: "equipment_set.equipment_set_name", order: "asc" },
       ];
     },
     filteredEquipment() {
@@ -325,6 +356,14 @@ export default {
         this.removeEquipmentFromProject(data);
       });
     },
+    groupClassify(item) {
+      if (item.key === "equipment_set.type.set_type_name") {
+        return "first-group";
+      } // Adjust this condition
+      if (item.key === "equipment_set.equipment_set_name") {
+        return "second-group";
+      }
+    },
   },
   created() {
     const route = useRoute();
@@ -335,3 +374,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.second-group {
+  margin-left: 20px; /* Adjust this value for more or less indentation */
+}
+.first-group {
+  font-weight: bolder; /* Adjust this value for more or less indentation */
+}
+</style>

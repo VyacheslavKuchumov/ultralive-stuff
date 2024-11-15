@@ -6,7 +6,7 @@
       :items="filteredProjects"
       :items-per-page="-1"
       :search="search"
-      height="400"
+      hide-default-footer
       fixed-header
       class="elevation-1"
     >
@@ -14,6 +14,16 @@
         <v-toolbar flat>
           <v-toolbar-title>Съёмки</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
+
+          <v-text-field
+            v-model="search"
+            label="Поиск"
+            prepend-icon="mdi-magnify"
+            clearable
+            placeholder="Search..."
+            class="mt-2"
+            width="100"
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn class="mb-2" color="primary" dark to="/project_types">
             Площадки
@@ -36,7 +46,10 @@
             </v-icon>
             <v-icon v-else color="green">mdi-check-circle</v-icon>
           </td>
-          <td>{{ item.shooting_date }}</td>
+          <td v-if="item.shooting_start_date !== item.shooting_end_date">
+            с {{ item.shooting_start_date }} по {{ item.shooting_end_date }}
+          </td>
+          <td v-else>{{ item.shooting_start_date }}</td>
           <td>{{ item.project_name }}</td>
           <td>{{ item.type.project_type_name }}</td>
           <td>{{ item.chiefEngineer.name }}</td>
@@ -69,23 +82,6 @@
       </template>
 
       <template v-slot:no-data> Нет данных </template>
-
-      <template v-slot:bottom>
-        <v-card>
-          <v-card-title>Поиск по названию</v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="search"
-              label="Поиск"
-              prepend-icon="mdi-magnify"
-              clearable
-              placeholder="Search..."
-              class="mt-2"
-              width="400"
-            ></v-text-field>
-          </v-card-text>
-        </v-card>
-      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -104,7 +100,7 @@ export default {
     headers() {
       return [
         { title: "Статус", key: "status", sortable: false },
-        { title: "Дата съёмки", key: "shooting_date" },
+        { title: "Дата съёмки" },
         { title: "Название", key: "project_name" },
         { title: "Площадка", key: "type.project_type_name" },
         { title: "Главный инженер", key: "chiefEngineer.name" },

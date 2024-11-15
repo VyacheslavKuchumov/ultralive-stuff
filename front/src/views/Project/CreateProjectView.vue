@@ -24,34 +24,61 @@
             </v-col>
 
             <v-col cols="12" md="6" sm="6">
+              <v-text-field
+                v-model="newProject.shooting_start_date"
+                label="Дата начала съемок"
+                prepend-icon="mdi-calendar"
+                @click="dialogStart = true"
+                readonly
+                clearable
+              />
+              <v-dialog v-model="dialogStart" width="400px">
+                <v-card>
+                  <v-date-picker v-model="datePickerStartDate" />
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="dialogStart = false"
+                      >Закрыть</v-btn
+                    >
+                    <v-btn text color="primary" @click="updateStartDate"
+                      >OK</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-col>
+
+            <v-col cols="12" md="6" sm="6">
+              <v-text-field
+                v-model="newProject.shooting_end_date"
+                label="Дата конца съемок"
+                prepend-icon="mdi-calendar"
+                @click="dialogEnd = true"
+                readonly
+                clearable
+              />
+              <v-dialog v-model="dialogEnd" width="400px">
+                <v-card>
+                  <v-date-picker v-model="datePickerEndDate" />
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="dialogEnd = false"
+                      >Закрыть</v-btn
+                    >
+                    <v-btn text color="primary" @click="updateEndDate"
+                      >OK</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-col>
+            <v-col cols="12" md="6" sm="6">
               <v-autocomplete
                 v-model="newProject.chief_engineer_name"
                 :items="userNames"
                 label="Главный инженер"
                 clearable
               />
-            </v-col>
-            <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                v-model="newProject.shooting_date"
-                label="Дата съемки"
-                prepend-icon="mdi-calendar"
-                @click="dialog = true"
-                readonly
-                clearable
-              />
-              <v-dialog v-model="dialog" width="400px">
-                <v-card>
-                  <v-date-picker v-model="datePickerDate" />
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="dialog = false"
-                      >Закрыть</v-btn
-                    >
-                    <v-btn text color="primary" @click="updateDate">OK</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </v-col>
           </v-row>
         </v-container>
@@ -71,13 +98,16 @@ import { mapActions, mapState, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      dialog: false,
-      datePickerDate: new Date(),
+      dialogStart: false,
+      dialogEnd: false,
+      datePickerStartDate: new Date(),
+      datePickerEndDate: new Date(),
       newProject: {
         project_name: "",
         project_type_name: "",
         chief_engineer_name: "",
-        shooting_date: "",
+        shooting_start_date: "",
+        shooting_end_date: "",
       },
     };
   },
@@ -99,14 +129,21 @@ export default {
     ...mapActions("user", ["getAllUsers", "getAllUserNames"]),
 
     // Update the date using date picker
-    updateDate() {
-      console.log(this.datePickerDate)
-      const date = new Date(this.datePickerDate);
-      console.log(this.date)
+    updateStartDate() {
+      const date = new Date(this.datePickerStartDate);
+
       date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      this.newProject.shooting_date = date.toISOString().split("T")[0]; // Converts to 'YYYY-MM-DD'
-      this.dialog = false;
-      console.log(this.newProject.shooting_date)
+      this.newProject.shooting_start_date = date.toISOString().split("T")[0]; // Converts to 'YYYY-MM-DD'
+      this.newProject.shooting_end_date = date.toISOString().split("T")[0];
+      this.dialogStart = false;
+    },
+
+    updateEndDate() {
+      const date = new Date(this.datePickerEndDate);
+
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+      this.newProject.shooting_end_date = date.toISOString().split("T")[0]; // Converts to 'YYYY-MM-DD'
+      this.dialogEnd = false;
     },
 
     // Save method

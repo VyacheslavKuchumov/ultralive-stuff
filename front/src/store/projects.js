@@ -97,7 +97,8 @@ export default {
             project_name: response.data.project_name,
             project_type_name: response.data.type.project_type_name,
             chief_engineer_name: response.data.chiefEngineer.name,
-            shooting_date: response.data.shooting_date,
+            shooting_start_date: response.data.shooting_start_date,
+            shooting_end_date: response.data.shooting_end_date,
             equipment: response.data.equipment,
           };
           commit("setEditedProject", formattedProject); // Setting as an array to maintain consistency
