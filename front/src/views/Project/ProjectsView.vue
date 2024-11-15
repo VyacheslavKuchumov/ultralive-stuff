@@ -32,7 +32,7 @@
               v-if="projectsWithSharedEquipment.has(item.project_id)"
               color="blue"
             >
-              mdi-alert
+              mdi-camera
             </v-icon>
             <v-icon v-else color="green">mdi-check-circle</v-icon>
           </td>

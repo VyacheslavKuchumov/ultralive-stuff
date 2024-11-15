@@ -1,6 +1,7 @@
 const { equipment } = require("../models/equipment");
 const { warehouse } = require("../models/warehouses");
 const { equipment_set } = require("../models/equipment_sets");
+const { set_type } = require("../models/set_types");
 const { project } = require("../models/projects");
 
 const getAllEquipment = async (req, res) => {
@@ -11,6 +12,12 @@ const getAllEquipment = async (req, res) => {
           model: equipment_set,
           as: "equipment_set",
           attributes: ["equipment_set_name"],
+          include: [
+            {
+              model: set_type,
+              as: "type",
+            },
+          ],
         },
         {
           model: warehouse,
@@ -18,8 +25,8 @@ const getAllEquipment = async (req, res) => {
           attributes: ["warehouse_name"],
         },
         {
-          model: project
-        }
+          model: project,
+        },
       ],
     });
 
