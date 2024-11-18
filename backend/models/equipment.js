@@ -36,11 +36,11 @@ const equipment = sequelize.define(
     },
     date_of_purchase: {
       type: DataTypes.DATEONLY,
-      allowNull: false,
+      allowNull: true,
     },
     cost_of_purchase: {
       type: DataTypes.DECIMAL,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {

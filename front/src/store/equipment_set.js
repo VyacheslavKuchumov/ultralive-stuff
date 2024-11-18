@@ -5,6 +5,7 @@ export default {
   state: () => ({
     equipment_sets: null,
     equipmentSetNames: [],
+    one_set: null,
   }),
   mutations: {
     setEquipmentSets(state, equipment_sets) {
@@ -12,6 +13,9 @@ export default {
     },
     setEquipmentSetNames(state, names) {
       state.equipmentSetNames = names;
+    },
+    setEquipmentSet(state, equipment_set) {
+      state.one_set = equipment_set;
     },
   },
   actions: {
@@ -37,9 +41,9 @@ export default {
     async getEquipmentSetByID({ commit }, equipment_set_id) {
       try {
         const equipmentSet = await instance.get(
-          `/api/equipment_set/${equipment_set_id}`
+          `/api/equipment_set/search/${equipment_set_id}`
         );
-        if (equipmentSet) return commit("setEquipmentSets", equipmentSet.data);
+        if (equipmentSet) return commit("setEquipmentSet", equipmentSet.data);
       } catch (error) {
         console.error("Error fetching equipment set by ID:", error);
       }

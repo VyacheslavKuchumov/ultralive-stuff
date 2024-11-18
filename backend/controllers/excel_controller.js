@@ -105,6 +105,7 @@ const exportDatabase = async (req, res) => {
           case "equipment_set":
             const equipmentSetFieldMapping = {
               equipment_set_name: "equipment_set_name",
+              description: "description",
               set_type_name: "set_type_name",
             };
             const equipmentSetData = await model.findAll({
@@ -296,6 +297,7 @@ const createModelByName = async (modelName, tableData) => {
           }
           await equipment_set.create({
             equipment_set_name: row.equipment_set_name,
+            description: row.description,
             set_type_id: foundSetType.set_type_id,
           });
           break;

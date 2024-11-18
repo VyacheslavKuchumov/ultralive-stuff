@@ -9,7 +9,7 @@ import Register from "@/views/Auth/Register.vue";
 import Login from "@/views/Auth/Login.vue";
 import instance from "@/middlewares";
 
-import EquipmentSetsView from "@/views/Dictionaries/EquipmentSetsView.vue";
+import EquipmentSetsView from "@/views/Equipment/EquipmentSetsView.vue";
 
 import auth from "@/store/auth";
 import WarehousesView from "@/views/Dictionaries/WarehousesView.vue";
@@ -35,21 +35,22 @@ const routes = [
     meta: { auth: false },
   },
   {
-    path: "/equipment",
+    path: "/equipment/:id",
     name: "equipment",
     component: EquipmentView,
     meta: { auth: true },
+    props: true,
   },
 
   {
-    path: "/equipment/create",
+    path: "/equipment/create/:set_id",
     name: "create-equipment",
     component: CreateEquipmentView,
     meta: { auth: true },
   },
 
   {
-    path: "/equipment/edit/:id",
+    path: "/equipment/edit/:set_id/:id",
     name: "edit-equipment",
     component: EditEquipmentView,
     meta: { auth: true },

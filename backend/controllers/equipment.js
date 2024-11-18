@@ -68,6 +68,30 @@ const getEquipmentById = async (req, res) => {
   }
 };
 
+const getEquipmentBySetId = async (req, res) => {
+  try {
+    const data = await equipment.findAll({
+      where: { equipment_set_id: req.params.id },
+      include: [
+        {
+          model: equipment_set,
+          as: "equipment_set",
+          attributes: ["equipment_set_name"], // Specify the fields to fetch from `equipment_set`
+        },
+        {
+          model: warehouse,
+          as: "storage",
+          attributes: ["warehouse_name"], // Specify the fields to fetch from `warehouse`
+        },
+      ],
+    });
+    if (!data) return res.status(404).send({ message: "Equipment not found" });
+    return res.json(data);
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
 // Function to add one equipment
 const createEquipment = async (req, res) => {
   try {
@@ -186,6 +210,7 @@ const deleteEquipmentById = async (req, res) => {
 
 // Exporting the functions
 module.exports = {
+  getEquipmentBySetId,
   getAllEquipment,
   createEquipment,
   editEquipmentById,

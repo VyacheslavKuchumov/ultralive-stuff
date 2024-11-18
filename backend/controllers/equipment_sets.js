@@ -46,7 +46,7 @@ const getEquipmentSetById = async (req, res) => {
 // Function to add a new equipment set
 const createEquipmentSet = async (req, res) => {
   try {
-    const { equipment_set_name, set_type_name } = req.body;
+    const { equipment_set_name, set_type_name, description } = req.body;
 
     const foundSetType = await set_type.findOne({
       where: { set_type_name: set_type_name },
@@ -54,9 +54,11 @@ const createEquipmentSet = async (req, res) => {
 
     const newEquipmentSet = await equipment_set.create({
       equipment_set_name,
+      description,
       set_type_id: foundSetType.set_type_id,
     });
     const data = await equipment_set.findAll({
+      order: [["equipment_set_name", "ASC"]],
       include: [
         {
           model: set_type,
@@ -75,7 +77,7 @@ const createEquipmentSet = async (req, res) => {
 const editEquipmentSetById = async (req, res) => {
   try {
     const id = req.params.id;
-    const { equipment_set_name, set_type_name } = req.body;
+    const { equipment_set_name, set_type_name, description } = req.body;
     const foundSetType = await set_type.findOne({
       where: { set_type_name: set_type_name },
     });
@@ -86,9 +88,11 @@ const editEquipmentSetById = async (req, res) => {
 
     await equipmentSetToUpdate.update({
       equipment_set_name,
+      description,
       set_type_id: foundSetType.set_type_id,
     });
     const data = await equipment_set.findAll({
+      order: [["equipment_set_name", "ASC"]],
       include: [
         {
           model: set_type,
@@ -114,6 +118,7 @@ const deleteEquipmentSetById = async (req, res) => {
 
     await equipmentSetToDelete.destroy();
     const data = await equipment_set.findAll({
+      order: [["equipment_set_name", "ASC"]],
       include: [
         {
           model: set_type,

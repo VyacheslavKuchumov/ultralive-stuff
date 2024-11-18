@@ -20,21 +20,21 @@ export default {
       if (equipment) return commit("setEquipment", equipment.data);
       console.log(equipment.message);
     },
+    async getEquipmentBySetID({ commit }, set_id) {
+      const response = await instance.get(`/api/equipment/set/${set_id}`);
+
+      if (response) return commit("setEquipment", response.data);
+      console.log(response);
+    },
     async getEquipmentByID({ commit }, equipment_id) {
       const equipment = await instance.get(
         `/api/equipment/search/${equipment_id}`
       );
       console.log(equipment);
       const formattedEquipment = {
-        equipment_id: equipment.data.equipment_id,
-        equipment_name: equipment.data.equipment_name,
-        serial_number: equipment.data.serial_number,
+        ...equipment.data,
         equipment_set_name: equipment.data.equipment_set.equipment_set_name,
         warehouse_name: equipment.data.storage.warehouse_name,
-        current_storage_name: equipment.data.current_storage,
-        needs_maintenance: equipment.data.needs_maintenance,
-        date_of_purchase: equipment.data.date_of_purchase,
-        cost_of_purchase: equipment.data.cost_of_purchase,
       };
       if (equipment) return commit("setEditedEquipment", formattedEquipment);
       console.log(equipment.message);

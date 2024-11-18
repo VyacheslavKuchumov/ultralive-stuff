@@ -2,7 +2,10 @@
   <v-container>
     <v-card>
       <v-card-title>
-        <span class="text-h5">Новое оборудование</span>
+        <span class="text-h5"
+          >Новое оборудование для комплекта
+          {{ this.one_set.equipment_set_name }}</span
+        >
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -22,14 +25,14 @@
               />
             </v-col>
 
-            <v-col cols="12" md="6" sm="6">
+            <!-- <v-col cols="12" md="6" sm="6">
               <v-autocomplete
                 clearable
                 label="Название комплекта"
                 v-model="newEquipment.equipment_set_name"
                 :items="equipmentSetNames"
               ></v-autocomplete>
-            </v-col>
+            </v-col> -->
 
             <v-col cols="12" md="6" sm="6">
               <v-autocomplete
@@ -84,12 +87,14 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { useRouter, useRoute } from "vue-router";
 
 export default {
   data() {
     return {
       dialog: false,
       datePickerDate: new Date(),
+      set_id: null,
       newEquipment: {
         equipment_name: "",
         serial_number: "",
@@ -102,7 +107,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("equipment_set", ["equipmentSetNames"]),
+    ...mapState("equipment_set", ["equipmentSetNames", "one_set"]),
     ...mapState("warehouse", ["warehouseNames"]),
   },
   methods: {
@@ -110,6 +115,7 @@ export default {
     ...mapActions("equipment_set", [
       "getAllEquipmentSets",
       "getAllEquipmentSetNames",
+      "getEquipmentSetByID",
     ]),
     ...mapActions("warehouse", ["getAllWarehouses", "getAllWarehouseNames"]),
 
@@ -123,16 +129,23 @@ export default {
 
     // Save method
     save() {
+      this.newEquipment.equipment_set_name = this.one_set.equipment_set_name;
       this.createEquipment(this.newEquipment);
 
-      this.$router.push("/equipment");
+      this.$router.push(`/equipment/${this.set_id}`);
     },
 
     cancel() {
-      this.$router.push("/equipment");
+      this.$router.push(`/equipment/${this.set_id}`);
     },
   },
   created() {
+    const route = useRoute();
+
+    this.set_id = route.params.set_id;
+    const setId = route.params.set_id;
+    this.getEquipmentSetByID(setId);
+
     this.getAllWarehouseNames();
     this.getAllEquipmentSetNames();
   },

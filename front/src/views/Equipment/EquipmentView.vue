@@ -1,8 +1,7 @@
 <template>
-  <v-card width="1200" class="elevation-5 mt-5 mx-auto">
+  <v-card max-width="1600" class="elevation-5 mt-5 mx-auto">
     <v-data-table
-      v-if="equipment"
-      :group-by="groupBy"
+      v-if="equipment && one_set"
       :headers="headers"
       :items="filteredEquipment"
       :items-per-page="-1"
@@ -13,7 +12,9 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Оборудование</v-toolbar-title>
+          <v-toolbar-title
+            >Комплект {{ one_set.equipment_set_name }}</v-toolbar-title
+          >
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-text-field
             v-model="search"
@@ -31,41 +32,26 @@
           <v-btn class="mb-2" color="primary" dark to="/equipment_sets">
             Комплекты
           </v-btn>
-          <v-btn class="mb-2" color="primary" dark to="/equipment/create">
+          <v-btn class="mb-2" color="primary" dark @click="goToCreatePage()">
             Новое оборудование
           </v-btn>
         </v-toolbar>
       </template>
 
-      <template
-        v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }"
-      >
-        <tr>
-          <td :colspan="columns.length" @click="toggleGroup(item)">
-            <v-btn
-              :class="groupClassify(item)"
-              :icon="
-                isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'
-              "
-              size="small"
-              variant="text"
-            ></v-btn>
-            <span :class="groupClassify(item)">{{ item.value }}</span>
-          </td>
-        </tr>
-      </template>
-
       <template v-slot:item="{ item }">
         <tr>
-          <td>{{}}</td>
           <td align="center">
             <v-icon v-if="item.needs_maintenance" color="orange"
               >mdi-tools</v-icon
             >
-            <v-icon v-else-if="item.current_storage" color="yellow"
+            <v-icon v-if="item.current_storage" color="yellow"
               >mdi-warehouse</v-icon
             >
-            <v-icon v-else color="green">mdi-check-circle</v-icon>
+            <v-icon
+              v-if="!(item.needs_maintenance && item.current_storage)"
+              color="green"
+              >mdi-check-circle</v-icon
+            >
           </td>
           <td>{{ item.equipment_name }}</td>
           <td>{{ item.serial_number }}</td>
@@ -99,15 +85,18 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { useRouter, useRoute } from "vue-router";
 
 export default {
   data() {
     return {
+      set_id: null,
       search: "",
     };
   },
   computed: {
     ...mapState("equipment", ["equipment"]),
+    ...mapState("equipment_set", ["one_set"]),
     headers() {
       return [
         { title: "Статус", key: "status", sortable: false },
@@ -122,18 +111,7 @@ export default {
         { title: "Удалить", key: "action_delete", sortable: false },
       ];
     },
-    groupBy() {
-      return [
-        {
-          key: "equipment_set.type.set_type_name",
-          order: "asc",
-        },
-        {
-          key: "equipment_set.equipment_set_name",
-          order: "asc",
-        },
-      ];
-    },
+
     filteredEquipment() {
       if (!this.search) {
         return this.equipment;
@@ -145,36 +123,27 @@ export default {
     },
   },
   methods: {
-    ...mapActions("equipment", ["getAllEquipment", "deleteEquipment"]),
-    initialize() {
-      this.getAllEquipment();
-    },
+    ...mapActions("equipment", ["getEquipmentBySetID", "deleteEquipment"]),
+    ...mapActions("equipment_set", ["getEquipmentSetByID"]),
+
     goToEditPage(item) {
-      this.$router.push(`/equipment/edit/${item.equipment_id}`);
+      this.$router.push(`/equipment/edit/${this.set_id}/${item.equipment_id}`);
+    },
+    goToCreatePage() {
+      this.$router.push(`/equipment/create/${this.set_id}`);
     },
     deleteItem(item) {
       this.deleteEquipment(item);
-    },
-    groupClassify(item) {
-      if (item.key === "equipment_set.type.set_type_name") {
-        return "first-group";
-      } // Adjust this condition
-      if (item.key === "equipment_set.equipment_set_name") {
-        return "second-group";
-      }
+      window.location.href = `/equipment/${this.set_id}`;
     },
   },
-  beforeMount() {
-    this.initialize();
+
+  created() {
+    const route = useRoute();
+    const setId = route.params.id;
+    this.set_id = route.params.id;
+    this.getEquipmentBySetID(setId);
+    this.getEquipmentSetByID(setId);
   },
 };
 </script>
-
-<style scoped>
-.second-group {
-  margin-left: 20px; /* Adjust this value for more or less indentation */
-}
-.first-group {
-  font-weight: bolder; /* Adjust this value for more or less indentation */
-}
-</style>

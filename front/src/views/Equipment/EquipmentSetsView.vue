@@ -1,10 +1,11 @@
 <template>
-  <v-container width="900">
+  <v-container max-width="1200">
     <v-row>
       <v-col cols="12">
         <v-data-table
           :headers="headers"
           :items="equipmentSets"
+          :group-by="groupBy"
           item-value="id"
           class="elevation-1"
           style="table-layout: auto; width: auto"
@@ -21,11 +22,38 @@
                 Виды комплектов
               </v-btn>
               <v-btn class="mb-2" color="primary" dark @click="openDialog()">
-                Добавить
+                Добавить комплект
               </v-btn>
             </v-toolbar>
           </template>
 
+          <template
+            v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }"
+          >
+            <tr>
+              <td :colspan="columns.length" @click="toggleGroup(item)">
+                <v-btn
+                  :icon="
+                    isGroupOpen(item) ? 'mdi-chevron-down' : 'mdi-chevron-right'
+                  "
+                  size="small"
+                  variant="text"
+                ></v-btn>
+                <span>{{ item.value }}</span>
+              </td>
+            </tr>
+          </template>
+
+          <template v-slot:item.actions_see_equipment="{ item }">
+            <v-btn
+              size="small"
+              color="secondary"
+              @click="goToSetEquipment(item)"
+              prepend-icon="mdi-camera"
+            >
+              Оборудование
+            </v-btn>
+          </template>
           <template v-slot:item.actions_edit="{ item }">
             <v-btn size="small" color="blue-darken-1" @click="openDialog(item)">
               <v-icon>mdi-pencil</v-icon>
@@ -61,6 +89,11 @@
             label="Введите название комплекта"
             required
           ></v-text-field>
+          <v-text-field
+            v-model="form.description"
+            label="Введите описание комплекта"
+            required
+          ></v-text-field>
           <v-autocomplete
             v-model="form.set_type_name"
             label="Введите вид комплекта"
@@ -90,6 +123,7 @@ export default {
         equipment_set_id: null,
         equipment_set_name: "",
         set_type_name: "",
+        description: "",
       },
       headers: [
         {
@@ -99,10 +133,16 @@ export default {
           sortable: true,
         },
         {
-          title: "Вид комплекта",
-          value: "type.set_type_name",
+          title: "Описание",
+          value: "description",
           width: "auto",
-          sortable: true,
+          sortable: false,
+        },
+        {
+          title: "Оборудование",
+          key: "actions_see_equipment",
+          width: "auto",
+          sortable: false,
         },
         {
           title: "Изменить",
@@ -125,6 +165,14 @@ export default {
     equipmentSets() {
       return this.equipment_sets || [];
     },
+    groupBy() {
+      return [
+        {
+          key: "type.set_type_name",
+          order: "asc",
+        },
+      ];
+    },
   },
   methods: {
     ...mapActions("equipment_set", [
@@ -140,8 +188,14 @@ export default {
             equipment_set_id: item.equipment_set_id,
             equipment_set_name: item.equipment_set_name,
             set_type_name: item.type.set_type_name,
+            description: item.description,
           }
-        : { equipment_set_id: null, equipment_set_name: "", set_type_name: "" };
+        : {
+            equipment_set_id: null,
+            equipment_set_name: "",
+            set_type_name: "",
+            description: "",
+          };
       this.dialog = true;
     },
     closeDialog() {
@@ -158,6 +212,9 @@ export default {
     },
     deleteItem(id) {
       this.deleteEquipmentSet({ equipment_set_id: id });
+    },
+    goToSetEquipment(item) {
+      this.$router.push(`/equipment/${item.equipment_set_id}`);
     },
   },
   beforeMount() {

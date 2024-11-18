@@ -100,7 +100,7 @@ export default {
   data() {
     return {
       dialog: false,
-
+      set_id: null,
       datePickerDate: new Date(),
     };
   },
@@ -116,10 +116,10 @@ export default {
 
     async save() {
       await this.updateEquipment(this.editedEquipment);
-      window.location.href = "/equipment";
+      window.location.href = `/equipment/${this.set_id}`;
     },
     cancel() {
-      this.$router.push("/equipment");
+      this.$router.push(`/equipment/${this.set_id}`);
     },
     updateDate() {
       const date = new Date(this.datePickerDate);
@@ -131,6 +131,7 @@ export default {
   async created() {
     const route = useRoute();
     const equipmentId = route.params.id;
+    this.set_id = route.params.set_id;
     this.getEquipmentByID(equipmentId);
 
     this.getAllWarehouseNames();
