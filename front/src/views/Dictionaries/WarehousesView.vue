@@ -8,6 +8,9 @@
           item-value="id"
           class="elevation-1"
           style="table-layout: auto; width: auto"
+          :items-per-page="-1"
+          fixed-header
+          hide-default-footer
         >
           <template v-slot:top>
             <v-toolbar flat>

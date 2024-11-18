@@ -5,6 +5,7 @@ const { set_type } = require("../models/set_types");
 const getAllEquipmentSets = async (req, res) => {
   try {
     const data = await equipment_set.findAll({
+      order: [["equipment_set_name", "ASC"]],
       include: [
         {
           model: set_type,

@@ -7,11 +7,13 @@ const { project } = require("../models/projects");
 const getAllEquipment = async (req, res) => {
   try {
     const data = await equipment.findAll({
+      order: [["equipment_name", "ASC"]],
       include: [
         {
           model: equipment_set,
           as: "equipment_set",
           attributes: ["equipment_set_name"],
+
           include: [
             {
               model: set_type,

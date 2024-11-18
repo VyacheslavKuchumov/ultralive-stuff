@@ -9,17 +9,16 @@ const equipment = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
+    equipment_set_id: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
     equipment_name: {
       type: DataTypes.TEXT,
       allowNull: false,
-      unique: true,
     },
     serial_number: {
       type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    equipment_set_id: {
-      type: DataTypes.BIGINT,
       allowNull: false,
     },
     storage_id: {
