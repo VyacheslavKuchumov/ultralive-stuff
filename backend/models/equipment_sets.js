@@ -15,6 +15,10 @@ const equipment_set = sequelize.define(
             type:DataTypes.TEXT,
             allowNull: false,
             unique: true
+        },
+        set_type_id:{
+            type: DataTypes.BIGINT,
+            allowNull: false,
         }
 
     },

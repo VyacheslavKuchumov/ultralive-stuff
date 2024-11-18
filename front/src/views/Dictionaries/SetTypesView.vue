@@ -4,8 +4,8 @@
       <v-col cols="12">
         <v-data-table
           :headers="headers"
-          :items="ProjectTypes"
-          item-value="project_type_id"
+          :items="SetTypes"
+          item-value="set_type_id"
           class="elevation-1"
           style="table-layout: auto; width: auto"
           :items-per-page="-1"
@@ -14,7 +14,7 @@
         >
           <template v-slot:top>
             <v-toolbar flat>
-              <v-toolbar-title>Площадки</v-toolbar-title>
+              <v-toolbar-title>Виды комплектов</v-toolbar-title>
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
               <v-btn class="mb-2" color="primary" dark @click="openDialog()">
@@ -32,7 +32,7 @@
             <v-btn
               size="small"
               color="red-darken-1"
-              @click="deleteItem(item.project_type_id)"
+              @click="deleteItem(item.set_type_id)"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -45,13 +45,13 @@
       <v-card>
         <v-card-title>
           <span class="headline"
-            >{{ form.project_type_id ? "Изменить" : "Добавить" }} площадку</span
+            >{{ form.set_type_id ? "Изменить" : "Добавить" }} набор</span
           >
         </v-card-title>
         <v-card-text>
           <v-text-field
-            v-model="form.project_type_name"
-            label="Project Type Name"
+            v-model="form.set_type_name"
+            label="Set Type Name"
             required
           ></v-text-field>
         </v-card-text>
@@ -72,9 +72,9 @@ export default {
   data() {
     return {
       dialog: false,
-      form: { project_type_id: null, project_type_name: "" },
+      form: { set_type_id: null, set_type_name: "" },
       headers: [
-        { title: "Название", value: "project_type_name", width: "auto" },
+        { title: "Название", value: "set_type_name", width: "auto" },
         {
           title: "Изменить",
           value: "action_edit",
@@ -91,43 +91,41 @@ export default {
     };
   },
   computed: {
-    ...mapState("project_types", ["projectTypes"]),
-    ProjectTypes() {
-      return this.projectTypes || [];
+    ...mapState("set_types", ["setTypes"]),
+    SetTypes() {
+      return this.setTypes || [];
     },
   },
   methods: {
-    ...mapActions("project_types", [
-      "getAllProjectTypes",
-      "createProjectType",
-      "updateProjectType",
-      "deleteProjectType",
+    ...mapActions("set_types", [
+      "getAllSetTypes",
+      "createSetType",
+      "updateSetType",
+      "deleteSetType",
     ]),
     openDialog(item = null) {
-      this.form = item
-        ? { ...item }
-        : { project_type_id: null, project_type_name: "" };
+      this.form = item ? { ...item } : { set_type_id: null, set_type_name: "" };
       this.dialog = true;
     },
     closeDialog() {
       this.dialog = false;
     },
     async saveItem() {
-      if (this.form.project_type_id) {
-        await this.updateProjectType(this.form);
+      if (this.form.set_type_id) {
+        await this.updateSetType(this.form);
       } else {
-        await this.createProjectType(this.form);
+        await this.createSetType(this.form);
       }
-      this.getAllProjectTypes();
+      this.getAllSetTypes();
       this.closeDialog();
     },
     async deleteItem(id) {
-      await this.deleteProjectType({ project_type_id: id });
-      this.getAllProjectTypes();
+      await this.deleteSetType({ set_type_id: id });
+      this.getAllSetTypes();
     },
   },
   beforeMount() {
-    this.getAllProjectTypes();
+    this.getAllSetTypes();
   },
 };
 </script>

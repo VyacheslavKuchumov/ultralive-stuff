@@ -3,15 +3,15 @@ const { DataTypes } = require('sequelize')
 
 
 
-const client = sequelize.define(
-    'client',
+const set_type = sequelize.define(
+    'set_type',
     {
-        client_id: {
+        set_type_id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true
         },
-        client_name:{
+        set_type_name:{
             type:DataTypes.TEXT,
             allowNull: false,
             unique: true
@@ -19,7 +19,7 @@ const client = sequelize.define(
 
     },
     {
-        tableName: 'clients',
+        tableName: 'set_types',
         timestamps: false
     },
     
@@ -28,4 +28,4 @@ const client = sequelize.define(
 
 
 
-module.exports = { client }
+module.exports = { set_type }
