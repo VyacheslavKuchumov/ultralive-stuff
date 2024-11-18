@@ -48,7 +48,7 @@
               >mdi-warehouse</v-icon
             >
             <v-icon
-              v-if="!(item.needs_maintenance && item.current_storage)"
+              v-if="!item.needs_maintenance && !item.current_storage"
               color="green"
               >mdi-check-circle</v-icon
             >

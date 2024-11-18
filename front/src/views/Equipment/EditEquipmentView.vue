@@ -29,12 +29,13 @@
               />
             </v-col>
             <v-col cols="12" md="6" sm="6">
-              <v-select
+              <v-text-field
                 clearable
                 v-model="editedEquipment.current_storage_name"
                 :items="warehouseNames"
                 label="Настоящее место хранения"
-              />
+              >
+              </v-text-field>
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-select
