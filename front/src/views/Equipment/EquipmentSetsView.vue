@@ -1,10 +1,10 @@
 <template>
-  <v-container max-width="1200">
+  <v-container max-width="1400">
     <v-row>
       <v-col cols="12">
         <v-data-table
           :headers="headers"
-          :items="equipmentSets"
+          :items="filteredEquipmentSets"
           :group-by="groupBy"
           item-value="id"
           class="elevation-1"
@@ -17,6 +17,15 @@
             <v-toolbar flat>
               <v-toolbar-title>Комплекты оборудования</v-toolbar-title>
               <v-divider class="mx-4" inset vertical></v-divider>
+              <v-text-field
+                v-model="search"
+                label="Поиск"
+                prepend-icon="mdi-magnify"
+                clearable
+                placeholder="Search..."
+                class="mt-2"
+                width="100"
+              ></v-text-field>
               <v-spacer></v-spacer>
               <v-btn class="mb-2" color="primary" dark to="/set_types">
                 Виды комплектов
@@ -119,6 +128,7 @@ export default {
   data() {
     return {
       dialog: false,
+      search: "",
       form: {
         equipment_set_id: null,
         equipment_set_name: "",
@@ -172,6 +182,15 @@ export default {
           order: "asc",
         },
       ];
+    },
+    filteredEquipmentSets() {
+      if (!this.search) {
+        return this.equipmentSets;
+      }
+      const searchTerm = this.search.toLowerCase();
+      return this.equipmentSets.filter((item) =>
+        item.equipment_set_name.toLowerCase().includes(searchTerm)
+      );
     },
   },
   methods: {
