@@ -1,19 +1,23 @@
 const { equipment_set } = require("../models/equipment_sets");
 const { set_type } = require("../models/set_types");
 
+const getAllDataHelper = () => {
+  return equipment_set.findAll({
+    order: [["equipment_set_name", "ASC"]],
+    include: [
+      {
+        model: set_type,
+        as: "type",
+        attributes: ["set_type_name"],
+      },
+    ],
+  })
+}
+
 // Function to get all equipment sets
 const getAllEquipmentSets = async (req, res) => {
   try {
-    const data = await equipment_set.findAll({
-      order: [["equipment_set_name", "ASC"]],
-      include: [
-        {
-          model: set_type,
-          as: "type",
-          attributes: ["set_type_name"],
-        },
-      ],
-    });
+    const data = await getAllDataHelper();
     if (!data)
       return res.status(404).send({ message: "Equipment sets not found" });
     return res.json(data);
@@ -57,16 +61,7 @@ const createEquipmentSet = async (req, res) => {
       description,
       set_type_id: foundSetType.set_type_id,
     });
-    const data = await equipment_set.findAll({
-      order: [["equipment_set_name", "ASC"]],
-      include: [
-        {
-          model: set_type,
-          as: "type",
-          attributes: ["set_type_name"],
-        },
-      ],
-    });
+    const data = await getAllDataHelper();
     return res.status(201).json(data);
   } catch (error) {
     return res.status(500).send({ message: error.message });
@@ -91,16 +86,7 @@ const editEquipmentSetById = async (req, res) => {
       description,
       set_type_id: foundSetType.set_type_id,
     });
-    const data = await equipment_set.findAll({
-      order: [["equipment_set_name", "ASC"]],
-      include: [
-        {
-          model: set_type,
-          as: "type",
-          attributes: ["set_type_name"],
-        },
-      ],
-    });
+    const data = await getAllDataHelper();
     return res.json(data);
   } catch (error) {
     return res.status(500).send({ message: error.message });
@@ -117,16 +103,7 @@ const deleteEquipmentSetById = async (req, res) => {
       return res.status(404).send({ message: "Equipment set not found" });
 
     await equipmentSetToDelete.destroy();
-    const data = await equipment_set.findAll({
-      order: [["equipment_set_name", "ASC"]],
-      include: [
-        {
-          model: set_type,
-          as: "type",
-          attributes: ["set_type_name"],
-        },
-      ],
-    });
+    const data = await getAllDataHelper();
     return res.status(200).send(data);
   } catch (error) {
     return res.status(500).send({ message: error.message });

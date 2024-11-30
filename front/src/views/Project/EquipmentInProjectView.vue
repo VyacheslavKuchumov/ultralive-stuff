@@ -4,23 +4,7 @@
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="editedProject"
   >
-    <v-toolbar flat>
-      <v-toolbar-title
-        v-if="editedProject.shooting_start_date !== editedProject.shooting_end_date"
-      >
-        Оборудование в съёмке: "{{ editedProject.project_name }}" 
-        ({{ formatDate(editedProject.shooting_start_date) }} - 
-         {{ formatDate(editedProject.shooting_end_date) }})
-      </v-toolbar-title>
-      <v-toolbar-title v-else>
-        Оборудование в съёмке: "{{ editedProject.project_name }}" 
-        ({{ formatDate(editedProject.shooting_start_date) }})
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" @click="dialog = true">
-        Добавить оборудование
-      </v-btn>
-    </v-toolbar>
+    
 
     <!-- Table for equipment in the project -->
     <v-data-table
@@ -34,7 +18,21 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>В съёмке</v-toolbar-title>
+          <v-toolbar-title
+            v-if="editedProject.shooting_start_date !== editedProject.shooting_end_date"
+          >
+            Оборудование в съёмке: "{{ editedProject.project_name }}" 
+            ({{ formatDate(editedProject.shooting_start_date) }} - 
+            {{ formatDate(editedProject.shooting_end_date) }})
+          </v-toolbar-title>
+          <v-toolbar-title v-else>
+            Оборудование в съёмке: "{{ editedProject.project_name }}" 
+            ({{ formatDate(editedProject.shooting_start_date) }})
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="dialog = true">
+            Добавить оборудование
+          </v-btn>
         </v-toolbar>
       </template>
 

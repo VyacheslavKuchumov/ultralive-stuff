@@ -4,33 +4,38 @@ const { equipment_set } = require("../models/equipment_sets");
 const { set_type } = require("../models/set_types");
 const { project } = require("../models/projects");
 
+
+const getAllDataHelper = () => {
+  return equipment.findAll({
+    order: [["equipment_name", "ASC"]],
+    include: [
+      {
+        model: equipment_set,
+        as: "equipment_set",
+        attributes: ["equipment_set_name"],
+
+        include: [
+          {
+            model: set_type,
+            as: "type",
+          },
+        ],
+      },
+      {
+        model: warehouse,
+        as: "storage",
+        attributes: ["warehouse_name"],
+      },
+      {
+        model: project,
+      },
+    ],
+  })
+}
+
 const getAllEquipment = async (req, res) => {
   try {
-    const data = await equipment.findAll({
-      order: [["equipment_name", "ASC"]],
-      include: [
-        {
-          model: equipment_set,
-          as: "equipment_set",
-          attributes: ["equipment_set_name"],
-
-          include: [
-            {
-              model: set_type,
-              as: "type",
-            },
-          ],
-        },
-        {
-          model: warehouse,
-          as: "storage",
-          attributes: ["warehouse_name"],
-        },
-        {
-          model: project,
-        },
-      ],
-    });
+    const data = await getAllDataHelper();
 
     if (!data) {
       return res.status(404).send({ message: "No equipment found" });
@@ -122,13 +127,14 @@ const createEquipment = async (req, res) => {
         date_of_purchase,
         cost_of_purchase,
       });
-
-      return res.status(201);
+      const data = await getAllDataHelper();
+      return res.status(201).send(data);
     } else {
       return res
         .status(500)
         .send({ message: "Invalid warehouse or equipment set." });
     }
+
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
@@ -171,8 +177,8 @@ const editEquipmentById = async (req, res) => {
       date_of_purchase,
       cost_of_purchase,
     });
-
-    return res.status(200).send({ message: "updated succesfully" }); // Return the updated equipment
+    const data = await getAllDataHelper();
+    return res.status(200).send(data); // Return the updated equipment
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
@@ -188,20 +194,7 @@ const deleteEquipmentById = async (req, res) => {
       return res.status(404).send({ message: "Equipment not found" });
 
     await equipmentToDelete.destroy();
-    const data = await equipment.findAll({
-      include: [
-        {
-          model: equipment_set,
-          as: "equipment_set",
-          attributes: ["equipment_set_name"], // Specify the fields to fetch from `equipment_set`
-        },
-        {
-          model: warehouse,
-          as: "storage",
-          attributes: ["warehouse_name"], // Specify the fields to fetch from `warehouse`
-        },
-      ],
-    });
+    const data = await getAllDataHelper();
     return res.status(200).send(data);
   } catch (error) {
     return res.status(500).send({ message: error.message });

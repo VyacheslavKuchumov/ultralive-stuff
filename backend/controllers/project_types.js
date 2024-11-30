@@ -1,9 +1,14 @@
 const { project_type } = require("../models/project_types");
 
+
+const getAllDataHelper = () => {
+  return project_type.findAll({})
+}
+
 // Function to get all project types
 const getAllProjectTypes = async (req, res) => {
   try {
-    const data = await project_type.findAll();
+    const data = await getAllDataHelper();
     if (!data) {
       return res.status(404).send({ message: "No project types found" });
     }
@@ -33,7 +38,7 @@ const createProjectType = async (req, res) => {
     try {
         const { project_type_name } = req.body;
         const newProjectType = await project_type.create({ project_type_name });
-        const data = await project_type.findAll();
+        const data = await getAllDataHelper();
         if (!data) {
             return res.status(404).send({ message: 'No project types found' });
         }
@@ -54,7 +59,7 @@ const editProjectTypeById = async (req, res) => {
         if (!projectTypeToUpdate) return res.status(404).send({ message: 'Project type not found' });
 
         await projectTypeToUpdate.update({ project_type_name });
-        const data = await project_type.findAll();
+        const data = await getAllDataHelper();
         if (!data) {
             return res.status(404).send({ message: 'No project types found' });
         }
@@ -73,7 +78,7 @@ const deleteProjectTypeById = async (req, res) => {
         if (!projectTypeToDelete) return res.status(404).send({ message: 'Project type not found' });
 
         await projectTypeToDelete.destroy();
-        const data = await project_type.findAll();
+        const data = await getAllDataHelper();
         if (!data) {
             return res.status(404).send({ message: 'No project types found' });
         }

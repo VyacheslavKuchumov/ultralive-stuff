@@ -131,8 +131,8 @@ export default {
     save() {
       this.newEquipment.equipment_set_name = this.one_set.equipment_set_name;
       this.createEquipment(this.newEquipment);
-
-      this.$router.push(`/equipment/${this.set_id}`);
+      window.location.href = `/equipment/${this.set_id}`;
+      
     },
 
     cancel() {
