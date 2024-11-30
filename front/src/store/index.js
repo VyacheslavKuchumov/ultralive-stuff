@@ -10,6 +10,8 @@ import projects from "@/store/projects";
 import clients from "@/store/clients";
 import project_types from "@/store/project_types";
 import set_types from "@/store/set_types";
+import equipment_in_project from "@/store/equipment_in_project";
+
 import excel_controller from "@/store/excel_controller";
 
 export default createStore({
@@ -30,5 +32,6 @@ export default createStore({
     project_types: project_types,
     set_types: set_types,
     excel_controller: excel_controller,
+    equipment_in_project: equipment_in_project
   },
 });

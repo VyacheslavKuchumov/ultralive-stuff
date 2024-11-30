@@ -2,16 +2,15 @@
   <v-card
     width="1100"
     class="elevation-5 mt-5 ml-auto mr-auto"
-    v-if="editedProject"
+    v-if="project"
   >
-    
 
     <!-- Table for equipment in the project -->
     <v-data-table
       v-if="equipment"
       :group-by="groupByInProject"
       :headers="headers"
-      :items="editedProject.equipment"
+      :items="project.equipment"
       :items-per-page="-1"
       fixed-header
       hide-default-footer
@@ -19,15 +18,15 @@
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title
-            v-if="editedProject.shooting_start_date !== editedProject.shooting_end_date"
+            v-if="project.shooting_start_date !== project.shooting_end_date"
           >
-            Оборудование в съёмке: "{{ editedProject.project_name }}" 
-            ({{ formatDate(editedProject.shooting_start_date) }} - 
-            {{ formatDate(editedProject.shooting_end_date) }})
+            Оборудование в съёмке: "{{ project.project_name }}" 
+            ({{ formatDate(project.shooting_start_date) }} - 
+            {{ formatDate(project.shooting_end_date) }})
           </v-toolbar-title>
           <v-toolbar-title v-else>
-            Оборудование в съёмке: "{{ editedProject.project_name }}" 
-            ({{ formatDate(editedProject.shooting_start_date) }})
+            Оборудование в съёмке: "{{ project.project_name }}" 
+            ({{ formatDate(project.shooting_start_date) }})
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="dialog = true">
@@ -56,7 +55,7 @@
               size="small"
               color="red-darken-1"
               @click.stop="removeGroup(item)"
-              v-if="editedProject.equipment.some(
+              v-if="project.equipment.some(
                 (equip) => equip.equipment_set.equipment_set_name === item.value
               )"
             >
@@ -119,7 +118,7 @@
                   size="small"
                   color="blue-darken-1"
                   @click.stop="addGroup(item)"
-                  v-if="!editedProject.equipment.some(
+                  v-if="!project.equipment.some(
                     (equip) =>
                       equip.equipment_set.equipment_set_name === item.value
                   ) && groupClassify(item) === 'second-group'"
@@ -159,8 +158,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("projects", ["editedProject", "projects"]),
     ...mapState("equipment", ["equipment"]),
+    ...mapState("equipment_in_project", ["project"]),
     headers() {
       return [
         { title: "Название", key: "equipment_name" },
@@ -183,31 +182,32 @@ export default {
     filteredEquipment() {
       return this.equipment.filter(
         (equip) =>
-          !this.editedProject.equipment.some(
+          !this.project.equipment.some(
             (projectEquip) => projectEquip.equipment_id === equip.equipment_id
           )
       );
     },
   },
   methods: {
-    ...mapActions("projects", [
-      "getAllProjects",
+    ...mapActions("equipment_in_project", [
       "getProjectByID",
-      "updateProject",
       "addEquipmentToProject",
       "removeEquipmentFromProject",
     ]),
-    ...mapActions("equipment", ["getAllEquipment"]),
+    ...mapActions("equipment", [
+      "getAllEquipment"
+    ]),
+
     deleteItem(item) {
       const data = {
-        project_id: this.editedProject.project_id,
+        project_id: this.project.project_id,
         equipment_id: item.equipment_id,
       };
       this.removeEquipmentFromProject(data);
     },
     addItem(item) {
       const data = {
-        project_id: this.editedProject.project_id,
+        project_id: this.project.project_id,
         equipment_id: item.equipment_id,
       };
       this.addEquipmentToProject(data);
@@ -218,19 +218,19 @@ export default {
       );
       equipmentToAdd.forEach((equip) => {
         const data = {
-          project_id: this.editedProject.project_id,
+          project_id: this.project.project_id,
           equipment_id: equip.equipment_id,
         };
         this.addEquipmentToProject(data);
       });
     },
     removeGroup(group) {
-      const equipmentToRemove = this.editedProject.equipment.filter(
+      const equipmentToRemove = this.project.equipment.filter(
         (equip) => equip.equipment_set.equipment_set_name === group.value
       );
       equipmentToRemove.forEach((equip) => {
         const data = {
-          project_id: this.editedProject.project_id,
+          project_id: this.project.project_id,
           equipment_id: equip.equipment_id,
         };
         this.removeEquipmentFromProject(data);
@@ -252,9 +252,9 @@ export default {
   created() {
     const route = useRoute();
     const projectId = route.params.id;
-    this.getAllProjects();
+
     this.getProjectByID(projectId);
-    this.getAllEquipment();
+    this.getAllEquipment()
   },
 };
 </script>

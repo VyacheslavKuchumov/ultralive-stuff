@@ -7,8 +7,7 @@ const {
   deleteProjectById,
   createProject,
   getProjectById,
-  addEquipmentToProject,
-  removeEquipmentFromProject,
+
 } = require("../controllers/projects");
 
 // Define routes for project operations
@@ -18,7 +17,5 @@ router.post("/", createProject);
 router.delete("/:id", deleteProjectById);
 router.put("/:id", editProjectById);
 
-router.post("/equipment", addEquipmentToProject);
-router.put("/equipment/del", removeEquipmentFromProject);
 
 module.exports = router;

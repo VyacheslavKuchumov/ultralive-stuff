@@ -6,32 +6,7 @@ const { project_type } = require("../models/project_types");
 const { user } = require("../models/users");
 
 
-const addEquipmentToProject = async (req, res) => {
-  try {
-    const { project_id, equipment_id } = req.body;
 
-    const foundProject = await project.findByPk(project_id);
-    const foundEquipment = await equipment.findByPk(equipment_id);
-
-    await foundProject.addEquipment(foundEquipment);
-    return res.status(200).send({ message: "Success!" });
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
-  }
-};
-
-const removeEquipmentFromProject = async (req, res) => {
-  try {
-    const { project_id, equipment_id } = req.body;
-    const foundProject = await project.findByPk(project_id);
-    const foundEquipment = await equipment.findByPk(equipment_id);
-
-    await foundProject.removeEquipment(foundEquipment);
-    return res.status(200).send({ message: "Success!" });
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
-  }
-};
 
 const getAllDataHelper = () => {
   return project.findAll({
@@ -215,6 +190,5 @@ module.exports = {
   createProject,
   editProjectById,
   deleteProjectById,
-  addEquipmentToProject,
-  removeEquipmentFromProject,
+
 };
