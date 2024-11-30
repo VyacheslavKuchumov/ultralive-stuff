@@ -1,9 +1,13 @@
 const { set_type } = require('../models/set_types');
 
+const getAllDataHelper = () => {
+    return set_type.findAll({})
+}
+
 // Function to get all set types
 const getAllSetTypes = async (req, res) => {
     try {
-        const data = await set_type.findAll();
+        const data = await getAllDataHelper();
         if (!data) {
             return res.status(404).send({ message: 'No set types found' });
         }
@@ -30,7 +34,7 @@ const createSetType = async (req, res) => {
     try {
         const { set_type_name } = req.body;
         const newSetType = await set_type.create({ set_type_name });
-        const data = await set_type.findAll();
+        const data = await getAllDataHelper();
         if (!data) {
             return res.status(404).send({ message: 'No set types found' });
         }
@@ -51,7 +55,7 @@ const editSetTypeById = async (req, res) => {
         if (!setTypeToUpdate) return res.status(404).send({ message: 'Set type not found' });
 
         await setTypeToUpdate.update({ set_type_name });
-        const data = await set_type.findAll();
+        const data = await getAllDataHelper();
         if (!data) {
             return res.status(404).send({ message: 'No set types found' });
         }
@@ -70,7 +74,7 @@ const deleteSetTypeById = async (req, res) => {
         if (!setTypeToDelete) return res.status(404).send({ message: 'Set type not found' });
 
         await setTypeToDelete.destroy();
-        const data = await set_type.findAll();
+        const data = await getAllDataHelper();
         if (!data) {
             return res.status(404).send({ message: 'No set types found' });
         }

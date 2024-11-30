@@ -1,9 +1,14 @@
 const { warehouse } = require('../models/warehouses');
 
+
+const getAllDataHelper = () => {
+    return warehouse.findAll({})
+}
+
 // Function to get all warehouses
 const getAllWarehouses = async (req, res) => {
     try {
-        const data = await warehouse.findAll({});
+        const data = await getAllDataHelper();
         if (!data) return res.status(404).send({ message: 'Warehouses not found' });
         return res.json(data);
     } catch (error) {
@@ -30,7 +35,7 @@ const addOneWarehouse = async (req, res) => {
             warehouse_name,
             warehouse_adress
         });
-        const data = await warehouse.findAll({});
+        const data = await getAllDataHelper();
         return res.status(201).json(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });
@@ -50,7 +55,7 @@ const editWarehouseById = async (req, res) => {
             warehouse_name,
             warehouse_adress
         });
-        const data = await warehouse.findAll({});
+        const data = await getAllDataHelper();
         return res.json(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });
@@ -66,7 +71,7 @@ const deleteWarehouseById = async (req, res) => {
         if (!warehouseToDelete) return res.status(404).send({ message: 'Warehouse not found' });
 
         await warehouseToDelete.destroy();
-        const data = await warehouse.findAll({});
+        const data = await getAllDataHelper();
         return res.status(200).send(data);
     } catch (error) {
         return res.status(500).send({ message: error.message });

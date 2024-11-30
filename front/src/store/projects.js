@@ -111,7 +111,7 @@ export default {
       try {
         const response = await instance.post("/api/projects", project);
         if (response) {
-          console.log("Project created successfully:", response.status);
+          commit("setProjects", response.data);
         }
       } catch (error) {
         console.error("Error creating project:", error);

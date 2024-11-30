@@ -4,7 +4,7 @@ const { equipment_set } = require("../models/equipment_sets");
 
 const { project_type } = require("../models/project_types");
 const { user } = require("../models/users");
-const { Model } = require("sequelize");
+
 
 const addEquipmentToProject = async (req, res) => {
   try {
@@ -33,29 +33,33 @@ const removeEquipmentFromProject = async (req, res) => {
   }
 };
 
+const getAllDataHelper = () => {
+  return project.findAll({
+    include: [
+      {
+        model: project_type,
+        as: "type",
+        attributes: ["project_type_name"], // Specify the fields to fetch from `project_types`
+      },
+      {
+        model: user,
+        as: "chiefEngineer",
+        attributes: ["name"],
+      },
+      {
+        model: equipment,
+        as: "equipment",
+        attributes: ["equipment_id"],
+      },
+    ],
+    order: [["shooting_start_date", "ASC"]],
+  })
+}
+
 // Function to get all projects
 const getAllProjects = async (req, res) => {
   try {
-    const data = await project.findAll({
-      include: [
-        {
-          model: project_type,
-          as: "type",
-          attributes: ["project_type_name"], // Specify the fields to fetch from `project_types`
-        },
-        {
-          model: user,
-          as: "chiefEngineer",
-          attributes: ["name"],
-        },
-        {
-          model: equipment,
-          as: "equipment",
-          attributes: ["equipment_id"],
-        },
-      ],
-      order: [["shooting_start_date", "ASC"]],
-    });
+    const data = await getAllDataHelper();
 
     if (!data) {
       return res.status(404).send({ message: "No projects found" });
@@ -130,8 +134,9 @@ const createProject = async (req, res) => {
         shooting_end_date,
         chief_engineer_id: foundUser.id,
       });
+      const data = await getAllDataHelper();
 
-      return res.status(201).json(newProject);
+      return res.status(201).send(data);
     } else {
       return res
         .status(500)
@@ -176,8 +181,9 @@ const editProjectById = async (req, res) => {
       shooting_date,
       chief_engineer_id: foundUser.id,
     });
+    const data = await getAllDataHelper();
 
-    return res.status(200).send({ message: "Project updated successfully" });
+    return res.status(200).send(data);
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
@@ -194,20 +200,7 @@ const deleteProjectById = async (req, res) => {
 
     await projectToDelete.destroy();
 
-    const data = await project.findAll({
-      include: [
-        {
-          model: project_type,
-          as: "type",
-          attributes: ["project_type_name"],
-        },
-        {
-          model: user,
-          as: "chiefEngineer",
-          attributes: ["name"],
-        },
-      ],
-    });
+    const data = await getAllDataHelper();
 
     return res.status(200).send(data);
   } catch (error) {

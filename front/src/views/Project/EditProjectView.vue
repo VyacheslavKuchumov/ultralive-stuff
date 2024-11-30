@@ -22,32 +22,62 @@
                 label="Площадка"
               />
             </v-col>
+            
+            <v-col cols="12" md="6" sm="6">
+              <v-text-field
+                v-model="editedProject.shooting_start_date"
+                label="Дата начала съемок"
+                prepend-icon="mdi-calendar"
+                @click="dialogStart = true"
+                readonly
+                clearable
+              />
+              <v-dialog v-model="dialogStart" width="400px">
+                <v-card>
+                  <v-date-picker v-model="datePickerStartDate" />
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="dialogStart = false"
+                      >Закрыть</v-btn
+                    >
+                    <v-btn text color="primary" @click="updateStartDate"
+                      >OK</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-col>
+
+            <v-col cols="12" md="6" sm="6">
+              <v-text-field
+                v-model="editedProject.shooting_end_date"
+                label="Дата конца съемок"
+                prepend-icon="mdi-calendar"
+                @click="dialogEnd = true"
+                readonly
+                clearable
+              />
+              <v-dialog v-model="dialogEnd" width="400px">
+                <v-card>
+                  <v-date-picker v-model="datePickerEndDate" />
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="primary" @click="dialogEnd = false"
+                      >Закрыть</v-btn
+                    >
+                    <v-btn text color="primary" @click="updateEndDate"
+                      >OK</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-select
                 v-model="editedProject.chief_engineer_name"
                 :items="userNames"
                 label="Главный инженер"
               />
-            </v-col>
-            <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                prepend-icon="mdi-calendar"
-                label="Дата съемки"
-                v-model="editedProject.shooting_date"
-                @click="dialog = true"
-              />
-              <v-dialog v-model="dialog" width="400px">
-                <v-card>
-                  <v-date-picker v-model="datePickerDate"></v-date-picker>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="dialog = false"
-                      >Закрыть</v-btn
-                    >
-                    <v-btn text color="primary" @click="updateDate">OK</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </v-col>
           </v-row>
         </v-container>
@@ -72,8 +102,10 @@ import { useRouter, useRoute } from "vue-router";
 export default {
   data() {
     return {
-      dialog: false,
-      datePickerDate: new Date(),
+      dialogStart: false,
+      dialogEnd: false,
+      datePickerStartDate: new Date(),
+      datePickerEndDate: new Date(),
     };
   },
   computed: {
@@ -96,11 +128,21 @@ export default {
     cancel() {
       this.$router.push("/projects");
     },
-    updateDate() {
-      const date = new Date(this.datePickerDate);
+    updateStartDate() {
+      const date = new Date(this.datePickerStartDate);
+
       date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      this.editedProject.shooting_date = date.toISOString().split("T")[0];
-      this.dialog = false;
+      this.editedProject.shooting_start_date = date.toISOString().split("T")[0]; // Converts to 'YYYY-MM-DD'
+      this.editedProject.shooting_end_date = date.toISOString().split("T")[0];
+      this.dialogStart = false;
+    },
+
+    updateEndDate() {
+      const date = new Date(this.datePickerEndDate);
+
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+      this.editedProject.shooting_end_date = date.toISOString().split("T")[0]; // Converts to 'YYYY-MM-DD'
+      this.dialogEnd = false;
     },
   },
   created() {
