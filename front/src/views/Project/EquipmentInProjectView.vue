@@ -1,10 +1,23 @@
 <template>
+
   <v-card
     max-width="1100"
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="project"
   >
-
+    <v-card-title
+      
+      v-if="project.shooting_start_date !== project.shooting_end_date"
+    >
+      "{{ project.project_name }}" 
+      ({{ formatDate(project.shooting_start_date) }} - 
+      {{ formatDate(project.shooting_end_date) }})
+    </v-card-title>
+    <v-card-title v-else>
+      "{{ project.project_name }}" 
+      ({{ formatDate(project.shooting_start_date) }})
+    </v-card-title>
+  
     <!-- Table for equipment in the project -->
     <v-data-table
       v-if="equipment"
@@ -17,16 +30,8 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title
-            v-if="project.shooting_start_date !== project.shooting_end_date"
-          >
-            Оборудование в съёмке: "{{ project.project_name }}" 
-            ({{ formatDate(project.shooting_start_date) }} - 
-            {{ formatDate(project.shooting_end_date) }})
-          </v-toolbar-title>
-          <v-toolbar-title v-else>
-            Оборудование в съёмке: "{{ project.project_name }}" 
-            ({{ formatDate(project.shooting_start_date) }})
+          <v-toolbar-title>
+            Оборудование в съёмке
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="dialog = true">

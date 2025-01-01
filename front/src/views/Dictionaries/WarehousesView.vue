@@ -23,17 +23,19 @@
             </v-toolbar>
           </template>
 
+          <!-- Кнопка редактирования -->
           <template v-slot:item.actions_edit="{ item }">
             <v-btn size="small" color="blue-darken-1" @click="openDialog(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
           </template>
 
+          <!-- Кнопка удаления с подтверждением -->
           <template v-slot:item.actions_delete="{ item }">
             <v-btn
               size="small"
               color="red-darken-1"
-              @click="deleteItem(item.warehouse_id)"
+              @click="openConfirmDialog(item.warehouse_id)"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -42,12 +44,13 @@
       </v-col>
     </v-row>
 
+    <!-- Диалог добавления/редактирования склада -->
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline"
-            >{{ form.warehouse_id ? "Изменить" : "Добавить" }} склад</span
-          >
+          <span class="headline">
+            {{ form.warehouse_id ? "Изменить" : "Добавить" }} склад
+          </span>
         </v-card-title>
         <v-card-text>
           <v-text-field
@@ -63,6 +66,19 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Диалог подтверждения удаления -->
+    <v-dialog v-model="confirmDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="text-h5">Подтвердите удаление</v-card-title>
+        <v-card-text>Вы уверены, что хотите удалить этот склад?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="confirmDialog = false">Отмена</v-btn>
+          <v-btn color="red" text @click="confirmDelete()">Удалить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -72,7 +88,9 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      dialog: false,
+      dialog: false, // Диалог добавления/редактирования
+      confirmDialog: false, // Диалог подтверждения удаления
+      selectedId: null, // ID выбранного склада для удаления
       form: { warehouse_id: null, warehouse_name: "" },
       headers: [
         { title: "Name", value: "warehouse_name", width: "auto" },
@@ -105,15 +123,20 @@ export default {
       "deleteWarehouse",
     ]),
 
+    // Открыть диалог добавления/редактирования
     openDialog(item = null) {
       this.form = item
         ? { ...item }
         : { warehouse_id: null, warehouse_name: "" };
       this.dialog = true;
     },
+
+    // Закрыть диалог добавления/редактирования
     closeDialog() {
       this.dialog = false;
     },
+
+    // Сохранить изменения (добавить или обновить запись)
     async saveItem() {
       if (this.form.warehouse_id) {
         await this.updateWarehouse(this.form);
@@ -123,9 +146,21 @@ export default {
       this.getAllWarehouses();
       this.closeDialog();
     },
-    async deleteItem(id) {
-      await this.deleteWarehouse({ warehouse_id: id });
-      this.getAllWarehouses();
+
+    // Открыть диалог подтверждения удаления
+    openConfirmDialog(id) {
+      this.selectedId = id; // Сохраняем ID для удаления
+      this.confirmDialog = true; // Открываем диалог подтверждения
+    },
+
+    // Подтвердить и выполнить удаление
+    confirmDelete() {
+      if (this.selectedId) {
+        this.deleteWarehouse({ warehouse_id: this.selectedId });
+        this.getAllWarehouses();
+      }
+      this.confirmDialog = false; // Закрываем диалог
+      this.selectedId = null; // Сбрасываем выбранный ID
     },
   },
   beforeMount() {

@@ -73,7 +73,7 @@
             <v-btn
               size="small"
               color="red-darken-1"
-              @click="deleteItem(item.equipment_set_id)"
+              @click="confirmDelete(item.equipment_set_id)"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -82,6 +82,7 @@
       </v-col>
     </v-row>
 
+    <!-- Диалог добавления/изменения комплекта -->
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
@@ -118,6 +119,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Диалог подтверждения удаления -->
+    <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="text-h5">Подтвердите удаление</v-card-title>
+        <v-card-text>
+          Вы уверены, что хотите удалить этот комплект?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="closeConfirmDialog()">Отмена</v-btn>
+          <v-btn color="red" @click="deleteConfirmed()">Удалить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -128,6 +144,8 @@ export default {
   data() {
     return {
       dialog: false,
+      confirmDeleteDialog: false,
+      equipmentSetToDelete: null,
       search: "",
       form: {
         equipment_set_id: null,
@@ -136,36 +154,11 @@ export default {
         description: "",
       },
       headers: [
-        {
-          title: "Название",
-          value: "equipment_set_name",
-          width: "auto",
-          sortable: true,
-        },
-        {
-          title: "Описание",
-          value: "description",
-          width: "auto",
-          sortable: false,
-        },
-        {
-          title: "Оборудование",
-          key: "actions_see_equipment",
-          width: "auto",
-          sortable: false,
-        },
-        {
-          title: "Изменить",
-          value: "actions_edit",
-          sortable: false,
-          width: "20",
-        },
-        {
-          title: "Удалить",
-          value: "actions_delete",
-          sortable: false,
-          width: "20",
-        },
+        { title: "Название", value: "equipment_set_name", sortable: true },
+        { title: "Описание", value: "description", sortable: false },
+        { title: "Оборудование", key: "actions_see_equipment", sortable: false },
+        { title: "Изменить", value: "actions_edit", sortable: false },
+        { title: "Удалить", value: "actions_delete", sortable: false },
       ],
     };
   },
@@ -177,44 +170,28 @@ export default {
     },
     groupBy() {
       return [
-        {
-          key: "type.set_type_name",
-          order: "asc",
-        },
+        { key: "type.set_type_name", order: "asc" },
       ];
     },
     filteredEquipmentSets() {
-      if (!this.search) {
-        return this.equipmentSets;
-      }
-      const searchTerm = this.search.toLowerCase();
+      if (!this.search) return this.equipmentSets;
       return this.equipmentSets.filter((item) =>
-        item.equipment_set_name.toLowerCase().includes(searchTerm)
+        item.equipment_set_name.toLowerCase().includes(this.search.toLowerCase())
       );
     },
   },
   methods: {
     ...mapActions("equipment_set", [
-      "getAllEquipmentSets", // Should be renamed to 'getAllEquipmentSets' in the Vuex store
-      "createEquipmentSet", // Should be renamed to 'createEquipmentSet'
-      "updateEquipmentSet", // Should be renamed to 'updateEquipmentSet'
-      "deleteEquipmentSet", // Should be renamed to 'deleteEquipmentSet'
+      "getAllEquipmentSets",
+      "createEquipmentSet",
+      "updateEquipmentSet",
+      "deleteEquipmentSet",
     ]),
     ...mapActions("set_types", ["getSetTypeNames"]),
     openDialog(item = null) {
       this.form = item
-        ? {
-            equipment_set_id: item.equipment_set_id,
-            equipment_set_name: item.equipment_set_name,
-            set_type_name: item.type.set_type_name,
-            description: item.description,
-          }
-        : {
-            equipment_set_id: null,
-            equipment_set_name: "",
-            set_type_name: "",
-            description: "",
-          };
+        ? { ...item, set_type_name: item.type.set_type_name }
+        : { equipment_set_id: null, equipment_set_name: "", set_type_name: "", description: "" };
       this.dialog = true;
     },
     closeDialog() {
@@ -226,11 +203,21 @@ export default {
       } else {
         this.createEquipmentSet(this.form);
       }
-
       this.closeDialog();
     },
-    deleteItem(id) {
-      this.deleteEquipmentSet({ equipment_set_id: id });
+    confirmDelete(id) {
+      this.equipmentSetToDelete = id;
+      this.confirmDeleteDialog = true;
+    },
+    closeConfirmDialog() {
+      this.confirmDeleteDialog = false;
+      this.equipmentSetToDelete = null;
+    },
+    deleteConfirmed() {
+      if (this.equipmentSetToDelete) {
+        this.deleteEquipmentSet({ equipment_set_id: this.equipmentSetToDelete });
+      }
+      this.closeConfirmDialog();
     },
     goToSetEquipment(item) {
       this.$router.push(`/equipment/${item.equipment_set_id}`);

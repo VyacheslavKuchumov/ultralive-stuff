@@ -23,16 +23,19 @@
             </v-toolbar>
           </template>
 
+          <!-- Кнопка редактирования -->
           <template v-slot:item.action_edit="{ item }">
             <v-btn size="small" color="blue-darken-1" @click="openDialog(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
           </template>
+
+          <!-- Кнопка удаления с подтверждением -->
           <template v-slot:item.action_delete="{ item }">
             <v-btn
               size="small"
               color="red-darken-1"
-              @click="deleteItem(item.project_type_id)"
+              @click="openConfirmDialog(item.project_type_id)"
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -41,12 +44,13 @@
       </v-col>
     </v-row>
 
+    <!-- Диалог добавления/редактирования -->
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline"
-            >{{ form.project_type_id ? "Изменить" : "Добавить" }} площадку</span
-          >
+          <span class="headline">
+            {{ form.project_type_id ? "Изменить" : "Добавить" }} площадку
+          </span>
         </v-card-title>
         <v-card-text>
           <v-text-field
@@ -62,6 +66,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Диалог подтверждения удаления -->
+    <v-dialog v-model="confirmDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="text-h5">Подтвердите удаление</v-card-title>
+        <v-card-text>
+          Вы уверены, что хотите удалить эту площадку?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="confirmDialog = false">Отмена</v-btn>
+          <v-btn color="red" text @click="confirmDelete()">Удалить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -71,7 +90,9 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      dialog: false,
+      dialog: false, // Диалог добавления/редактирования
+      confirmDialog: false, // Диалог подтверждения удаления
+      selectedId: null, // ID выбранной площадки для удаления
       form: { project_type_id: null, project_type_name: "" },
       headers: [
         { title: "Название", value: "project_type_name", width: "auto" },
@@ -103,15 +124,21 @@ export default {
       "updateProjectType",
       "deleteProjectType",
     ]),
+
+    // Открыть диалог добавления/редактирования
     openDialog(item = null) {
       this.form = item
         ? { ...item }
         : { project_type_id: null, project_type_name: "" };
       this.dialog = true;
     },
+
+    // Закрыть диалог добавления/редактирования
     closeDialog() {
       this.dialog = false;
     },
+
+    // Сохранить изменения (добавить или обновить запись)
     async saveItem() {
       if (this.form.project_type_id) {
         await this.updateProjectType(this.form);
@@ -121,9 +148,21 @@ export default {
       this.getAllProjectTypes();
       this.closeDialog();
     },
-    async deleteItem(id) {
-      await this.deleteProjectType({ project_type_id: id });
-      this.getAllProjectTypes();
+
+    // Открыть диалог подтверждения удаления
+    openConfirmDialog(id) {
+      this.selectedId = id; // Сохраняем ID для удаления
+      this.confirmDialog = true; // Открываем диалог подтверждения
+    },
+
+    // Подтвердить и выполнить удаление
+    async confirmDelete() {
+      if (this.selectedId) {
+        await this.deleteProjectType({ project_type_id: this.selectedId });
+        this.getAllProjectTypes();
+      }
+      this.confirmDialog = false; // Закрываем диалог
+      this.selectedId = null; // Сбрасываем выбранный ID
     },
   },
   beforeMount() {

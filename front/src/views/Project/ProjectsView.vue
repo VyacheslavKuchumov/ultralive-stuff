@@ -74,7 +74,7 @@
             </v-btn>
           </td>
           <td>
-            <v-btn size="small" color="red-darken-1" @click="deleteItem(item)">
+            <v-btn size="small" color="red-darken-1" @click="confirmDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </td>
@@ -84,6 +84,21 @@
       <template v-slot:no-data> Нет данных </template>
     </v-data-table>
   </v-card>
+
+  <!-- Диалог подтверждения удаления -->
+  <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+    <v-card>
+      <v-card-title class="text-h5">Подтвердите удаление</v-card-title>
+      <v-card-text>
+        Вы уверены, что хотите удалить проект "{{ projectToDelete?.project_name }}"?
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeConfirmDialog()">Отмена</v-btn>
+        <v-btn color="red" @click="deleteConfirmed()">Удалить</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -93,6 +108,8 @@ export default {
   data() {
     return {
       search: "",
+      confirmDeleteDialog: false,
+      projectToDelete: null, // Хранит информацию о проекте для удаления
     };
   },
   computed: {
@@ -109,14 +126,6 @@ export default {
         { title: "Удалить", key: "action_delete", sortable: false },
       ];
     },
-    // groupBy() {
-    //   return [
-    //     {
-    //       key: "shooting_date",
-    //       order: "desc",
-    //     },
-    //   ];
-    // },
     filteredProjects() {
       if (!this.search) {
         return this.projects;
@@ -127,28 +136,19 @@ export default {
       );
     },
     projectsWithSharedEquipment() {
-      // Create a map to store equipment and shooting_date combinations.
       const equipmentDateMap = {};
-
-      // Iterate through each project and its equipment.
       this.projects.forEach((project) => {
         project.equipment.forEach((eq) => {
           const key = `${eq.equipment_id}_${project.shooting_date}`;
-
-          // Initialize an empty array for this key if not already present.
           if (!equipmentDateMap[key]) {
             equipmentDateMap[key] = [];
           }
-
-          // Store the project ID for the combination of equipment and shooting_date.
           equipmentDateMap[key].push(project.project_id);
         });
       });
 
-      // Find project IDs that have shared equipment on the same date.
       const sharedProjectIds = new Set();
       Object.values(equipmentDateMap).forEach((projectIds) => {
-        // If more than one project shares the same equipment and date, mark them.
         if (projectIds.length > 1) {
           projectIds.forEach((id) => sharedProjectIds.add(id));
         }
@@ -165,11 +165,29 @@ export default {
     goToEditPage(item) {
       this.$router.push(`/project/edit/${item.project_id}`);
     },
-    deleteItem(item) {
-      this.deleteProject(item.project_id);
-    },
     goToProjectEquipment(item) {
       this.$router.push(`/project/${item.project_id}`);
+    },
+
+    // Открыть диалог подтверждения
+    confirmDelete(item) {
+      this.projectToDelete = item; // Сохраняем проект для удаления
+      this.confirmDeleteDialog = true; // Открываем диалог
+    },
+
+    // Закрыть диалог
+    closeConfirmDialog() {
+      this.confirmDeleteDialog = false;
+      this.projectToDelete = null;
+    },
+
+    // Подтверждение удаления
+    deleteConfirmed() {
+      if (this.projectToDelete) {
+        this.deleteProject(this.projectToDelete.project_id); // Удаляем проект
+        this.getAllProjects(); // Обновляем список проектов
+      }
+      this.closeConfirmDialog();
     },
   },
   created() {

@@ -71,7 +71,7 @@
             </v-btn>
           </td>
           <td>
-            <v-btn size="small" color="red-darken-1" @click="deleteItem(item)">
+            <v-btn size="small" color="red-darken-1" @click="confirmDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </td>
@@ -81,6 +81,21 @@
       <template v-slot:no-data> Нет данных </template>
     </v-data-table>
   </v-card>
+
+  <!-- Диалог подтверждения удаления -->
+  <v-dialog v-model="confirmDeleteDialog" max-width="400px">
+    <v-card>
+      <v-card-title class="text-h5">Подтвердите удаление</v-card-title>
+      <v-card-text>
+        Вы уверены, что хотите удалить оборудование "{{ equipmentToDelete?.equipment_name }}"?
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeConfirmDialog()">Отмена</v-btn>
+        <v-btn color="red" @click="deleteConfirmed()">Удалить</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -92,6 +107,8 @@ export default {
     return {
       set_id: null,
       search: "",
+      confirmDeleteDialog: false,
+      equipmentToDelete: null,
     };
   },
   computed: {
@@ -132,9 +149,22 @@ export default {
     goToCreatePage() {
       this.$router.push(`/equipment/create/${this.set_id}`);
     },
-    deleteItem(item) {
-      this.deleteEquipment(item);
-      window.location.href = `/equipment/${this.set_id}`;
+
+    confirmDelete(item) {
+      this.equipmentToDelete = item; // Сохраняем оборудование для удаления
+      this.confirmDeleteDialog = true; // Открываем диалог подтверждения
+    },
+    closeConfirmDialog() {
+      this.confirmDeleteDialog = false;
+      this.equipmentToDelete = null;
+    },
+    deleteConfirmed() {
+      if (this.equipmentToDelete) {
+        this.deleteEquipment(this.equipmentToDelete); // Выполняем удаление
+        this.getEquipmentBySetID(this.set_id); // Обновляем список оборудования
+        window.location.href = `/equipment/${this.set_id}`;
+      }
+      this.closeConfirmDialog();
     },
   },
 
