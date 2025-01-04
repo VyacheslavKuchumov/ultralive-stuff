@@ -7,26 +7,27 @@
   >
     <v-card-title
       
-      v-if="project.shooting_start_date !== project.shooting_end_date"
+      v-if="project.project.shooting_start_date !== project.project.shooting_end_date"
     >
-      "{{ project.project_name }}" 
-      ({{ formatDate(project.shooting_start_date) }} - 
-      {{ formatDate(project.shooting_end_date) }})
+      "{{ project.project.project_name }}" 
+      ({{ formatDate(project.project.shooting_start_date) }} - 
+      {{ formatDate(project.project.shooting_end_date) }})
     </v-card-title>
     <v-card-title v-else>
-      "{{ project.project_name }}" 
-      ({{ formatDate(project.shooting_start_date) }})
+      "{{ project.project.project_name }}" 
+      ({{ formatDate(project.project.shooting_start_date) }})
     </v-card-title>
   
     <!-- Table for equipment in the project -->
     <v-data-table
-      v-if="equipment"
+      v-if="project.equipment_in_project"
       :group-by="groupByInProject"
       :headers="headers"
-      :items="project.equipment"
+      :items="project.equipment_in_project"
       :items-per-page="-1"
       fixed-header
       hide-default-footer
+      hide-default-header="true"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -56,13 +57,12 @@
             ></v-btn>
             <span :class="groupClassify(item)">{{ item.value }}</span>
             <v-btn
+              v-if="groupClassify(item) != 'first-group'"
               class="ml-5"
               size="small"
               color="red-darken-1"
-              @click.stop="removeGroup(item)"
-              v-if="project.equipment.some(
-                (equip) => equip.equipment_set.equipment_set_name === item.value
-              )"
+              @click.stop="removeSet(item)"
+              
             >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -86,8 +86,10 @@
 
     <!-- Dialog for available equipment -->
     <v-dialog v-model="dialog" max-width="600">
+      
       <v-card>
         <v-toolbar flat>
+          
           <v-toolbar-title>Добавить оборудование</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn v-if="!sets_view" @click="sets_view = true" class="mb-2" color="red" dark>
@@ -95,13 +97,33 @@
           </v-btn>
           
         </v-toolbar>
+        <v-text-field
+        v-if="sets_view"
+                v-model="searchSets"
+                label="Поиск комплектов"
+                prepend-icon="mdi-magnify"
+                clearable
+                placeholder="Panasonic..."
+                class="mt-2 ml-2"
+                max-width="500"
+              ></v-text-field>
+        <v-text-field
+        v-else
+                v-model="searchEquipment"
+                label="Поиск оборудования"
+                prepend-icon="mdi-magnify"
+                clearable
+                placeholder="Камера..."
+                class="mt-2 ml-2"
+                max-width="500"
+              ></v-text-field>
         <v-data-table
-          v-if="equipment_sets && sets_view"
+          v-if="project.sets_in_project && sets_view"
           :group-by="groupBySets"
           :headers="setsHeaders"
-          :items="equipment_sets"
+          :items="filteredSets"
           :items-per-page="-1"
-          fixed-header
+          hide-default-header="true"
           hide-default-footer
         >
           <template v-slot:group-header="{
@@ -141,7 +163,7 @@
               class="mr-5"
               size="small"
               color="blue-darken-1"
-              @click="addItem(item)"
+              @click="addSet(item)"
             >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -156,10 +178,11 @@
         <v-data-table
           v-if="equipment && !sets_view"
           :headers="equipmentHeaders"
-          :items="equipment"
+          :items="filteredEquipment"
           :items-per-page="-1"
           fixed-header
           hide-default-footer
+          hide-default-header="true"
         >
           
 
@@ -191,13 +214,31 @@ export default {
   data() {
     return {
       dialog: false,
-      sets_view: true
+      sets_view: true,
+      searchSets: "",
+      searchEquipment: "",
     };
   },
   computed: {
-    ...mapState("equipment", ["equipment"]),
-    ...mapState("equipment_in_project", ["project"]),
+    
+    ...mapState("equipment_in_project", ["project", "equipment"]),
     ...mapState("equipment_set", ["equipment_sets"]),
+    filteredSets() {
+    // Filter sets based on search input
+    if (!this.searchSets) return this.project.sets_in_project || [];
+    const search = this.searchSets.toLowerCase();
+    return this.project.sets_in_project.filter((item) =>
+      item.equipment_set_name.toLowerCase().includes(search)
+    );
+  },
+  filteredEquipment() {
+    // Filter equipment based on search input
+    if (!this.searchEquipment) return this.equipment || [];
+    const search = this.searchEquipment.toLowerCase();
+    return this.equipment.filter((item) =>
+      item.equipment_name.toLowerCase().includes(search)
+    );
+  },
 
     headers() {
       return [
@@ -243,20 +284,16 @@ export default {
         { key: "equipment_set.equipment_set_name", order: "asc" },
       ];
     },
-    filteredEquipment() {
-      return this.equipment.filter(
-        (equip) =>
-          !this.project.equipment.some(
-            (projectEquip) => projectEquip.equipment_id === equip.equipment_id
-          )
-      );
-    },
+    
   },
   methods: {
     ...mapActions("equipment_in_project", [
       "getProjectByID",
       "addEquipmentToProject",
       "removeEquipmentFromProject",
+      "addSetToProject",
+      "removeSetFromProject",
+      "getAvailableEquipmentInSet"
     ]),
     ...mapActions("equipment", [
       "getAllEquipment",
@@ -270,47 +307,47 @@ export default {
       "deleteEquipmentSet",
     ]),
     showEquipment(item){
-      this.getEquipmentBySetID(item.equipment_set_id)
+      const data = {
+        project_id: this.project.project.project_id,
+        equipment_set_id: item.equipment_set_id,
+      }
+      this.getAvailableEquipmentInSet(data)
       this.sets_view = false
     },
 
     deleteItem(item) {
       const data = {
-        project_id: this.project.project_id,
+        project_id: this.project.project.project_id,
         equipment_id: item.equipment_id,
       };
       this.removeEquipmentFromProject(data);
     },
     addItem(item) {
       const data = {
-        project_id: this.project.project_id,
+        project_id: this.project.project.project_id,
         equipment_id: item.equipment_id,
+        equipment_set_id: item.equipment_set_id,
       };
       this.addEquipmentToProject(data);
     },
-    addGroup(group) {
-      const equipmentToAdd = this.filteredEquipment.filter(
-        (equip) => equip.equipment_set.equipment_set_name === group.value
-      );
-      equipmentToAdd.forEach((equip) => {
-        const data = {
-          project_id: this.project.project_id,
-          equipment_id: equip.equipment_id,
-        };
-        this.addEquipmentToProject(data);
-      });
+    addSet(item) {
+      console.log(item)
+      const data = {
+        project_id: this.project.project.project_id,
+        equipment_set_id: item.equipment_set_id,
+      };
+      
+      this.addSetToProject(data);
+      
     },
-    removeGroup(group) {
-      const equipmentToRemove = this.project.equipment.filter(
-        (equip) => equip.equipment_set.equipment_set_name === group.value
-      );
-      equipmentToRemove.forEach((equip) => {
-        const data = {
-          project_id: this.project.project_id,
-          equipment_id: equip.equipment_id,
-        };
-        this.removeEquipmentFromProject(data);
-      });
+    removeSet(item) {
+      console.log(item);
+      
+      const data = {
+        project_id: this.project.project.project_id,
+        equipment_set_name: item.value,
+      };
+      this.removeSetFromProject(data);
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString("ru", {

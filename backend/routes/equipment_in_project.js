@@ -5,12 +5,18 @@ const {
 
   addEquipmentToProject,
   removeEquipmentFromProject,
-  getEquipmentInProject
+  getEquipmentInProject,
+  addSetToProject,
+  removeSetFromProject,
+  getAvailableEquipmentInSet
 } = require("../controllers/equipment_in_project");
 
 
 router.get("/:id", getEquipmentInProject);
 router.post("/add", addEquipmentToProject);
 router.put("/del", removeEquipmentFromProject);
+router.post("/add_set", addSetToProject);
+router.put("/del_set", removeSetFromProject);
+router.post("/equipment_in_set", getAvailableEquipmentInSet);
 
 module.exports = router;
