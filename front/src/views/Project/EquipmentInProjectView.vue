@@ -1,10 +1,11 @@
 <template>
-
+  
   <v-card
     max-width="1100"
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="project"
   >
+    {{ conflictingSetNames }}
     <v-card-title
       
       v-if="project.project.shooting_start_date !== project.project.shooting_end_date"
@@ -55,6 +56,12 @@
               size="small"
               variant="text"
             ></v-btn>
+            <v-icon
+              v-if="checkSetName(item.value)"
+              color="blue"
+            >
+              mdi-camera
+            </v-icon>
             <span :class="groupClassify(item)">{{ item.value }}</span>
             <v-btn
               v-if="groupClassify(item) != 'first-group'"
@@ -69,6 +76,12 @@
           </td>
         </tr>
       </template>
+
+      <!-- <template v-slot:item.status="{ item }">
+        <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
+        <v-icon v-else color="green">mdi-check-circle</v-icon>
+
+      </template> -->
 
       <template v-slot:item.action_delete="{ item }">
         <v-btn
@@ -140,10 +153,18 @@
                   size="small"
                   variant="text"
                 ></v-btn>
+                
+                
                 <span>{{ item.value }}</span>
                 
               </td>
             </tr>
+          </template>
+
+          <template v-slot:item.status="{ item }">
+            <v-icon v-if="checkSetName(item.equipment_set_name)" color="blue">mdi-camera</v-icon>
+            
+
           </template>
 
           <template v-slot:item.actions_see_equipment="{ item }">
@@ -185,6 +206,11 @@
           hide-default-header="true"
         >
           
+          <template v-slot:item.status="{ item }">
+            <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
+           
+
+          </template>
 
           <template v-slot:item.action_add="{ item }">
             <v-btn
@@ -221,7 +247,7 @@ export default {
   },
   computed: {
     
-    ...mapState("equipment_in_project", ["project", "equipment"]),
+    ...mapState("equipment_in_project", ["project", "equipment", "conflictingEquipmentIDs", "conflictingSetNames"]),
     ...mapState("equipment_set", ["equipment_sets"]),
     filteredSets() {
     // Filter sets based on search input
@@ -242,6 +268,7 @@ export default {
 
     headers() {
       return [
+        {title: "Статус", key: "status", sortable: false },
         { title: "Название", key: "equipment_name" },
         { title: "", key: "action_add", sortable: false },
         { title: "", key: "action_delete", sortable: false },
@@ -250,7 +277,9 @@ export default {
 
     setsHeaders() {
       return [
+        { title: "Статус", key: "status", sortable: false },
         { title: "Название комплекта", key: "equipment_set_name" },
+        { title: "Описание", key: "description", sortable: false },
         {
           title: "",
           key: "actions_see_equipment",
@@ -268,6 +297,7 @@ export default {
     },
     equipmentHeaders() {
       return [
+        { title: "Статус", key: "status", sortable: false },
         { title: "Название", key: "equipment_name" },
         { title: "", key: "action_add", sortable: false },
       ];
@@ -293,7 +323,8 @@ export default {
       "removeEquipmentFromProject",
       "addSetToProject",
       "removeSetFromProject",
-      "getAvailableEquipmentInSet"
+      "getAvailableEquipmentInSet",
+      "getConflictingEquipment"
     ]),
     ...mapActions("equipment", [
       "getAllEquipment",
@@ -313,6 +344,14 @@ export default {
       }
       this.getAvailableEquipmentInSet(data)
       this.sets_view = false
+    },
+
+    checkSetName(item){
+      return this.conflictingSetNames.includes(item)
+    },
+
+    checkEquipmentID(item){
+      return this.conflictingEquipmentIDs.includes(item)
     },
 
     deleteItem(item) {
@@ -368,6 +407,7 @@ export default {
     this.getAllEquipmentSets();
     this.getProjectByID(projectId);
     this.getAllEquipment()
+    this.getConflictingEquipment(projectId)
   },
 };
 </script>

@@ -6,6 +6,8 @@ export default {
   state: () => ({
     project: null,
     equipment: null,
+    conflictingEquipmentIDs: null,
+    conflictingSetNames: null,
   }),
   mutations: {
     setProject(state, project) {
@@ -17,10 +19,37 @@ export default {
     setProjectAndEquipment(state, data) {
       state.project = data.project;
       state.equipment = data.equipment;
-    }
+    },
+    setConflictingEquipment(state, data) {
+      state.conflictingEquipmentIDs = data.equipmentIDs;
+      state.conflictingSetNames = data.setNames;
+    },
+    
 
   },
   actions: {
+
+    async getConflictingEquipment({ commit }, project_id) {
+      try {
+        const body = {
+          project_id: project_id,
+        };
+        const response = await instance.post(
+          `/api/equipment_in_project/conflicting`, body
+        );
+
+        
+          const conflictingEquipmentIDs = response.data.map(item => item.equipment_id);
+          const conflictingSetNames = [...new Set(response.data.map(item => item.equipment_set_name))];
+          console.log(conflictingEquipmentIDs);
+          console.log(conflictingSetNames);
+          const data = { equipmentIDs: conflictingEquipmentIDs, setNames: conflictingSetNames };
+          commit("setConflictingEquipment", data);
+        
+      } catch (error) {
+        console.error("Error fetching conflicting equipment:", error);
+      }
+    },
 
     async getProjectByID({ commit }, project_id) {
         try {

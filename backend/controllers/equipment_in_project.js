@@ -252,12 +252,119 @@ const getAvailableEquipmentInSet = async (req, res) => {
 }
 
 
+
+const getConflictingEquipment = async (req, res) => {
+  try {
+    const { project_id } = req.body;
+    console.log(project_id)
+    // Retrieve the requested project's details, including equipment
+    const proj = await project.findOne({
+      where: { project_id: project_id },
+      include: [
+        {
+          model: equipment,
+          include: [
+            {
+              model: equipment_set,
+              as: "equipment_set",
+              attributes: ["equipment_set_name"],
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!proj) {
+      return res.status(404).send({ message: "Project not found" });
+    }
+
+    const start_date = proj.shooting_start_date;
+    const end_date = proj.shooting_end_date;
+
+    // Extract equipment IDs for the current project
+    const equipmentIdsInProject = proj.equipment.map((e) => e.equipment_id);
+
+    // Find conflicting projects with overlapping shooting dates
+    const conflictingProjects = await project.findAll({
+      where: {
+        project_id: { [Op.ne]: project_id }, // Exclude the current project
+        [Op.or]: [
+          {
+            shooting_start_date: {
+              [Op.between]: [start_date, end_date], // Start date overlaps
+            },
+          },
+          {
+            shooting_end_date: {
+              [Op.between]: [start_date, end_date], // End date overlaps
+            },
+          },
+          {
+            [Op.and]: [
+              { shooting_start_date: { [Op.lte]: start_date } }, // Enclosing range
+              { shooting_end_date: { [Op.gte]: end_date } },
+            ],
+          },
+        ],
+      },
+      include: [
+        {
+          model: equipment,
+          include: [
+            {
+              model: equipment_set,
+              as: "equipment_set",
+              attributes: ["equipment_set_name"],
+              include: [
+                {
+                  model: set_type,
+                  as: "type",
+                },
+              ],
+            },
+            {
+              model: warehouse,
+              as: "storage",
+              attributes: ["warehouse_name"],
+            },
+          ],
+        },
+      ],
+    });
+
+    // Extract conflicting equipment details
+    const conflictingEquipment = [];
+    conflictingProjects.forEach((conflictingProj) => {
+      conflictingProj.equipment.forEach((equip) => {
+        
+          conflictingEquipment.push({
+            project_id: conflictingProj.project_id,
+            project_name: conflictingProj.project_name,
+            equipment_id: equip.equipment_id,
+            equipment_name: equip.equipment_name,
+            equipment_set_name: equip.equipment_set.equipment_set_name,
+            warehouse_name: equip.storage.warehouse_name,
+          });
+        
+      });
+    });
+
+    // Send response
+    return res.status(200).send(conflictingEquipment);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+
 module.exports = {
     getEquipmentInProject,
     addEquipmentToProject,
     removeEquipmentFromProject,
     removeSetFromProject,
     addSetToProject,
-    getAvailableEquipmentInSet
+    getAvailableEquipmentInSet,
+    getConflictingEquipment,
 };
   
