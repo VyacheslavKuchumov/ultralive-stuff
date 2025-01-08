@@ -5,7 +5,7 @@
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="project"
   >
-    {{ conflictingSetNames }}
+    <!-- {{ conflictingSetNames }} -->
     <v-card-title
       
       v-if="project.project.shooting_start_date !== project.project.shooting_end_date"
@@ -77,11 +77,11 @@
         </tr>
       </template>
 
-      <!-- <template v-slot:item.status="{ item }">
+      <template v-slot:item.status="{ item }">
         <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
-        <v-icon v-else color="green">mdi-check-circle</v-icon>
+        
 
-      </template> -->
+      </template>
 
       <template v-slot:item.action_delete="{ item }">
         <v-btn
