@@ -90,7 +90,8 @@ export default {
       try {
         const response = await instance.delete(`/api/equipment/${equipment.equipment_id}`);
         if (response.status === 200) {
-          return commit("setEquipment", response.data);
+          console.log("Equipment deleted successfully:");
+          // return commit("setEquipment", response.data);
         }
         window.alert(`Error: ${response.status} - ${response.statusText}`);
       } catch (error) {

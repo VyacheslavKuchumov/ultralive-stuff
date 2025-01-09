@@ -20,6 +20,13 @@
             <v-col cols="12" md="6" sm="6">
               <v-text-field
                 clearable
+                v-model="newEquipment.description"
+                label="Описание"
+              />
+            </v-col>
+            <v-col cols="12" md="6" sm="6">
+              <v-text-field
+                clearable
                 v-model="newEquipment.serial_number"
                 label="Серийный номер"
               />
@@ -97,6 +104,7 @@ export default {
       set_id: null,
       newEquipment: {
         equipment_name: "",
+        description: "",
         serial_number: "",
         equipment_set_name: "", // Changed to hold the selected equipment type object
         warehouse_name: "", // Changed to hold the selected warehouse object

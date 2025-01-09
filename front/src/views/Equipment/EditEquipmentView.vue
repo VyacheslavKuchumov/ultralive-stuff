@@ -17,6 +17,12 @@
             </v-col>
             <v-col cols="12" md="6" sm="6">
               <v-text-field
+                v-model="editedEquipment.description"
+                label="Описание"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="6" sm="6">
+              <v-text-field
                 v-model="editedEquipment.serial_number"
                 label="Серийный номер"
               ></v-text-field>

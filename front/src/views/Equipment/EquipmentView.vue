@@ -54,6 +54,7 @@
             >
           </td>
           <td>{{ item.equipment_name }}</td>
+          <td>{{ item.description }}</td>
           <td>{{ item.serial_number }}</td>
           <td>{{ item.storage?.warehouse_name || "N/A" }}</td>
           <td>{{ item.current_storage || "N/A" }}</td>
@@ -118,6 +119,7 @@ export default {
       return [
         { title: "Статус", key: "status", sortable: false },
         { title: "Название", key: "equipment_name" },
+        { title: "Описание", key: "description" },
         { title: "Серийный номер", key: "serial_number" },
         { title: "Место хранения", key: "storage.warehouse_name" },
         { title: "Текущее место хранения", key: "current_storage" },

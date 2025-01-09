@@ -31,7 +31,7 @@
           </v-btn>
         </v-toolbar>
       </template>
-      <template v-slot:item.actions_see_equipment="{ item }">
+      <template v-slot:item.action_see_equipment="{ item }">
             <v-btn
               size="small"
               color="secondary"

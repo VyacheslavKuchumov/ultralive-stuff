@@ -104,6 +104,7 @@ const createEquipment = async (req, res) => {
       equipment_name,
       serial_number,
       equipment_set_name,
+      description,
       warehouse_name,
       needs_maintenance,
       date_of_purchase,
@@ -121,6 +122,7 @@ const createEquipment = async (req, res) => {
       const newEquipment = await equipment.create({
         equipment_name,
         serial_number,
+        description,
         equipment_set_id: foundEquipmentSet.equipment_set_id, // Associate with the equipment set ID
         storage_id: foundWarehouse.warehouse_id, // Associate with the warehouse ID
         needs_maintenance,
@@ -148,6 +150,7 @@ const editEquipmentById = async (req, res) => {
       equipment_name,
       serial_number,
       equipment_set_name,
+      description,
       warehouse_name,
       current_storage_name,
       needs_maintenance,
@@ -170,6 +173,7 @@ const editEquipmentById = async (req, res) => {
     await equipmentToUpdate.update({
       equipment_name,
       serial_number,
+      description,
       equipment_set_id: foundEquipmentSet.equipment_set_id, // Directly update using IDs
       storage_id: foundWarehouse.warehouse_id, // Directly update using IDs
       current_storage: current_storage_name,
@@ -195,7 +199,7 @@ const deleteEquipmentById = async (req, res) => {
 
     await equipmentToDelete.destroy();
     const data = await getAllDataHelper();
-    return res.status(200).send(data);
+    return res.status(200).send(message);
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
