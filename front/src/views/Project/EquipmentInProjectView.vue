@@ -63,6 +63,7 @@
               mdi-camera
             </v-icon>
             <span :class="groupClassify(item)">{{ item.value }}</span>
+               
             <v-btn
               v-if="groupClassify(item) != 'first-group'"
               class="ml-5"

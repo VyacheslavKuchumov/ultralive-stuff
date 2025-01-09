@@ -22,9 +22,6 @@
           Виды комплектов
         </v-btn>
 
-        <v-btn disabled color="primary" class="mb-2" to="" width="300">
-          Пресеты оборудования
-        </v-btn>
       </v-row>
     </v-container>
   </v-card>

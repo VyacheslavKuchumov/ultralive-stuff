@@ -104,6 +104,7 @@ export default {
       datePickerEndDate: new Date(),
       newProject: {
         project_name: "",
+        archived: false,
         project_type_name: "",
         chief_engineer_name: "",
         shooting_start_date: "",

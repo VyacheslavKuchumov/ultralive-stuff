@@ -95,6 +95,7 @@ export default {
           const formattedProject = {
             project_id: project_id,
             project_name: response.data.project_name,
+            archived: response.data.archived,
             project_type_name: response.data.type.project_type_name,
             chief_engineer_name: response.data.chiefEngineer.name,
             shooting_start_date: response.data.shooting_start_date,
@@ -119,6 +120,7 @@ export default {
     },
     async updateProject({ commit }, project) {
       try {
+        console.log(project);
         const response = await instance.put(
           `/api/projects/${project.project_id}`,
           project

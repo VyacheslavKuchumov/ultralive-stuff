@@ -8,6 +8,7 @@ const { project } = require("./projects");
 const { project_type } = require("./project_types");
 
 const { set_type } = require("./set_types");
+const { draft } = require("./drafts");
 
 // User and Auth
 user.belongsTo(auth, {
@@ -42,6 +43,17 @@ project.belongsToMany(equipment, {
   through: "equipment_in_shooting",
   timestamps: false,
 });
+
+equipment.belongsToMany(draft, {
+  
+    through: "equipment_in_draft",
+    timestamps: false,
+  });
+draft.belongsToMany(equipment, {
+    through: "equipment_in_draft",
+    timestamps: false,
+  }
+)
 
 // Shooting and User (Chief Engineer)
 project.belongsTo(user, {

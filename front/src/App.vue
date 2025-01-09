@@ -6,6 +6,7 @@
       <v-spacer></v-spacer>
 
       <v-btn v-if="isAuth" text to="/">Главная</v-btn>
+      <v-btn v-if="isAuth" text to="/drafts">Шаблоны</v-btn>
 
       <v-btn v-if="isAuth" text to="/equipment_sets"
         >Комплекты оборудования</v-btn

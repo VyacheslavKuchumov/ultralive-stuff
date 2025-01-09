@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-5 mt-5 ml-auto mr-auto" width="1100">
+  <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="1100">
     <v-data-table
       v-if="projects"
       :headers="headers"

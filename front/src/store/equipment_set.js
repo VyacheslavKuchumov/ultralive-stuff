@@ -20,44 +20,60 @@ export default {
   },
   actions: {
     async getAllEquipmentSetNames({ commit }) {
-      const equipmentSets = await instance.get(`/api/equipment_set`);
-      if (equipmentSets) {
-        const names = equipmentSets.data.map(
-          ({ equipment_set_name }) => equipment_set_name
-        );
-        return commit("setEquipmentSetNames", names);
+      try {
+        const response = await instance.get(`/api/equipment_set`);
+        if (response.status === 200) {
+          const names = response.data.map(
+            ({ equipment_set_name }) => equipment_set_name
+          );
+          return commit("setEquipmentSetNames", names);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
+      } catch (error) {
+        console.error("Error fetching equipment set names:", error);
+        window.alert("An error occurred while fetching equipment set names.");
       }
     },
+
     async getAllEquipmentSets({ commit }) {
       try {
-        const equipmentSets = await instance.get(`/api/equipment_set`);
-        if (equipmentSets)
-          return commit("setEquipmentSets", equipmentSets.data);
+        const response = await instance.get(`/api/equipment_set`);
+        if (response.status === 200) {
+          return commit("setEquipmentSets", response.data);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
       } catch (error) {
         console.error("Error fetching equipment sets:", error);
+        window.alert("An error occurred while fetching equipment sets.");
       }
     },
 
     async getEquipmentSetByID({ commit }, equipment_set_id) {
       try {
-        const equipmentSet = await instance.get(
+        const response = await instance.get(
           `/api/equipment_set/search/${equipment_set_id}`
         );
-        if (equipmentSet) return commit("setEquipmentSet", equipmentSet.data);
+        if (response.status === 200) {
+          return commit("setEquipmentSet", response.data);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
       } catch (error) {
         console.error("Error fetching equipment set by ID:", error);
+        window.alert("An error occurred while fetching the equipment set.");
       }
     },
 
     async createEquipmentSet({ commit }, equipmentSet) {
       try {
-        const response = await instance.post(
-          "/api/equipment_set",
-          equipmentSet
-        );
-        if (response) return commit("setEquipmentSets", response.data);
+        const response = await instance.post("/api/equipment_set", equipmentSet);
+        if (response.status === 201) {
+          console.log("Equipment set created successfully:", response.data);
+          return commit("setEquipmentSets", response.data);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
       } catch (error) {
         console.error("Error creating equipment set:", error);
+        window.alert("An error occurred while creating the equipment set.");
       }
     },
 
@@ -67,9 +83,13 @@ export default {
           `/api/equipment_set/${equipmentSet.equipment_set_id}`,
           equipmentSet
         );
-        if (response) return commit("setEquipmentSets", response.data);
+        if (response.status === 200) {
+          return commit("setEquipmentSets", response.data);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
       } catch (error) {
         console.error("Error updating equipment set:", error);
+        window.alert("An error occurred while updating the equipment set.");
       }
     },
 
@@ -78,9 +98,13 @@ export default {
         const response = await instance.delete(
           `/api/equipment_set/${equipmentSet.equipment_set_id}`
         );
-        if (response) return commit("setEquipmentSets", response.data);
+        if (response.status === 200) {
+          return commit("setEquipmentSets", response.data);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
       } catch (error) {
         console.error("Error deleting equipment set:", error);
+        window.alert("An error occurred while deleting the equipment set.");
       }
     },
   },

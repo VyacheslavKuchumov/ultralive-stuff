@@ -8,6 +8,7 @@ const { warehouse } = require("./warehouses");
 const { equipment_set } = require("./equipment_sets");
 const { set_type } = require("./set_types");
 const { project_type } = require("./project_types");
+const { draft } = require("./drafts");
 
 require("./associations"); // Import the associations after models are loaded
 

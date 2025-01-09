@@ -89,6 +89,7 @@ const createProject = async (req, res) => {
     const {
       project_name,
       project_type_name,
+      archived,
       chief_engineer_name,
       shooting_start_date,
       shooting_end_date,
@@ -104,6 +105,7 @@ const createProject = async (req, res) => {
     if (foundProjectType) {
       const newProject = await project.create({
         project_name,
+        archived,
         project_type_id: foundProjectType.project_type_id, // Associate with the project type ID
         shooting_start_date,
         shooting_end_date,
@@ -129,7 +131,9 @@ const editProjectById = async (req, res) => {
     const {
       project_name,
       project_type_name,
-      shooting_date,
+      archived,
+      shooting_start_date,
+      shooting_end_date,
       chief_engineer_name,
     } = req.body;
 
@@ -149,13 +153,17 @@ const editProjectById = async (req, res) => {
       return res
         .status(400)
         .send({ message: "something wrong with users or types" });
+    console.log("\n\nUPDATING\n\n");
+    await project.update({
 
-    await projectToUpdate.update({
       project_name,
+      archived,
       project_type_id: foundProjectType.project_type_id,
-      shooting_date,
+      shooting_start_date,
+      shooting_end_date,
       chief_engineer_id: foundUser.id,
-    });
+    },
+  { where: { project_id: id } });
     const data = await getAllDataHelper();
 
     return res.status(200).send(data);

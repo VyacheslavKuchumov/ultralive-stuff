@@ -17,6 +17,10 @@ const equipment = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     serial_number: {
       type: DataTypes.TEXT,
       allowNull: false,

@@ -13,11 +13,15 @@ const project = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    archived: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    },
     project_type_id: {
       type: DataTypes.BIGINT,
       allowNull: false,
     },
-
     shooting_start_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,

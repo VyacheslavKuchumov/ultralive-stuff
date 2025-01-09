@@ -122,6 +122,7 @@ export default {
     ...mapActions("user", ["getAllUserNames"]),
 
     async save() {
+      
       await this.updateProject(this.editedProject);
       window.location.href = "/projects";
     },

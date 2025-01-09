@@ -20,6 +20,7 @@ import EditProjectView from "@/views/Project/EditProjectView.vue";
 
 import EquipmentInProjectView from "@/views/Project/EquipmentInProjectView.vue";
 import SetTypesView from "@/views/Dictionaries/SetTypesView.vue";
+import DraftView from "@/views/Drafts/DraftView.vue";
 
 const routes = [
   {
@@ -27,6 +28,13 @@ const routes = [
     name: "home",
     component: HomeView,
     meta: { auth: true },
+  },
+
+  {
+    path: "/drafts",
+    name: "drafts",
+    component: DraftView,
+    meta: {auth: true}
   },
   {
     path: "/admin",
