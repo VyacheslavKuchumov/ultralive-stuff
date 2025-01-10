@@ -23,7 +23,7 @@ const excel_controller_routes = require("./routes/excel_controller");
 
 app.use(
   cors({
-    origin: ["http://localhost:8080"],
+    origin: ["http://localhost:8080", "http://192.168.50.21:8080"],
   }),
 );
 

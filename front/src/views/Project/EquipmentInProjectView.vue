@@ -1,23 +1,24 @@
 <template>
-  
+  <v-card v-if="project" max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
+    <v-card-title
+      align="center"
+      v-if="project.project.shooting_start_date !== project.project.shooting_end_date"
+    >
+      Съёмка "{{ project.project.project_name }}" ({{ formatDate(project.project.shooting_start_date) }} - {{ formatDate(project.project.shooting_end_date) }})
+    </v-card-title>
+    <v-card-title align="center" v-else>
+      Съёмка
+      "{{ project.project.project_name }}" 
+      ({{ formatDate(project.project.shooting_start_date) }})
+    </v-card-title>
+  </v-card>
   <v-card
     max-width="1100"
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="project"
   >
     <!-- {{ conflictingSetNames }} -->
-    <v-card-title
-      
-      v-if="project.project.shooting_start_date !== project.project.shooting_end_date"
-    >
-      "{{ project.project.project_name }}" 
-      ({{ formatDate(project.project.shooting_start_date) }} - 
-      {{ formatDate(project.project.shooting_end_date) }})
-    </v-card-title>
-    <v-card-title v-else>
-      "{{ project.project.project_name }}" 
-      ({{ formatDate(project.project.shooting_start_date) }})
-    </v-card-title>
+    
   
     <!-- Table for equipment in the project -->
     <v-data-table

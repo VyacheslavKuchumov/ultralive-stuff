@@ -1,6 +1,6 @@
 <template>
     <v-container class="home" fluid>
-        <v-card-title>Войти</v-card-title>
+        <v-card-title>Зарегистрироваться</v-card-title>
         <v-form @submit.prevent="go_register" ref="registerForm" v-model="valid" lazy-validation>
             <v-text-field
             label="Введите email"
