@@ -1,5 +1,5 @@
 import instance from "@/middlewares";
-import equipment from "./equipment";
+
 
 export default {
   name: "equipment_in_project",

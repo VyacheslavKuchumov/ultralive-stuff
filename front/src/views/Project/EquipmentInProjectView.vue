@@ -28,7 +28,7 @@
       :items-per-page="-1"
       fixed-header
       hide-default-footer
-      hide-default-header="true"
+      hide-default-header
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -62,7 +62,7 @@
             >
               mdi-camera
             </v-icon>
-            <span :class="groupClassify(item)">{{ item.value }}</span>
+            <span :class="groupClassify(item)">{{ item.value }}</span> 
                
             <v-btn
               v-if="groupClassify(item) != 'first-group'"
@@ -137,7 +137,7 @@
           :headers="setsHeaders"
           :items="filteredSets"
           :items-per-page="-1"
-          hide-default-header="true"
+          hide-default-header
           hide-default-footer
         >
           <template v-slot:group-header="{
@@ -204,7 +204,7 @@
           :items-per-page="-1"
           fixed-header
           hide-default-footer
-          hide-default-header="true"
+          hide-default-header
         >
           
           <template v-slot:item.status="{ item }">

@@ -16,7 +16,7 @@ const getAllDataHelper = async (id) => {
                 {
                     model: equipment_set,
                     as: "equipment_set",
-                    attributes: ["equipment_set_name"],
+                    attributes: ["equipment_set_name", "description"],
                 },
                 ],
             }
@@ -33,7 +33,7 @@ const getAllDataHelper = async (id) => {
       {
         model: equipment_set,
         as: "equipment_set",
-        attributes: ["equipment_set_name"],
+        attributes: ["equipment_set_name", "description"],
 
         include: [
           {

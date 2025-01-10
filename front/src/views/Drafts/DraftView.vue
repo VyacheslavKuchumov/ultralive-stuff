@@ -64,7 +64,7 @@
         {{ editingDraft ? "Редактировать шаблон" : "Создать шаблон" }}
       </v-card-title>
       <v-card-text>
-        <v-form ref="draftForm" v-model="valid">
+        <v-form ref="draftForm" v-model="valid" @submit.prevent="saveDraft">
           <v-text-field
             v-model="draftForm.draft_name"
             label="Название"

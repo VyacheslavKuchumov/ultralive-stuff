@@ -8,16 +8,16 @@
       <v-data-table
         :group-by="groupByInDraft"
         :headers="headers"
-        :items="draft.equipment"
+        :items="draft.draft.equipment"
         :items-per-page="-1"
         fixed-header
         hide-default-footer
-        hide-default-header="true"
+        hide-default-header
       >
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>
-              Шаблон "{{ draft.draft_name }}"
+              Шаблон "{{ draft.draft.draft_name }}"
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="dialog = true">
@@ -40,12 +40,7 @@
                 size="small"
                 variant="text"
               ></v-btn>
-              <v-icon
-                v-if="checkSetName(item.value)"
-                color="blue"
-              >
-                mdi-camera
-              </v-icon>
+              
               <span :class="groupClassify(item)">{{ item.value }}</span>
   
               <v-btn
@@ -62,7 +57,7 @@
         </template>
   
         <template v-slot:item.status="{ item }">
-          <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
+          <!-- for statuses if needed-->
         </template>
   
         <template v-slot:item.action_delete="{ item }">
@@ -115,7 +110,7 @@
             :headers="setsHeaders"
             :items="filteredSets"
             :items-per-page="-1"
-            hide-default-header="true"
+            hide-default-header
             hide-default-footer
           >
             <template v-slot:group-header="{
@@ -137,7 +132,7 @@
             </template>
   
             <template v-slot:item.status="{ item }">
-              <v-icon v-if="checkSetName(item.equipment_set_name)" color="blue">mdi-camera</v-icon>
+              <!-- for statuses if needed-->
             </template>
   
             <template v-slot:item.actions_see_equipment="{ item }">
@@ -172,10 +167,10 @@
             :items-per-page="-1"
             fixed-header
             hide-default-footer
-            hide-default-header="true"
+            hide-default-header
           >
             <template v-slot:item.status="{ item }">
-              <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
+              <!-- for statuses if needed-->
             </template>
   
             <template v-slot:item.action_add="{ item }">
@@ -288,7 +283,7 @@
       ]),
       showEquipment(item) {
         const data = {
-          draft_id: this.draft.draft_id,
+          draft_id: this.draft.draft.draft_id,
           equipment_set_id: item.equipment_set_id,
         };
         this.getAvailableEquipmentInSet(data);
@@ -296,14 +291,14 @@
       },
       deleteItem(item) {
         const data = {
-          draft_id: this.draft.draft_id,
+          draft_id: this.draft.draft.draft_id,
           equipment_id: item.equipment_id,
         };
         this.removeEquipmentFromDraft(data);
       },
       addItem(item) {
         const data = {
-          draft_id: this.draft.draft_id,
+          draft_id: this.draft.draft.draft_id,
           equipment_id: item.equipment_id,
           equipment_set_id: item.equipment_set_id,
         };
@@ -311,14 +306,14 @@
       },
       addSet(item) {
         const data = {
-          draft_id: this.draft.draft_id,
+          draft_id: this.draft.draft.draft_id,
           equipment_set_id: item.equipment_set_id,
         };
         this.addSetToDraft(data);
       },
       removeSet(item) {
         const data = {
-          draft_id: this.draft.draft_id,
+          draft_id: this.draft.draft.draft_id,
           equipment_set_name: item.value,
         };
         this.removeSetFromDraft(data);

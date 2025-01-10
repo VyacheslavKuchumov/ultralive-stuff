@@ -21,6 +21,7 @@ import EditProjectView from "@/views/Project/EditProjectView.vue";
 import EquipmentInProjectView from "@/views/Project/EquipmentInProjectView.vue";
 import SetTypesView from "@/views/Dictionaries/SetTypesView.vue";
 import DraftView from "@/views/Drafts/DraftView.vue";
+import EquipmentInDraftView from "@/views/Drafts/EquipmentInDraftView.vue";
 
 const routes = [
   {
@@ -35,6 +36,13 @@ const routes = [
     name: "drafts",
     component: DraftView,
     meta: {auth: true}
+  },
+  {
+    path: "/draft/:id",
+    name: "equipment-in-draft",
+    component: EquipmentInDraftView,
+    meta: { auth: true },
+    props: true,
   },
   {
     path: "/admin",

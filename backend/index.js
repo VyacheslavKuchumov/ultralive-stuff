@@ -17,6 +17,7 @@ const project_types_routes = require("./routes/project_types");
 const set_types_routes = require("./routes/set_types");
 const equipment_in_project_routes = require("./routes/equipment_in_project");
 const draft_routes = require("./routes/drafts");
+const equipment_in_draft_routes = require("./routes/equipment_in_draft");
 
 const excel_controller_routes = require("./routes/excel_controller");
 
@@ -36,6 +37,7 @@ app.use("/api/projects", project_routes);
 app.use("/api/project_types", project_types_routes);
 app.use("/api/equipment_in_project", equipment_in_project_routes);
 app.use("/api/drafts", draft_routes);
+app.use("/api/equipment_in_draft", equipment_in_draft_routes);
 
 app.use("/api/admin/excel", excel_controller_routes);
 
