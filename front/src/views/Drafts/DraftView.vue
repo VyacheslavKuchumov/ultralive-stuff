@@ -142,6 +142,9 @@ export default {
   },
   methods: {
     ...mapActions("drafts", ["getAllDrafts", "deleteDraft", "createDraft", "updateDraft"]),
+    goToDraftEquipment(item) {
+      this.$router.push(`/draft/${item.draft_id}`);
+    },
     openCreateDialog() {
       this.editingDraft = null;
       this.draftForm = { draft_name: ""};
