@@ -29,6 +29,20 @@ export default {
   },
   actions: {
 
+    async resetEquipmentInProject({commit}, project_id) {
+      try {
+        const response = await instance.delete(
+          `/api/equipment_in_project/reset/${project_id}`
+        );
+        if (response) {
+          console.log(response.data);
+          
+        }
+      } catch (error) {
+        console.error("Error resetting equipment in project:", error);
+      }
+    },
+
     async getConflictingEquipment({ commit }, project_id) {
       try {
         const body = {

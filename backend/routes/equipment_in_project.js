@@ -9,7 +9,9 @@ const {
   addSetToProject,
   removeSetFromProject,
   getAvailableEquipmentInSet,
-  getConflictingEquipment
+  getConflictingEquipment,
+  addDraftToProject,
+  resetEquipmentInProject
 } = require("../controllers/equipment_in_project");
 
 
@@ -20,5 +22,7 @@ router.post("/add_set", addSetToProject);
 router.put("/del_set", removeSetFromProject);
 router.post("/equipment_in_set", getAvailableEquipmentInSet);
 router.post("/conflicting", getConflictingEquipment);
+router.delete("/reset/:id", resetEquipmentInProject);
+router.post("/add_draft", addDraftToProject);
 
 module.exports = router;

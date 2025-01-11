@@ -37,8 +37,14 @@
             Оборудование в съёмке
           </v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-btn color="primary" @click="">
+            Добавить шаблон
+          </v-btn>
           <v-btn color="primary" @click="dialog = true">
             Добавить оборудование
+          </v-btn>
+          <v-btn color="red" @click="dialogReset = true">
+            Сбросить
           </v-btn>
         </v-toolbar>
       </template>
@@ -98,6 +104,21 @@
 
       <template v-slot:no-data>Нет данных</template>
     </v-data-table>
+
+     <!-- Диалог подтверждения сброса проекта -->
+     <v-dialog v-model="dialogReset" max-width="400">
+      <v-card>
+        <v-card-title class="text-h6">Подтвердите сброс проекта</v-card-title>
+        <v-card-text>
+          Вы уверены, что хотите сбросить проект? Все изменения будут потеряны.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialogReset = false">Отмена</v-btn>
+          <v-btn color="red darken-1" text @click="confirmReset">Да</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- Dialog for available equipment -->
     <v-dialog v-model="dialog" max-width="600">
@@ -242,6 +263,7 @@ export default {
   data() {
     return {
       dialog: false,
+      dialogReset: false,
       sets_view: true,
       searchSets: "",
       searchEquipment: "",
@@ -326,7 +348,8 @@ export default {
       "addSetToProject",
       "removeSetFromProject",
       "getAvailableEquipmentInSet",
-      "getConflictingEquipment"
+      "getConflictingEquipment",
+      "resetEquipmentInProject",
     ]),
     ...mapActions("equipment", [
       "getAllEquipment",
@@ -346,6 +369,15 @@ export default {
       }
       this.getAvailableEquipmentInSet(data)
       this.sets_view = false
+    },
+    resetProject() {
+      // Логика сброса проекта
+      this.resetEquipmentInProject(this.project.project.project_id);
+      location.reload();
+    },
+    confirmReset() {
+      this.resetProject();
+      this.dialogReset = false; // Закрыть диалог
     },
 
     checkSetName(item){

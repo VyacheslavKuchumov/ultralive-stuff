@@ -3,6 +3,7 @@ const { equipment } = require("../models/equipment");
 const { warehouse } = require("../models/warehouses");
 const { equipment_set } = require("../models/equipment_sets");
 const { set_type } = require("../models/set_types");
+const { draft } = require("../models/drafts");
 const { Op } = require("sequelize");
 
 
@@ -101,6 +102,47 @@ const getAllDataHelper = async (id) => {
     });
     return {project:proj, equipment_in_project, available_equipment, sets_in_project: setsInProject}
   }
+
+
+const resetEquipmentInProject = async (req, res) => {
+  try {
+    const project_id  = req.params.id;
+    const foundProject = await project.findByPk(project_id);
+    foundProject.setEquipment([]);
+    return res.status(200).send({message: "Equipment in project reset"});
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+}
+
+const addDraftToProject = async (req, res) => {
+  try {
+    const { project_id, draft_id } = req.body;
+
+    const foundProject = await project.findByPk(project_id);
+    const foundDraft = await draft.findByPk(draft_id);
+    if (!foundProject) {
+      return res.status(404).json({ message: "Project not found." });
+    }
+    if (!foundDraft) {
+      return res.status(404).json({ message: "Draft not found." });
+    }
+
+    // Retrieve equipment associated with the draft
+    const draftEquipment = await foundDraft.getEquipments();
+
+    // Associate each equipment with the project
+    await foundProject.addEquipments(draftEquipment);
+
+    return res.status(200).json({ 
+      message: "Draft equipment successfully added to the project.",
+      equipmentAdded: draftEquipment
+    });
+  } catch (error) {
+    console.error("Error adding draft to project:", error);
+    return res.status(500).json({ message: "Internal server error.", error });
+  }
+};
 
 
 const getEquipmentInProject = async (req, res) => {
@@ -366,5 +408,7 @@ module.exports = {
     addSetToProject,
     getAvailableEquipmentInSet,
     getConflictingEquipment,
+    resetEquipmentInProject,
+    addDraftToProject
 };
   
