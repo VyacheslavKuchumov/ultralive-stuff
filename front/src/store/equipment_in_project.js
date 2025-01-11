@@ -29,6 +29,22 @@ export default {
   },
   actions: {
 
+    async addDraftToProject({ commit }, input) {
+      try {
+        const body = {
+          project_id: input.project_id,
+          draft_id: input.draft_id,
+        };
+        console.log("sending draft to project");
+        console.log(body);
+        const data = await instance.post(`/api/equipment_in_project/add_draft`, body);
+        
+        
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+
     async resetEquipmentInProject({commit}, project_id) {
       try {
         const response = await instance.delete(

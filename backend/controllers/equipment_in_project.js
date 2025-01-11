@@ -129,10 +129,12 @@ const addDraftToProject = async (req, res) => {
     }
 
     // Retrieve equipment associated with the draft
-    const draftEquipment = await foundDraft.getEquipments();
-
+    const draftEquipment = await foundDraft.getEquipment();
+    for (const equip of draftEquipment) {
+      await foundProject.addEquipment(equip);
+    }
     // Associate each equipment with the project
-    await foundProject.addEquipments(draftEquipment);
+    
 
     return res.status(200).json({ 
       message: "Draft equipment successfully added to the project.",

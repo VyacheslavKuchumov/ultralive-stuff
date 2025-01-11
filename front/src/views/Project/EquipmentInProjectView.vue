@@ -37,7 +37,7 @@
             Оборудование в съёмке
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="">
+          <v-btn color="primary" @click="dialogDrafts = true">
             Добавить шаблон
           </v-btn>
           <v-btn color="primary" @click="dialog = true">
@@ -117,6 +117,37 @@
           <v-btn color="blue darken-1" text @click="dialogReset = false">Отмена</v-btn>
           <v-btn color="red darken-1" text @click="confirmReset">Да</v-btn>
         </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogDrafts" max-width="400">
+      <v-card>
+        <v-data-table 
+          :headers="draftHeaders"
+          :items="drafts"
+          :items-per-page="-1"
+          fixed-header
+          hide-default-footer
+          hide-default-header>
+          <template v-slot:top>
+            <v-toolbar flat>
+              <v-toolbar-title>Шаблоны</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="dialogDrafts = false">Закрыть</v-btn>
+            </v-toolbar>
+          </template>
+          <template v-slot:item.action_add="{ item }">
+            <v-btn
+              class="mr-5"
+              size="small"
+              color="blue-darken-1"
+              @click="addDraft(item)"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+
+          </template>
+        </v-data-table>
       </v-card>
     </v-dialog>
 
@@ -264,6 +295,7 @@ export default {
     return {
       dialog: false,
       dialogReset: false,
+      dialogDrafts: false,
       sets_view: true,
       searchSets: "",
       searchEquipment: "",
@@ -273,6 +305,7 @@ export default {
     
     ...mapState("equipment_in_project", ["project", "equipment", "conflictingEquipmentIDs", "conflictingSetNames"]),
     ...mapState("equipment_set", ["equipment_sets"]),
+    ...mapState("drafts", ["drafts"]),
     filteredSets() {
     // Filter sets based on search input
     if (!this.searchSets) return this.project.sets_in_project || [];
@@ -298,7 +331,12 @@ export default {
         { title: "", key: "action_delete", sortable: false },
       ];
     },
-
+    draftHeaders() {
+      return [
+        { title: "Название", key: "draft_name" },
+        { title: "Добавить", key: "action_add", sortable: false },
+      ];
+    },
     setsHeaders() {
       return [
         { title: "Статус", key: "status", sortable: false },
@@ -350,7 +388,9 @@ export default {
       "getAvailableEquipmentInSet",
       "getConflictingEquipment",
       "resetEquipmentInProject",
+      "addDraftToProject"
     ]),
+    ...mapActions("drafts", ["getAllDrafts"]),
     ...mapActions("equipment", [
       "getAllEquipment",
       "getEquipmentBySetID"
@@ -394,6 +434,14 @@ export default {
         equipment_id: item.equipment_id,
       };
       this.removeEquipmentFromProject(data);
+    },
+    addDraft(item) {
+      const data = {
+        project_id: this.project.project.project_id,
+        draft_id: item.draft_id,
+      };
+      this.addDraftToProject(data);
+      location.reload();
     },
     addItem(item) {
       const data = {
@@ -442,6 +490,7 @@ export default {
     this.getProjectByID(projectId);
     this.getAllEquipment()
     this.getConflictingEquipment(projectId)
+    this.getAllDrafts();
   },
 };
 </script>
