@@ -43,7 +43,7 @@ const neaktorCreateProject = async (req, res) => {
     } else {
       return res
         .status(500)
-        .send({ message: "Invalid client or project type." });
+        .send({ message: "Ошибка. Такой площадки (project_type) или пользователя не существует" });
     }
   } catch (error) {
     return res.status(500).send({ message: error.message });
