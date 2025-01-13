@@ -87,7 +87,12 @@
 
       <template v-slot:item.status="{ item }">
         <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
-        
+        <v-icon v-if="item.needs_maintenance" color="orange"
+              >mdi-tools</v-icon
+            >
+        <v-icon v-if="item.current_storage" color="yellow"
+              >mdi-warehouse</v-icon
+        >
 
       </template>
 
@@ -262,7 +267,12 @@
           
           <template v-slot:item.status="{ item }">
             <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
-           
+            <v-icon v-if="item.needs_maintenance" color="orange"
+              >mdi-tools</v-icon
+            >
+            <v-icon v-if="item.current_storage" color="yellow"
+                  >mdi-warehouse</v-icon
+            >
 
           </template>
 
