@@ -20,6 +20,7 @@ const draft_routes = require("./routes/drafts");
 const equipment_in_draft_routes = require("./routes/equipment_in_draft");
 
 const excel_controller_routes = require("./routes/excel_controller");
+const neaktor_routes = require("./routes/neaktor");
 
 app.use(
   cors({
@@ -40,6 +41,7 @@ app.use("/api/drafts", draft_routes);
 app.use("/api/equipment_in_draft", equipment_in_draft_routes);
 
 app.use("/api/admin/excel", excel_controller_routes);
+app.use("/api/neaktor", neaktor_routes);
 
 
 app.use((error, request, response, next) => {

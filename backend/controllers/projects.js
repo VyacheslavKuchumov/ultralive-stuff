@@ -4,6 +4,7 @@ const { equipment_set } = require("../models/equipment_sets");
 
 const { project_type } = require("../models/project_types");
 const { user } = require("../models/users");
+const { auth } = require("../models/auths");
 
 
 
@@ -82,6 +83,7 @@ const getProjectById = async (req, res) => {
     return res.status(500).send({ message: error.message });
   }
 };
+
 
 // Function to create a new project
 const createProject = async (req, res) => {
@@ -198,5 +200,4 @@ module.exports = {
   createProject,
   editProjectById,
   deleteProjectById,
-
 };
