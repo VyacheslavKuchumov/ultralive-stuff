@@ -8,7 +8,7 @@ const { auth } = require("../models/auths");
 
 function convertToISODate(russianDate) {
     // Step 1: Split the Russian date string into day, month, year
-    const [day, month, year] = russianDate.split('.');
+    const [day, month, year] = russianDate.split('-');
     
     // Step 2: Create the ISO date format
     const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
