@@ -6,6 +6,16 @@ const { project_type } = require("../models/project_types");
 const { user } = require("../models/users");
 const { auth } = require("../models/auths");
 
+function convertToISODate(russianDate) {
+    // Step 1: Split the Russian date string into day, month, year
+    const [day, month, year] = russianDate.split('.');
+    
+    // Step 2: Create the ISO date format
+    const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    
+    // Step 3: Return the ISO formatted date
+    return isoDate;
+}
 
 const neaktorCreateProject = async (req, res) => {
   try {
@@ -34,8 +44,8 @@ const neaktorCreateProject = async (req, res) => {
         project_name,
         archived: false,
         project_type_id: foundProjectType.project_type_id, // Associate with the project type ID
-        shooting_start_date,
-        shooting_end_date,
+        shooting_start_date: convertToISODate(shooting_start_date),
+        shooting_end_date: convertToISODate(shooting_end_date),
         chief_engineer_id: foundUser.id,
       });
 
