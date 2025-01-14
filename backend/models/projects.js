@@ -10,8 +10,9 @@ const project = sequelize.define(
       primaryKey: true,
     },
     neaktor_id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.TEXT,
       allowNull: true,
+      unique: true,
     },
     project_name: {
       type: DataTypes.TEXT,
