@@ -19,7 +19,7 @@
           @click="handleFileUpload()"
           width="300"
         >
-          Импортировать через эксель
+          Восстановить базу
         </v-btn>
         <v-btn
           color="primary"
@@ -27,7 +27,7 @@
           @click="exportToExcel()"
           width="300"
         >
-          Выгрузить базу в Excel
+          Скачать базу
         </v-btn>
         <v-btn disabled color="primary" class="mb-2" to="/" width="300">
           Редактировать пользователей
@@ -49,19 +49,24 @@ export default {
     };
   },
   computed: {
-    ...mapState("excel_controller", ["database"]),
-    Database() {
-      return this.database || {};
-    },
+  
   },
   methods: {
-    ...mapActions("excel_controller", ["getDatabase", "postDatabase"]),
+    ...mapActions({
+      getDatabase: "excel_controller/getDatabase",
+      postDatabase: "excel_controller/postDatabase",
+    }),
+    
+    database() {
+      return this.$store.state.excel_controller.database;
+    },
+    
 
     exportToExcel() {
       const workbook = XLSX.utils.book_new();
 
       // Assuming this.Database is an array of objects with table_name and table_data
-      this.Database.forEach((table) => {
+      this.database().forEach((table) => {
         const table_name = table.table_name; // Get the table name
         const worksheet = XLSX.utils.json_to_sheet(table.table_data); // Convert table data to a worksheet
         XLSX.utils.book_append_sheet(workbook, worksheet, table_name); // Append the worksheet with the table name
@@ -134,10 +139,11 @@ export default {
       });
 
       Promise.all(filePromises)
-        .then((allParsedData) => {
+        .then(async (allParsedData) => {
           // Flatten the array of arrays
           const combinedData = allParsedData.flat();
-          this.postDatabase(combinedData); // Send the combined data to the backend
+          await this.postDatabase(combinedData);
+          alert("Finished.");
           this.files = []; // Clear the files after processing
         })
         .catch((error) => {
@@ -147,8 +153,8 @@ export default {
     },
   },
 
-  created() {
-    this.getDatabase();
+  async created() {
+    await this.getDatabase();
   },
 };
 </script>

@@ -36,11 +36,11 @@ equipment.belongsTo(warehouse, {
 
 // Equipment and Project (Many-to-Many)
 equipment.belongsToMany(project, {
-  through: "equipment_in_shooting",
+  through: "equipment_in_project",
   timestamps: false,
 });
 project.belongsToMany(equipment, {
-  through: "equipment_in_shooting",
+  through: "equipment_in_project",
   timestamps: false,
 });
 

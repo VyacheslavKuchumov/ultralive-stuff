@@ -1,3 +1,4 @@
+const e = require("cors");
 const { sequelize } = require("../connection");
 
 const { auth } = require("../models/auths");
@@ -8,229 +9,65 @@ const { project } = require("../models/projects");
 const { set_type } = require("../models/set_types");
 const { user } = require("../models/users");
 const { warehouse } = require("../models/warehouses");
+const { draft } = require("../models/drafts");
 
 const exportDatabase = async (req, res) => {
   try {
     const tableDataArray = [];
+  
+    await auth.findAll().then((auths) => {
+      tableDataArray.push({ table_name: "auth", table_data: auths });
+    });
 
-    // Fetch data from each table and convert to JSON
-    const addTableData = async (model, tableName) => {
-      try {
-        switch (tableName.toLowerCase()) {
-          case "auth":
-            const authFieldsToInclude = [
-              "auth_uid",
-              "AccessToken",
-              "RefreshToken",
-              "password",
-              "email",
-              "createdAt",
-              "updatedAt",
-            ];
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: (await model.findAll({})).map((row) => {
-                // Create a new object with only the desired fields
-                const newRow = {};
-                authFieldsToInclude.forEach((field) => {
-                  if (row[field] !== undefined) {
-                    newRow[field] = row[field];
-                  }
-                });
-                return newRow;
-              }),
-            });
-            break;
+    await user.findAll().then((users) => {
+      tableDataArray.push({ table_name: "user", table_data: users });
+    });
 
-          case "user":
-            const userFieldsToInclude = [
-              "user_uid",
-              "name",
-              "role",
-              "createdAt",
-              "updatedAt",
-            ];
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: (await model.findAll({})).map((row) => {
-                // Create a new object with only the desired fields
-                const newRow = {};
-                userFieldsToInclude.forEach((field) => {
-                  if (row[field] !== undefined) {
-                    newRow[field] = row[field];
-                  }
-                });
-                return newRow;
-              }),
-            });
-            break;
+    await warehouse.findAll().then((warehouses) => {
+      tableDataArray.push({ table_name: "warehouse", table_data: warehouses });
+    });
 
-          case "warehouse":
-            const warehouseFieldsToInclude = [
-              "warehouse_name",
-              "warehouse_adress",
-            ];
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: (await model.findAll({})).map((row) => {
-                // Create a new object with only the desired fields
-                const newRow = {};
-                warehouseFieldsToInclude.forEach((field) => {
-                  if (row[field] !== undefined) {
-                    newRow[field] = row[field];
-                  }
-                });
-                return newRow;
-              }),
-            });
-            break;
+    await set_type.findAll().then((setTypes) => {
+      tableDataArray.push({ table_name: "set_type", table_data: setTypes });
+    });
 
-          case "set_type":
-            const setTypeFieldsToInclude = ["set_type_name"];
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: (await model.findAll({})).map((row) => {
-                // Create a new object with only the desired fields
-                const newRow = {};
-                setTypeFieldsToInclude.forEach((field) => {
-                  if (row[field] !== undefined) {
-                    newRow[field] = row[field];
-                  }
-                });
-                return newRow;
-              }),
-            });
-            break;
+    await equipment_set.findAll().then((equipmentSets) => {
+      tableDataArray.push({ table_name: "equipment_set", table_data: equipmentSets });
+    });
 
-          case "equipment_set":
-            const equipmentSetFieldMapping = {
-              equipment_set_name: "equipment_set_name",
-              description: "description",
-              set_type_name: "set_type_name",
-            };
-            const equipmentSetData = await model.findAll({
-              include: [
-                {
-                  model: set_type,
-                  as: "type",
-                  attributes: ["set_type_name"],
-                },
-              ],
-            });
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: equipmentSetData.map((row) => {
-                const newRow = {};
-                Object.keys(equipmentSetFieldMapping).forEach(
-                  (originalField) => {
-                    if (row[originalField] !== undefined) {
-                      newRow[equipmentSetFieldMapping[originalField]] =
-                        row[originalField];
-                    } else if (originalField === "set_type_name" && row.type) {
-                      // Handle nested field mapping
-                      newRow[equipmentSetFieldMapping[originalField]] =
-                        row.type.set_type_name;
-                    }
-                  },
-                );
-                return newRow;
-              }),
-            });
+    await equipment.findAll().then((equipmentItems) => {
+      tableDataArray.push({ table_name: "equipment", table_data: equipmentItems });
+    });
 
-            break;
+    await project_type.findAll().then((projectTypes) => {
+      tableDataArray.push({ table_name: "project_type", table_data: projectTypes });
+    });
 
-          case "equipment":
-            const equipmentFieldMapping = {
-              equipment_set_name: "equipment_set_name",
-              equipment_name: "equipment_name",
-              serial_number: "serial_number",
-              warehouse_name: "warehouse_name",
-              current_storage: "current_storage",
-              needs_maintenance: "needs_maintenance",
-              date_of_purchase: "date_of_purchase",
-              cost_of_purchase: "cost_of_purchase",
-            };
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: (
-                await model.findAll({
-                  include: [
-                    {
-                      model: equipment_set,
-                      as: "equipment_set",
-                      attributes: ["equipment_set_name"], // Specify the fields to fetch from `equipment_set`
-                    },
-                    {
-                      model: warehouse,
-                      as: "storage",
-                      attributes: ["warehouse_name"], // Specify the fields to fetch from `warehouse`
-                    },
-                  ],
-                })
-              ).map((row) => {
-                const newRow = {};
-                Object.keys(equipmentFieldMapping).forEach((originalField) => {
-                  if (row[originalField] !== undefined) {
-                    newRow[equipmentFieldMapping[originalField]] =
-                      row[originalField];
-                  } else if (
-                    originalField === "equipment_set_name" &&
-                    row.equipment_set
-                  ) {
-                    // Handle nested field mapping
-                    newRow[equipmentFieldMapping[originalField]] =
-                      row.equipment_set.equipment_set_name;
-                  } else if (
-                    originalField === "warehouse_name" &&
-                    row.storage
-                  ) {
-                    // Handle nested field mapping
-                    newRow[equipmentFieldMapping[originalField]] =
-                      row.storage.warehouse_name;
-                  }
-                });
-                return newRow;
-              }),
-            });
-            break;
+    await project.findAll().then((projects) => {
+      tableDataArray.push({ table_name: "project", table_data: projects });
+    });
 
-          case "project_type":
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: (
-                await model.findAll({ exclude: ["project_type_id"] })
-              ).map((row) => row.toJSON()),
-            });
-            break;
+    // equipment in project
+    await sequelize.query( // Query to get all equipment in projects
+      `SELECT * FROM equipment_in_project;`,
+      { type: sequelize.QueryTypes.SELECT }
+    ).then((equipmentInProjects) => {
+      tableDataArray.push({ table_name: "equipment_in_project", table_data: equipmentInProjects });
+    });
 
-          case "project":
-            tableDataArray.push({
-              table_name: tableName,
-              table_data: (
-                await model.findAll({ exclude: ["project_id"] })
-              ).map((row) => row.toJSON()),
-            });
-            break;
+    await draft.findAll().then((drafts) => {
+      tableDataArray.push({ table_name: "drafts", table_data: drafts });
+    });
 
-          default:
-            throw new Error(`Unknown model type: ${tableName}`);
-        }
-      } catch (error) {
-        console.error(`Error processing row for model ${modelName}:`, error);
-        // You can choose to skip this row or rethrow the error
-        // For now, let's just log it and continue with the next row
-      }
-    };
+    // equipment in draft
+    await sequelize.query( // Query to get all equipment in drafts
+      `SELECT * FROM equipment_in_draft;`,
+      { type: sequelize.QueryTypes.SELECT }
+    ).then((equipmentInDrafts) => {
+      tableDataArray.push({ table_name: "equipment_in_draft", table_data: equipmentInDrafts });
+    });
 
-    await addTableData(auth, "auth");
-    await addTableData(user, "user");
-    await addTableData(warehouse, "warehouse");
-    await addTableData(set_type, "set_type");
-    await addTableData(equipment_set, "equipment_set");
-    await addTableData(equipment, "equipment");
-    await addTableData(project_type, "project_type");
-    await addTableData(project, "project");
-
+    
     // Send the JSON data as a response
     res.json(tableDataArray);
   } catch (error) {

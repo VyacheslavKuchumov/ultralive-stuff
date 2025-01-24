@@ -28,6 +28,7 @@ export default {
       try {
         // const backup_db = await instance.get(`/api/admin/excel`);
         try {
+          console.log(new_db);
           const response = await instance.post(`/api/admin/excel`, new_db);
           console.log(response);
         } catch (error) {
