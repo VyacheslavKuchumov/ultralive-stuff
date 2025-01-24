@@ -18,6 +18,7 @@
           class="mb-2"
           @click="handleFileUpload()"
           width="300"
+          disabled
         >
           Восстановить базу
         </v-btn>
