@@ -170,11 +170,55 @@ const neaktorArchiveProject = async (req, res) => {
 };
 
 
+const neaktorCreateProjectType = async (req, res) => {
+  try {
+    const { project_type_id, project_type_name } = req.body;
+
+    if (project_type_name) {
+      const newProjectType = await project_type.create({
+        project_type_name,
+        neaktor_id: project_type_id
+      });
+
+      return res.status(201).send({ message: "Площадка создана успешно!", newProjectType });
+    } else {
+      return res.status(500).send({ message: "Ошибка. Название площадки не указано" });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+}
+
+const neaktorEditProjectType = async (req, res) => {
+  try {
+    const { project_type_id, project_type_name } = req.body;
+
+    const foundProjectType = await project_type.findOne({
+      where: { neaktor_id: project_type_id },
+    });
+
+    if (foundProjectType) {
+      await foundProjectType.update(
+        {
+          project_type_name,
+        });
+
+      return res.status(200).send({ message: "Площадка изменена успешно!" });
+    } else {
+      return res.status(404).send({ message: "Площадка не найдена" });
+    }
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+}
+
 
 
 module.exports = {
     neaktorCreateProject,
     neaktorDeleteProject,
     neaktorEditProject,
-    neaktorArchiveProject
+    neaktorArchiveProject,
+    neaktorCreateProjectType,
+    neaktorEditProjectType,
   };

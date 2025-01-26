@@ -15,7 +15,12 @@ const project_type = sequelize.define(
             type:DataTypes.TEXT,
             allowNull: false,
             unique: true
-        }
+        },
+        neaktor_id: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+            unique: true,
+        },
 
     },
     {

@@ -4,12 +4,12 @@ import equipment from "./equipment";
 export default {
   name: "projects",
   state: () => ({
-    projects: null,
+    data: null,
     editedProject: null,
   }),
   mutations: {
     setProjects(state, projects) {
-      state.projects = projects;
+      state.data = projects;
     },
     setEditedProject(state, project) {
       state.editedProject = project;
@@ -132,11 +132,11 @@ export default {
         console.error("Error updating project:", error);
       }
     },
-    async deleteProject({ commit }, project_id) {
+    async deleteProject({}, project_id) {
       try {
         const response = await instance.delete(`/api/projects/${project_id}`);
-        if (response) {
-          commit("setProjects", response.data);
+        if (response.status === 200) {
+          console.log("Project deleted successfully");
         }
       } catch (error) {
         console.error("Error deleting project:", error);

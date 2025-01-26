@@ -13,7 +13,7 @@
     </v-card-title>
   </v-card>
   <v-card
-    max-width="1100"
+    max-width="800"
     class="elevation-5 mt-5 ml-auto mr-auto"
     v-if="project"
   >
@@ -33,19 +33,13 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>
-            Оборудование в съёмке
-          </v-toolbar-title>
+          <v-btn icon="mdi-keyboard-backspace" color="primary" to="/projects"></v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="dialogDrafts = true">
-            Добавить шаблон
-          </v-btn>
-          <v-btn color="primary" @click="dialog = true">
-            Добавить оборудование
-          </v-btn>
-          <v-btn color="red" @click="dialogReset = true">
-            Сбросить
-          </v-btn>
+          
+          
+          <v-btn color="red" icon="mdi-trash-can" @click="dialogReset = true"></v-btn>
+          <v-btn color="primary" icon="mdi-folder-multiple-plus" @click="dialogDrafts = true"></v-btn>
+          <v-btn color="primary" icon="mdi-plus" @click="dialog = true"></v-btn>
         </v-toolbar>
       </template>
 
@@ -138,7 +132,7 @@
             <v-toolbar flat>
               <v-toolbar-title>Шаблоны</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click="dialogDrafts = false">Закрыть</v-btn>
+              <v-btn  icon="mdi-close" @click="dialogDrafts = false"></v-btn>
             </v-toolbar>
           </template>
           <template v-slot:item.action_add="{ item }">
@@ -167,7 +161,7 @@
           <v-btn v-if="!sets_view" @click="sets_view = true" class="mb-2" color="red" dark>
             Назад
           </v-btn>
-          
+          <v-btn v-else  icon="mdi-close" @click="dialog = false"></v-btn>
         </v-toolbar>
         <v-text-field
         v-if="sets_view"

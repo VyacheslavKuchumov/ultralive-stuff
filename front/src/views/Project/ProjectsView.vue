@@ -1,88 +1,79 @@
 <template>
-  <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="1100">
-    <v-data-table
-      v-if="projects"
-      :headers="headers"
-      :items="filteredProjects"
-      :items-per-page="-1"
-      :search="search"
-      hide-default-footer
-      fixed-header
-      class="elevation-1"
-    >
-      <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>Съёмки</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
+    <v-card max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
+      <v-card-title
+        align="center">
+        Съёмки
+      </v-card-title>
+    
+    </v-card>
 
-          <v-text-field
-            v-model="search"
-            label="Поиск"
-            prepend-icon="mdi-magnify"
-            clearable
-            placeholder="Search..."
-            class="mt-2"
-            width="100"
-          ></v-text-field>
-          <v-spacer></v-spacer>
-          <v-btn class="mb-2" color="primary" dark to="/project_types">
-            Площадки
-          </v-btn>
-          <v-btn class="mb-2" color="primary" dark to="/project/create">
-            Новая съёмка
-          </v-btn>
-        </v-toolbar>
-      </template>
+    <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="800">
+    <v-toolbar flat>
+      <v-btn icon="mdi-keyboard-backspace" color="primary" to="/"></v-btn>
+      
+      <v-spacer></v-spacer>
 
-      <template v-slot:item="{ item }">
-        <tr>
-          <!-- Status Column -->
-          <td align="center">
-            <v-icon
-              v-if="projectsWithSharedEquipment.has(item.project_id)"
-              color="blue"
-            >
-              mdi-camera
-            </v-icon>
-            <v-icon v-else color="green">mdi-check-circle</v-icon>
-          </td>
-          <td v-if="item.shooting_start_date !== item.shooting_end_date">
-            с {{ item.shooting_start_date }} по {{ item.shooting_end_date }}
-          </td>
-          <td v-else>{{ item.shooting_start_date }}</td>
-          <td>{{ item.project_name }}</td>
-          <td>{{ item.type.project_type_name }}</td>
-          <td>{{ item.chiefEngineer.name }}</td>
-          <td>
-            <v-btn
-              size="small"
-              color="secondary"
-              @click="goToProjectEquipment(item)"
-              prepend-icon="mdi-camera"
-            >
-              Оборудование
-            </v-btn>
-          </td>
-          <td>
-            <v-btn
-              class="mr-5"
-              size="small"
-              color="blue-darken-1"
-              @click="goToEditPage(item)"
-            >
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-          </td>
-          <td>
-            <v-btn size="small" color="red-darken-1" @click="confirmDelete(item)">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </template>
+      
+      
+      <v-btn v-if="search" icon="mdi-magnify" color="red" @click="searchDialog = !searchDialog"></v-btn>
+      <v-btn v-else icon="mdi-magnify" color="grey" @click="searchDialog = !searchDialog"></v-btn>
+      <v-btn icon="mdi-plus" color="primary" to="/project/create"></v-btn>
+      
+    </v-toolbar>
 
-      <template v-slot:no-data> Нет данных </template>
-    </v-data-table>
+    <v-container v-if="filteredProjects">
+      <v-row v-for="item in filteredProjects"
+      :key="item.project_id">
+        <v-col
+
+        >
+          <v-card class="ma-2">
+            <v-card-title class="text-h6">
+              {{ item.project_name }}
+            </v-card-title>
+
+            <v-card-subtitle class="text-body-2">
+              {{ formatShootingDates(item) }}
+            </v-card-subtitle>
+
+            <v-card-text>
+              <div class="text-caption">Площадка</div>
+              <div class="text-body-1">{{ item.type.project_type_name }}</div>
+              
+              <div class="text-caption mt-2">Главный инженер</div>
+              <div class="text-body-1">{{ item.chiefEngineer.name }}</div>
+            </v-card-text>
+
+            <v-card-actions class="justify-end">
+              <v-btn
+                color="secondary"
+                
+                icon="mdi-camera"
+                @click="goToProjectEquipment(item)"
+              ></v-btn>
+              
+                <v-btn
+                  icon="mdi-pencil"
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="goToEditPage(item)"
+                ></v-btn>
+                <v-btn
+                  icon="mdi-delete"
+                  color="red-darken-1"
+                  variant="text"
+                  @click="confirmDelete(item)"
+                ></v-btn>
+             
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-alert v-else type="info" class="ma-4">
+      Нет данных
+    </v-alert>
   </v-card>
 
   <!-- Диалог подтверждения удаления -->
@@ -99,6 +90,26 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <v-dialog v-model="searchDialog" max-width="400px">
+    <v-card>
+      <v-card-title class="text-h5">Поиск</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="search"
+          label="Поиск"
+          prepend-icon="mdi-magnify"
+          clearable
+          placeholder="Поиск..."
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn text @click="search=''">Очистить</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn text @click="searchDialog = false">Закрыть</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -110,58 +121,68 @@ export default {
       search: "",
       confirmDeleteDialog: false,
       projectToDelete: null, // Хранит информацию о проекте для удаления
+      searchDialog: false,
     };
   },
   computed: {
-    ...mapState("projects", ["projects"]),
-    headers() {
-      return [
-        { title: "Статус", key: "status", sortable: false },
-        { title: "Дата съёмки" },
-        { title: "Название", key: "project_name" },
-        { title: "Площадка", key: "type.project_type_name" },
-        { title: "Главный инженер", key: "chiefEngineer.name" },
-        { title: "Оборудование", key: "action_see_equipment", sortable: false },
-        { title: "Изменить", key: "action_edit", sortable: false },
-        { title: "Удалить", key: "action_delete", sortable: false },
-      ];
-    },
+    
+
     filteredProjects() {
-      if (!this.search) {
-        return this.projects;
-      }
-      const searchTerm = this.search.toLowerCase();
-      return this.projects.filter((item) =>
-        item.project_name.toLowerCase().includes(searchTerm)
-      );
-    },
-    projectsWithSharedEquipment() {
-      const equipmentDateMap = {};
-      this.projects.forEach((project) => {
-        project.equipment.forEach((eq) => {
-          const key = `${eq.equipment_id}_${project.shooting_date}`;
-          if (!equipmentDateMap[key]) {
-            equipmentDateMap[key] = [];
-          }
-          equipmentDateMap[key].push(project.project_id);
-        });
+      const searchTerm = this.search?.toLowerCase() || '';
+      if (!searchTerm) return this.projects();
+      
+      return this.projects().filter(project => {
+        const values = [
+          project.project_name,
+          project.type.project_type_name,
+          project.chiefEngineer.name,
+          project.shooting_start_date,
+          project.shooting_end_date
+        ].join(' ').toLowerCase();
+        
+        return values.includes(searchTerm);
       });
-
-      const sharedProjectIds = new Set();
-      Object.values(equipmentDateMap).forEach((projectIds) => {
-        if (projectIds.length > 1) {
-          projectIds.forEach((id) => sharedProjectIds.add(id));
-        }
-      });
-
-      return sharedProjectIds;
-    },
+    }
+    
+    
   },
   methods: {
-    ...mapActions("projects", ["getAllProjects", "deleteProject"]),
-    initialize() {
-      this.getAllProjects();
+    projects() {
+      return this.$store.state.projects.data;
     },
+
+    ...mapActions({
+      getAllProjects: "projects/getAllProjects",
+      deleteProject: "projects/deleteProject",
+    }),
+
+    isoToRussianDate(isoDate) {
+            // Check if the input is a valid ISO date
+            if (!isoDate || typeof isoDate !== "string") {
+                throw new Error("Invalid input. Please provide a valid ISO date string.");
+            }
+
+            // Split the ISO date string into parts
+            const [year, month, day] = isoDate.split("-");
+            
+            // Validate the extracted values
+            if (!year || !month || !day || isNaN(Date.parse(isoDate))) {
+                throw new Error("Invalid ISO date format.");
+            }
+
+            // Return the date in Russian format
+            return `${day}.${month}.${year}`;
+        },
+    
+    formatShootingDates(item) {
+      if (item.shooting_start_date !== item.shooting_end_date) {
+        return `с ${this.isoToRussianDate(item.shooting_start_date)} по ${this.isoToRussianDate(item.shooting_end_date)}`;
+      }
+      return this.isoToRussianDate(item.shooting_start_date);
+    },
+
+    
+
     goToEditPage(item) {
       this.$router.push(`/project/edit/${item.project_id}`);
     },
@@ -182,16 +203,16 @@ export default {
     },
 
     // Подтверждение удаления
-    deleteConfirmed() {
+    async deleteConfirmed() {
       if (this.projectToDelete) {
-        this.deleteProject(this.projectToDelete.project_id); // Удаляем проект
-        this.getAllProjects(); // Обновляем список проектов
+        await this.deleteProject(this.projectToDelete.project_id); // Удаляем проект
+        await this.getAllProjects(); // Обновляем список проектов
       }
       this.closeConfirmDialog();
     },
   },
-  created() {
-    this.initialize();
+  async created() {
+    await this.getAllProjects();
   },
 };
 </script>

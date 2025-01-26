@@ -1,5 +1,5 @@
 <template>
-  <v-container width="600">
+  <v-container max-width="600">
     <v-row>
       <v-col cols="12">
         <v-data-table

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" width="600">
+  <v-card class="mx-auto" max-width="600">
     <v-card-title class="d-flex justify-center align-center">
       Панель администратора
     </v-card-title>
