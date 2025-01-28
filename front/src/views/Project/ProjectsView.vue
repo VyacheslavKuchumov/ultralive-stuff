@@ -15,8 +15,8 @@
 
       
       
-      <v-btn v-if="search" icon="mdi-magnify" color="red" @click="searchDialog = !searchDialog"></v-btn>
-      <v-btn v-else icon="mdi-magnify" color="grey" @click="searchDialog = !searchDialog"></v-btn>
+      <v-btn v-if="search || filterByEngineer" icon="mdi-filter" color="red" @click="searchDialog = !searchDialog"></v-btn>
+      <v-btn v-else icon="mdi-filter" color="grey" @click="searchDialog = !searchDialog"></v-btn>
       <v-btn icon="mdi-plus" color="primary" to="/project/create"></v-btn>
       
     </v-toolbar>
@@ -102,9 +102,14 @@
           clearable
           placeholder="Поиск..."
         ></v-text-field>
+        <v-switch
+          v-model="filterByEngineer"
+          label="Показать только мои съёмки"
+          color="primary"
+        ></v-switch>
       </v-card-text>
       <v-card-actions>
-        <v-btn text @click="search=''">Очистить</v-btn>
+        
         <v-spacer></v-spacer>
         <v-btn text @click="searchDialog = false">Закрыть</v-btn>
       </v-card-actions>
@@ -122,6 +127,7 @@ export default {
       confirmDeleteDialog: false,
       projectToDelete: null, // Хранит информацию о проекте для удаления
       searchDialog: false,
+      filterByEngineer: true,
     };
   },
   computed: {
@@ -129,26 +135,47 @@ export default {
 
     filteredProjects() {
       const searchTerm = this.search?.toLowerCase() || '';
-      if (!searchTerm) return this.projects();
       
-      return this.projects().filter(project => {
-        const values = [
-          project.project_name,
-          project.type.project_type_name,
-          project.chiefEngineer.name,
-          project.shooting_start_date,
-          project.shooting_end_date
-        ].join(' ').toLowerCase();
-        
-        return values.includes(searchTerm);
-      });
+      if (this.projects() && this.user()) {
+        // Determine the initial project set based on the filterByEngineer flag
+        let filtered = this.filterByEngineer
+          ? this.projects().filter(project => 
+              project.chiefEngineer.name === this.user().name
+            )
+          : this.projects();
+
+        // Apply search term filter if present
+        if (searchTerm) {
+          filtered = filtered.filter(project => {
+            const values = [
+              project.project_name,
+              project.type.project_type_name,
+              project.chiefEngineer.name,
+              project.shooting_start_date,
+              project.shooting_end_date
+            ].join(' ').toLowerCase();
+            return values.includes(searchTerm);
+          });
+        }
+
+        return filtered;
+      } else {
+        return this.projects();
+      }
     }
     
     
   },
   methods: {
+    ...mapActions({
+        getUser: "user/getUserByUid",
+
+      }),
     projects() {
       return this.$store.state.projects.data;
+    },
+    user() {
+      return this.$store.state.user.user;
     },
 
     ...mapActions({
@@ -213,6 +240,7 @@ export default {
   },
   async created() {
     await this.getAllProjects();
+    await this.getUser();
   },
 };
 </script>

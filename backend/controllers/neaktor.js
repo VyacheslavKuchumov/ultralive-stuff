@@ -174,7 +174,7 @@ const neaktorCreateProjectType = async (req, res) => {
   try {
     const { project_type_id, project_type_name } = req.body;
 
-    if (project_type_name) {
+    if (project_type_name && project_type_id) {
       const newProjectType = await project_type.create({
         project_type_name,
         neaktor_id: project_type_id
