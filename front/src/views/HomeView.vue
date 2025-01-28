@@ -14,6 +14,7 @@
       <v-row class="d-flex flex-column align-center">
         
         <v-btn color="primary" class="mb-2" width="300" to="/projects">Съёмки</v-btn>
+        <v-btn color="primary" class="mb-2" width="300" to="/projects/archived">Архив съёмок</v-btn>
         <v-btn color="primary" class="mb-2" width="300" to="/drafts">Шаблоны</v-btn>
 
         <v-btn color="primary" class="mb-2" width="300" to="/equipment_sets"

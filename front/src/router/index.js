@@ -23,6 +23,9 @@ import SetTypesView from "@/views/Dictionaries/SetTypesView.vue";
 import DraftView from "@/views/Drafts/DraftView.vue";
 import EquipmentInDraftView from "@/views/Drafts/EquipmentInDraftView.vue";
 
+
+import ArchivedProjectsView from "@/views/Project/ArchivedProjectsView.vue";
+
 const routes = [
   {
     path: "/",
@@ -112,6 +115,13 @@ const routes = [
     path: "/projects",
     name: "projects",
     component: ProjectsView,
+    meta: { auth: true },
+  },
+
+  {
+    path: "/projects/archived",
+    name: "archived-projects",
+    component: ArchivedProjectsView,
     meta: { auth: true },
   },
 

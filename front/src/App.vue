@@ -29,6 +29,9 @@
           <v-list-item  to="/projects">
             <v-list-item-title>Съёмки</v-list-item-title>
           </v-list-item>
+          <v-list-item  to="/projects/archived">
+            <v-list-item-title>Архив съёмок</v-list-item-title>
+          </v-list-item>
           <v-list-item  to="/drafts">
             <v-list-item-title>Шаблоны</v-list-item-title>
           </v-list-item>

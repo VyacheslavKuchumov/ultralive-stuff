@@ -78,6 +78,7 @@ export default {
     async getAllProjects({ commit }) {
       try {
         const response = await instance.get(`/api/projects`);
+        console.log(response.data);
         if (response) {
           commit("setProjects", response.data);
         }
@@ -85,6 +86,18 @@ export default {
         console.error("Error fetching projects:", error);
       }
     },
+
+    async getArchivedProjects({ commit }) {
+      try {
+        const response = await instance.get(`/api/projects/archived`);
+        if (response) {
+          commit("setProjects", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching archived projects:", error);
+      }
+    },
+
     async getProjectByID({ commit }, project_id) {
       try {
         const response = await instance.get(

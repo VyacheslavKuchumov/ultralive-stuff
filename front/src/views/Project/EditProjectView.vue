@@ -79,6 +79,14 @@
                 label="Главный инженер"
               />
             </v-col>
+            <v-col cols="12" md="6" sm="6">
+              <v-switch
+                v-model="editedProject.archived"
+                clearable
+                label="Архивировать"
+                color="red-darken-1"
+              />
+            </v-col>
           </v-row>
         </v-container>
       </v-card-text>

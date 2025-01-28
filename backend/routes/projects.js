@@ -7,11 +7,13 @@ const {
   deleteProjectById,
   createProject,
   getProjectById,
+  getArchivedProjects,
 
 } = require("../controllers/projects");
 
 // Define routes for project operations
 router.get("/", getAllProjects);
+router.get("/archived", getArchivedProjects);
 router.get("/search/:id", getProjectById);
 router.post("/", createProject);
 router.delete("/:id", deleteProjectById);

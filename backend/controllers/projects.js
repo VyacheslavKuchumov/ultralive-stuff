@@ -35,7 +35,27 @@ const getAllDataHelper = () => {
 // Function to get all projects
 const getAllProjects = async (req, res) => {
   try {
-    const data = await getAllDataHelper();
+    const data = await project.findAll({
+      where: { archived: false },
+      include: [
+        {
+          model: project_type,
+          as: "type",
+          attributes: ["project_type_name"], // Specify the fields to fetch from `project_types`
+        },
+        {
+          model: user,
+          as: "chiefEngineer",
+          attributes: ["name"],
+        },
+        {
+          model: equipment,
+          as: "equipment",
+          attributes: ["equipment_id"],
+        },
+      ],
+      order: [["shooting_start_date", "ASC"]],
+    })
 
     if (!data) {
       return res.status(404).send({ message: "No projects found" });
@@ -47,6 +67,43 @@ const getAllProjects = async (req, res) => {
     return res.status(500).send({ message: error.message });
   }
 };
+
+
+const getArchivedProjects = async (req, res) => {
+  try {
+    const data = await project.findAll({
+      where: { archived: true },
+      include: [
+        {
+          model: project_type,
+          as: "type",
+          attributes: ["project_type_name"], // Specify the fields to fetch from `project_types`
+        },
+        {
+          model: user,
+          as: "chiefEngineer",
+          attributes: ["name"],
+        },
+        {
+          model: equipment,
+          as: "equipment",
+          attributes: ["equipment_id"],
+        },
+      ],
+      order: [["shooting_start_date", "DESC"]],
+    })
+
+    if (!data) {
+      return res.status(404).send({ message: "No projects found" });
+    }
+
+    return res.json(data);
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    return res.status(500).send({ message: error.message });
+  }
+};
+
 
 // Function to get a project by ID
 const getProjectById = async (req, res) => {
@@ -200,4 +257,5 @@ module.exports = {
   createProject,
   editProjectById,
   deleteProjectById,
+  getArchivedProjects
 };
