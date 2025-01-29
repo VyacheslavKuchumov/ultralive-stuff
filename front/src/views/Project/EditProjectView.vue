@@ -135,7 +135,7 @@ export default {
       window.location.href = "/projects";
     },
     cancel() {
-      this.$router.push("/projects");
+      this.$router.go(-1);
     },
     updateStartDate() {
       const date = new Date(this.datePickerStartDate);

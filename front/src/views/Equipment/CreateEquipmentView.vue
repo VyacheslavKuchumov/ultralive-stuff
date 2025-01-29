@@ -8,80 +8,87 @@
         >
       </v-card-title>
       <v-card-text>
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                clearable
-                v-model="newEquipment.equipment_name"
-                label="Название оборудования"
-              />
-            </v-col>
-            <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                clearable
-                v-model="newEquipment.description"
-                label="Описание"
-              />
-            </v-col>
-            <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                clearable
-                v-model="newEquipment.serial_number"
-                label="Серийный номер"
-              />
-            </v-col>
+        <v-form ref="newEquipment" v-model="valid" @submit.prevent="save" max-width="400" class="ml-auto mr-auto">
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  clearable
+                  v-model="newEquipment.equipment_name"
+                  label="Название оборудования"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+              <v-col>
+                <v-text-field
+                  clearable
+                  v-model="newEquipment.description"
+                  label="Описание"
+                />
+              </v-col>
+              <v-col>
+                <v-text-field
+                  clearable
+                  v-model="newEquipment.serial_number"
+                  label="Серийный номер"
+                  :rules="[rules.required]"
+                />
+              </v-col>
 
-            <!-- <v-col cols="12" md="6" sm="6">
-              <v-autocomplete
-                clearable
-                label="Название комплекта"
-                v-model="newEquipment.equipment_set_name"
-                :items="equipmentSetNames"
-              ></v-autocomplete>
-            </v-col> -->
+              <!-- <v-col cols="12" md="6" sm="6">
+                <v-autocomplete
+                  clearable
+                  label="Название комплекта"
+                  v-model="newEquipment.equipment_set_name"
+                  :items="equipmentSetNames"
+                ></v-autocomplete>
+              </v-col> -->
 
-            <v-col cols="12" md="6" sm="6">
-              <v-autocomplete
-                clearable
-                v-model="newEquipment.warehouse_name"
-                :items="warehouseNames"
-                label="Место хранения"
-              ></v-autocomplete>
-            </v-col>
-            <!-- <v-col cols="12" md="6" sm="6">
-              <v-switch v-model="newEquipment.needs_maintenance" label="Требует обслуживания" />
-            </v-col> -->
-            <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                clearable
-                prepend-icon="mdi-calendar"
-                label="Дата покупки"
-                v-model="newEquipment.date_of_purchase"
-                @click="dialog = true"
-              />
-              <v-dialog v-model="dialog" width="400px">
-                <v-card>
-                  <v-date-picker v-model="datePickerDate" />
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="dialog = false"
-                      >Закрыть</v-btn
-                    >
-                    <v-btn text color="primary" @click="updateDate">OK</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-col>
-            <v-col cols="12" md="6" sm="6">
-              <v-text-field
-                clearable
-                v-model="newEquipment.cost_of_purchase"
-                label="Стоимость покупки"
-              />
-            </v-col>
-          </v-row>
-        </v-container>
+              <v-col>
+                <v-autocomplete
+                  clearable
+                  v-model="newEquipment.warehouse_name"
+                  :items="warehouseNames"
+                  label="Место хранения"
+                  :rules="[rules.required]"
+                ></v-autocomplete>
+              </v-col>
+              <!-- <v-col cols="12" md="6" sm="6">
+                <v-switch v-model="newEquipment.needs_maintenance" label="Требует обслуживания" />
+              </v-col> -->
+              <v-col>
+                <v-text-field
+                  clearable
+                  prepend-icon="mdi-calendar"
+                  label="Дата покупки"
+                  v-model="newEquipment.date_of_purchase"
+                  @click="dialog = true"
+                  :rules="[rules.required]"
+                />
+                <v-dialog v-model="dialog" width="400px">
+                  <v-card>
+                    <v-date-picker v-model="datePickerDate" />
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="dialog = false"
+                        >Закрыть</v-btn
+                      >
+                      <v-btn text color="primary" @click="updateDate">OK</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  clearable
+                  v-model="newEquipment.cost_of_purchase"
+                  label="Стоимость покупки"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -99,6 +106,9 @@ import { useRouter, useRoute } from "vue-router";
 export default {
   data() {
     return {
+      rules: {
+        required: value => !!value || 'Обязательное поле',
+      },
       dialog: false,
       datePickerDate: new Date(),
       set_id: null,

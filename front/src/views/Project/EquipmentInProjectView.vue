@@ -1,12 +1,13 @@
 <template>
   <v-card v-if="project" max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
     <v-card-title
+      class="text-wrap"
       align="center"
       v-if="project.project.shooting_start_date !== project.project.shooting_end_date"
     >
       Съёмка "{{ project.project.project_name }}" ({{ formatDate(project.project.shooting_start_date) }} - {{ formatDate(project.project.shooting_end_date) }})
     </v-card-title>
-    <v-card-title align="center" v-else>
+    <v-card-title align="center" class="text-wrap" v-else>
       Съёмка
       "{{ project.project.project_name }}" 
       ({{ formatDate(project.project.shooting_start_date) }})

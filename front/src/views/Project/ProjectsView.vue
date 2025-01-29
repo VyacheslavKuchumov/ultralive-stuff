@@ -15,7 +15,9 @@
 
       
       
-      <v-btn v-if="search || filterByEngineer" icon="mdi-filter" color="red" @click="searchDialog = !searchDialog"></v-btn>
+      <v-btn v-if="filterByEngineer" color="red" icon="mdi-account-search" @click="filterByEngineer = !filterByEngineer"></v-btn>
+      <v-btn v-else color="grey" icon="mdi-account-search" @click="filterByEngineer = !filterByEngineer"></v-btn>
+      <v-btn v-if="search" icon="mdi-filter" color="red" @click="searchDialog = !searchDialog"></v-btn>
       <v-btn v-else icon="mdi-filter" color="grey" @click="searchDialog = !searchDialog"></v-btn>
       <v-btn icon="mdi-plus" color="primary" to="/project/create"></v-btn>
       
@@ -102,11 +104,7 @@
           clearable
           placeholder="Поиск..."
         ></v-text-field>
-        <v-switch
-          v-model="filterByEngineer"
-          label="Показать только мои съёмки"
-          color="primary"
-        ></v-switch>
+        
       </v-card-text>
       <v-card-actions>
         

@@ -1,4 +1,11 @@
 <template>
+  <v-card max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
+      <v-card-title
+        align="center" class="text-wrap">
+        Комплекты оборудования
+      </v-card-title>
+    
+  </v-card>
   <v-container max-width="1400">
     <v-row>
       <v-col cols="12">
@@ -15,24 +22,15 @@
         >
           <template v-slot:top>
             <v-toolbar flat>
-              <v-toolbar-title>Комплекты оборудования</v-toolbar-title>
-              <v-divider class="mx-4" inset vertical></v-divider>
-              <v-text-field
-                v-model="search"
-                label="Поиск"
-                prepend-icon="mdi-magnify"
-                clearable
-                placeholder="Search..."
-                class="mt-2"
-                width="100"
-              ></v-text-field>
+              <v-btn icon="mdi-keyboard-backspace" color="primary" to="/"></v-btn>
+              
+              
               <v-spacer></v-spacer>
-              <v-btn class="mb-2" color="primary" dark to="/set_types">
-                Виды комплектов
-              </v-btn>
-              <v-btn class="mb-2" color="primary" dark @click="openDialog()">
-                Добавить комплект
-              </v-btn>
+              
+              
+              <v-btn v-if="search" icon="mdi-filter" color="red" @click="searchDialog = !searchDialog"></v-btn>
+              <v-btn v-else icon="mdi-filter" color="grey" @click="searchDialog = !searchDialog"></v-btn>
+              <v-btn icon="mdi-plus" color="primary" @click="openDialog()"></v-btn>
             </v-toolbar>
           </template>
 
@@ -58,10 +56,8 @@
               size="small"
               color="secondary"
               @click="goToSetEquipment(item)"
-              prepend-icon="mdi-camera"
-            >
-              Оборудование
-            </v-btn>
+              
+            ><v-icon>mdi-camera</v-icon></v-btn>
           </template>
           <template v-slot:item.actions_edit="{ item }">
             <v-btn size="small" color="blue-darken-1" @click="openDialog(item)">
@@ -114,8 +110,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="closeDialog()">Cancel</v-btn>
-          <v-btn color="primary" @click="saveItem()">Save</v-btn>
+          <v-btn text @click="closeDialog()">Отменить</v-btn>
+          <v-btn color="primary" @click="saveItem()">Сохранить</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -134,6 +130,27 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="searchDialog" max-width="400px">
+    <v-card>
+      <v-card-title class="text-h5">Поиск</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="search"
+          label="Поиск"
+          prepend-icon="mdi-magnify"
+          clearable
+          placeholder="Поиск..."
+        ></v-text-field>
+        
+      </v-card-text>
+      <v-card-actions>
+        
+        <v-spacer></v-spacer>
+        <v-btn text @click="searchDialog = false">Закрыть</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   </v-container>
 </template>
 
@@ -143,6 +160,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
+      searchDialog: false,
       dialog: false,
       confirmDeleteDialog: false,
       equipmentSetToDelete: null,
@@ -156,9 +174,9 @@ export default {
       headers: [
         { title: "Название", value: "equipment_set_name", sortable: true },
         { title: "Описание", value: "description", sortable: false },
-        { title: "Оборудование", key: "actions_see_equipment", sortable: false },
-        { title: "Изменить", value: "actions_edit", sortable: false },
-        { title: "Удалить", value: "actions_delete", sortable: false },
+        { title: "", key: "actions_see_equipment", sortable: false },
+        { title: "", value: "actions_edit", sortable: false },
+        { title: "", value: "actions_delete", sortable: false },
       ],
     };
   },
