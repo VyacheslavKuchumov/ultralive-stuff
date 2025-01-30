@@ -23,6 +23,11 @@ equipment.belongsTo(equipment_set, {
   foreignKey: "equipment_set_id",
 });
 
+equipment_set.hasMany(equipment, {
+  as: "equipment",  // Alias for the related `equipment` entries
+  foreignKey: "equipment_set_id",  // The foreign key in the `equipment` table
+});
+
 equipment_set.belongsTo(set_type,{
   as: "type",
   foreignKey: "set_type_id",

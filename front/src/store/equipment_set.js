@@ -6,6 +6,8 @@ export default {
     equipment_sets: null,
     equipmentSetNames: [],
     one_set: null,
+    maintenance_sets: null,
+    storage_sets: null,
   }),
   mutations: {
     setEquipmentSets(state, equipment_sets) {
@@ -16,6 +18,12 @@ export default {
     },
     setEquipmentSet(state, equipment_set) {
       state.one_set = equipment_set;
+    },
+    setMaintenanceSets(state, maintenance_sets) {
+      state.maintenance_sets = maintenance_sets;
+    },
+    setStorageSets(state, storage_sets) {
+      state.storage_sets = storage_sets;
     },
   },
   actions: {
@@ -107,6 +115,31 @@ export default {
         window.alert("An error occurred while deleting the equipment set.");
       }
     },
+    async getMaintenanceSets({ commit }) {
+      try {
+        const response = await instance.get(`/api/equipment_set/maintenance`);
+        if (response.status === 200) {
+          return commit("setMaintenanceSets", response.data);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
+      } catch (error) {
+        console.error("Error fetching maintenance sets:", error);
+        window.alert("An error occurred while fetching maintenance sets.");
+      }
+    },
+    async getStorageSets({ commit }) {
+      try {
+        const response = await instance.get(`/api/equipment_set/storage`);
+        if (response.status === 200) {
+          return commit("setStorageSets", response.data);
+        }
+        window.alert(`Error: ${response.status} - ${response.statusText}`);
+      } catch (error) {
+        console.error("Error fetching storage sets:", error);
+        window.alert("An error occurred while fetching storage sets.");
+      }
+    }
+
   },
 
   namespaced: true,

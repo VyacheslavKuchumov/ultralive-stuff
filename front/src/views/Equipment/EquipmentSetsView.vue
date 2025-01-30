@@ -1,4 +1,5 @@
 <template>
+
   <v-card max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
       <v-card-title
         align="center" class="text-wrap">
@@ -6,7 +7,7 @@
       </v-card-title>
     
   </v-card>
-  <v-container max-width="1400">
+  <v-container v-if="equipmentSets()" max-width="1400">
     <v-row>
       <v-col cols="12">
         <v-data-table
@@ -49,6 +50,12 @@
                 <span>{{ item.value }}</span>
               </td>
             </tr>
+          </template>
+
+          <template v-slot:item.status="{ item }">
+            <v-icon color="yellow" v-if="checkStorage(item.equipment_set_id)">mdi-warehouse</v-icon>
+            <v-icon color="orange" v-if="checkMaintenance(item.equipment_set_id)">mdi-tools</v-icon>
+
           </template>
 
           <template v-slot:item.actions_see_equipment="{ item }">
@@ -103,7 +110,7 @@
           <v-autocomplete
             v-model="form.set_type_name"
             label="Введите вид комплекта"
-            :items="setTypeNames"
+            :items="setTypeNames()"
             clearable
             required
           />
@@ -172,40 +179,59 @@ export default {
         description: "",
       },
       headers: [
+        { title: "", key: "status", sortable: false },
         { title: "Название", value: "equipment_set_name", sortable: true },
         { title: "Описание", value: "description", sortable: false },
         { title: "", key: "actions_see_equipment", sortable: false },
-        { title: "", value: "actions_edit", sortable: false },
-        { title: "", value: "actions_delete", sortable: false },
+        { title: "", key: "actions_edit", sortable: false },
+        { title: "", key: "actions_delete", sortable: false },
       ],
     };
   },
   computed: {
-    ...mapState("equipment_set", ["equipment_sets"]),
-    ...mapState("set_types", ["setTypeNames"]),
-    equipmentSets() {
-      return this.equipment_sets || [];
-    },
+    
+    
+
     groupBy() {
       return [
         { key: "type.set_type_name", order: "asc" },
       ];
     },
     filteredEquipmentSets() {
-      if (!this.search) return this.equipmentSets;
-      return this.equipmentSets.filter((item) =>
+      if (!this.search) return this.equipmentSets();
+      return this.equipmentSets().filter((item) =>
         item.equipment_set_name.toLowerCase().includes(this.search.toLowerCase())
       );
     },
   },
   methods: {
-    ...mapActions("equipment_set", [
-      "getAllEquipmentSets",
-      "createEquipmentSet",
-      "updateEquipmentSet",
-      "deleteEquipmentSet",
-    ]),
-    ...mapActions("set_types", ["getSetTypeNames"]),
+    equipmentSets() {
+      return this.$store.state.equipment_set.equipment_sets;
+    },
+
+    maintanenceSets() {
+      return this.$store.state.equipment_set.maintenance_sets;
+    },
+
+    storageSets() {
+      return this.$store.state.equipment_set.storage_sets;
+    },
+
+    setTypeNames() {
+      return this.$store.state.set_types.setTypeNames;
+    },
+    
+    ...mapActions({
+      getAllEquipmentSets: "equipment_set/getAllEquipmentSets",
+      createEquipmentSet: "equipment_set/createEquipmentSet",
+      updateEquipmentSet: "equipment_set/updateEquipmentSet",
+      deleteEquipmentSet: "equipment_set/deleteEquipmentSet",
+      getSetTypeNames: "set_types/getSetTypeNames",
+
+      getMaintenanceSets: "equipment_set/getMaintenanceSets",
+      getStorageSets: "equipment_set/getStorageSets",
+    }),
+
     openDialog(item = null) {
       this.form = item
         ? { ...item, set_type_name: item.type.set_type_name }
@@ -215,11 +241,11 @@ export default {
     closeDialog() {
       this.dialog = false;
     },
-    saveItem() {
+    async saveItem() {
       if (this.form.equipment_set_id) {
-        this.updateEquipmentSet(this.form);
+        await this.updateEquipmentSet(this.form);
       } else {
-        this.createEquipmentSet(this.form);
+        await this.createEquipmentSet(this.form);
       }
       this.closeDialog();
     },
@@ -231,19 +257,34 @@ export default {
       this.confirmDeleteDialog = false;
       this.equipmentSetToDelete = null;
     },
-    deleteConfirmed() {
+    async deleteConfirmed() {
       if (this.equipmentSetToDelete) {
-        this.deleteEquipmentSet({ equipment_set_id: this.equipmentSetToDelete });
+        await this.deleteEquipmentSet({ equipment_set_id: this.equipmentSetToDelete });
       }
       this.closeConfirmDialog();
     },
     goToSetEquipment(item) {
       this.$router.push(`/equipment/${item.equipment_set_id}`);
     },
+    checkMaintenance(item) {
+      
+      const maintanenceIds = this.maintanenceSets().map((set) => set.equipment_set_id);
+      console.log(`${maintanenceIds} ${item} ${maintanenceIds.includes(item)}`);
+      const out = maintanenceIds.includes(item)
+      return out;
+    }, 
+    checkStorage(item) {
+      const storageIds = this.storageSets().map((set) => set.equipment_set_id);
+      console.log(storageIds);
+      return storageIds.includes(item);
+    },
   },
-  beforeMount() {
-    this.getAllEquipmentSets();
-    this.getSetTypeNames();
+  async beforeMount() {
+    await this.getMaintenanceSets();
+    await this.getStorageSets();
+    await this.getAllEquipmentSets();
+    await this.getSetTypeNames();
+    
   },
 };
 </script>

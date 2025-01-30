@@ -1,5 +1,8 @@
 const { equipment_set } = require("../models/equipment_sets");
 const { set_type } = require("../models/set_types");
+const { equipment } = require("../models/equipment");
+const { Op } = require("sequelize");
+
 
 const getAllDataHelper = () => {
   return equipment_set.findAll({
@@ -110,6 +113,53 @@ const deleteEquipmentSetById = async (req, res) => {
   }
 };
 
+// find all equipment sets where the equipment needs maintenance (needs_maintanance is a field in equipment)
+const getEquipmentSetsWithMaintenance = async (req, res) => {
+  try {
+    const data = await equipment_set.findAll({
+      include: [
+        {
+          model: equipment,
+          as: "equipment",
+          where: {
+            needs_maintenance: true,
+          },
+        },
+      ],
+    });
+    if (!data)
+      return res.status(404).send({ message: "Equipment sets not found" });
+    return res.json(data);
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+// find all equipment sets where current storage is not null in equipment
+const getEquipmentSetsWithStorage = async (req, res) => {
+  try {
+    const data = await equipment_set.findAll({
+      include: [
+        {
+          model: equipment,
+          as: "equipment",
+          where: {
+            current_storage: {
+              [Op.not]: null,
+            },
+          },
+        },
+      ],
+    });
+    if (!data)
+      return res.status(404).send({ message: "Equipment sets not found" });
+    return res.json(data);
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+
 // Exporting the functions
 module.exports = {
   getAllEquipmentSets,
@@ -117,4 +167,6 @@ module.exports = {
   editEquipmentSetById,
   deleteEquipmentSetById,
   getEquipmentSetById,
+  getEquipmentSetsWithMaintenance,
+  getEquipmentSetsWithStorage,
 };

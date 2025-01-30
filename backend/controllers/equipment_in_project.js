@@ -402,6 +402,75 @@ const getConflictingEquipment = async (req, res) => {
 };
 
 
+// get the list of projects that have the same equipment
+const getConflictingProjects = async (req, res) => {
+  try {
+    // Step 1: Fetch all projects with their equipment
+    const allProjects = await project.findAll({
+      include: [
+        {
+          model: equipment,
+          attributes: ["equipment_id", "equipment_name"],
+        },
+      ],
+    });
+
+    // Step 2: Identify projects with overlapping dates
+    const overlappingProjects = [];
+
+    for (let i = 0; i < allProjects.length; i++) {
+      for (let j = i + 1; j < allProjects.length; j++) {
+        const projA = allProjects[i];
+        const projB = allProjects[j];
+
+        const startA = projA.shooting_start_date;
+        const endA = projA.shooting_end_date;
+        const startB = projB.shooting_start_date;
+        const endB = projB.shooting_end_date;
+
+        // Check if dates overlap
+        const hasOverlappingDates =
+          (startA <= endB && endA >= startB) || 
+          (startB <= endA && endB >= startA);
+
+        if (hasOverlappingDates) {
+          overlappingProjects.push([projA, projB]);
+        }
+      }
+    }
+
+    // Step 3: Compare equipment IDs between overlapping projects
+    const conflictingProjects = new Map(); // To avoid duplicates
+
+    overlappingProjects.forEach(([projA, projB]) => {
+      const equipA = new Set(projA.equipment.map((e) => e.equipment_id));
+      const equipB = new Set(projB.equipment.map((e) => e.equipment_id));
+
+      // Find common equipment
+      const sharedEquipment = [...equipA].filter((id) => equipB.has(id));
+
+      if (sharedEquipment.length > 0) {
+        conflictingProjects.set(projA.project_id, projA.project_name);
+        conflictingProjects.set(projB.project_id, projB.project_name);
+      }
+    });
+
+    // Step 4: Output the unique list of projects with shared equipment
+    const result = Array.from(conflictingProjects.entries()).map(([id, name]) => ({
+      project_id: id,
+      project_name: name,
+    }));
+
+    return res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+
+
+
 module.exports = {
     getEquipmentInProject,
     addEquipmentToProject,
@@ -411,6 +480,7 @@ module.exports = {
     getAvailableEquipmentInSet,
     getConflictingEquipment,
     resetEquipmentInProject,
-    addDraftToProject
+    addDraftToProject,
+    getConflictingProjects
 };
   

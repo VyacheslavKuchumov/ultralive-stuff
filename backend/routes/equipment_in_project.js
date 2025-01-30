@@ -11,7 +11,8 @@ const {
   getAvailableEquipmentInSet,
   getConflictingEquipment,
   addDraftToProject,
-  resetEquipmentInProject
+  resetEquipmentInProject,
+  getConflictingProjects
 } = require("../controllers/equipment_in_project");
 
 
@@ -24,5 +25,6 @@ router.post("/equipment_in_set", getAvailableEquipmentInSet);
 router.post("/conflicting", getConflictingEquipment);
 router.delete("/reset/:id", resetEquipmentInProject);
 router.post("/add_draft", addDraftToProject);
+router.post("/conflicting_projects", getConflictingProjects);
 
 module.exports = router;

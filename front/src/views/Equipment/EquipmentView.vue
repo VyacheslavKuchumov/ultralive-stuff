@@ -40,11 +40,7 @@
             <v-icon v-if="item.current_storage" color="yellow"
               >mdi-warehouse</v-icon
             >
-            <v-icon
-              v-if="!item.needs_maintenance && !item.current_storage"
-              color="green"
-              >mdi-check-circle</v-icon
-            >
+            
           </td>
           <td>{{ item.equipment_name }}</td>
           <td>{{ item.description }}</td>
@@ -131,7 +127,7 @@ export default {
     ...mapState("equipment_set", ["one_set"]),
     headers() {
       return [
-        { title: "Статус", key: "status", sortable: false },
+        { title: "", key: "status", sortable: false },
         { title: "Название", key: "equipment_name" },
         { title: "Описание", key: "description" },
         { title: "Серийный номер", key: "serial_number" },

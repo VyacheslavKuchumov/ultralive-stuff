@@ -8,6 +8,7 @@ export default {
     equipment: null,
     conflictingEquipmentIDs: null,
     conflictingSetNames: null,
+    conflictingProjects: null,
   }),
   mutations: {
     setProject(state, project) {
@@ -23,6 +24,9 @@ export default {
     setConflictingEquipment(state, data) {
       state.conflictingEquipmentIDs = data.equipmentIDs;
       state.conflictingSetNames = data.setNames;
+    },
+    setConflictingProjects(state, projects) {
+      state.conflictingProjects = projects;
     },
     
 
@@ -172,6 +176,22 @@ export default {
         console.error("Error fetching equipment in set:", error);
       }
     },
+
+    async getConflictingProjects({ commit }) {
+      try {
+        
+        const response = await instance.post(
+          `api/equipment_in_project/conflicting_projects`
+        );
+        if (response) {
+          console.log(response.data);
+          commit("setConflictingProjects", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching conflicting projects:", error);
+      }
+    }
+
 
     
   },

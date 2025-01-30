@@ -1,4 +1,5 @@
 <template>
+
     <v-card max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
       <v-card-title
         align="center">
@@ -30,7 +31,9 @@
 
         >
           <v-card class="ma-2">
+            
             <v-card-title class="text-h6">
+              <v-icon v-if="checkProjects(item.project_id)" color="primary">mdi-camera</v-icon>
               {{ item.project_name }}
             </v-card-title>
 
@@ -164,6 +167,7 @@ export default {
     
     
   },
+
   methods: {
     ...mapActions({
         getUser: "user/getUserByUid",
@@ -175,10 +179,14 @@ export default {
     user() {
       return this.$store.state.user.user;
     },
+    conflicting_projects() {
+      return this.$store.state.equipment_in_project.conflictingProjects;
+    },
 
     ...mapActions({
       getAllProjects: "projects/getAllProjects",
       deleteProject: "projects/deleteProject",
+      getConflictingProjects: "equipment_in_project/getConflictingProjects",
     }),
 
     isoToRussianDate(isoDate) {
@@ -206,7 +214,11 @@ export default {
       return this.isoToRussianDate(item.shooting_start_date);
     },
 
-    
+    checkProjects(item){
+      const conflictingProjectIds = this.conflicting_projects().map((proj) => proj.project_id);
+      return conflictingProjectIds.includes(item);
+      
+    },
 
     goToEditPage(item) {
       this.$router.push(`/project/edit/${item.project_id}`);
@@ -237,8 +249,10 @@ export default {
     },
   },
   async created() {
+    await this.getConflictingProjects();
     await this.getAllProjects();
     await this.getUser();
+    
   },
 };
 </script>
