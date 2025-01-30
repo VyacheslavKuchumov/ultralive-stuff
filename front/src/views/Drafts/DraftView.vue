@@ -1,4 +1,11 @@
 <template>
+  <v-card max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
+      <v-card-title
+        align="center">
+        Шаблоны
+      </v-card-title>
+  </v-card> 
+      
   <v-card class="elevation-5 mt-5 ml-auto mr-auto" max-width="1100">
     <v-data-table
       v-if="drafts"
@@ -12,23 +19,15 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Шаблоны</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-btn icon="mdi-keyboard-backspace" color="primary" to="/"></v-btn>
+          
 
-          <v-text-field
-            v-model="search"
-            label="Поиск"
-            prepend-icon="mdi-magnify"
-            clearable
-            placeholder="Search..."
-            class="mt-2"
-            width="100"
-          ></v-text-field>
+          
           <v-spacer></v-spacer>
 
-          <v-btn class="mb-2" color="primary" dark @click="openCreateDialog">
-            Новый шаблон
-          </v-btn>
+          <v-btn v-if="search" icon="mdi-filter" color="red" @click="searchDialog = !searchDialog"></v-btn>
+          <v-btn v-else icon="mdi-filter" color="grey" @click="searchDialog = !searchDialog"></v-btn>
+          <v-btn icon="mdi-plus" color="primary" @click="openCreateDialog"></v-btn>
         </v-toolbar>
       </template>
       <template v-slot:item.action_see_equipment="{ item }">
@@ -36,9 +35,9 @@
               size="small"
               color="secondary"
               @click="goToDraftEquipment(item)"
-              prepend-icon="mdi-camera"
+              
             >
-              Оборудование
+              <v-icon>mdi-camera</v-icon>
             </v-btn>
       </template>
       <template v-slot:[`item.action_edit`]="{ item }">
@@ -97,6 +96,26 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="searchDialog" max-width="400px">
+    <v-card>
+      <v-card-title class="text-h5">Поиск</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="search"
+          label="Поиск"
+          prepend-icon="mdi-magnify"
+          clearable
+          placeholder="Поиск..."
+        ></v-text-field>
+        
+      </v-card-text>
+      <v-card-actions>
+        
+        <v-spacer></v-spacer>
+        <v-btn text @click="searchDialog = false">Закрыть</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -106,6 +125,7 @@ export default {
   data() {
     return {
       search: "",
+      searchDialog: false,
       confirmDeleteDialog: false,
       editDialog: false,
       draftToDelete: null,

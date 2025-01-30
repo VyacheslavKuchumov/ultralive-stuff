@@ -1,4 +1,10 @@
 <template>
+    <v-card max-width="800" class="elevation-0 mt-5 ml-auto mr-auto">
+      <v-card-title
+        align="center" class="textwrap">
+        Шаблон "{{ draft.draft.draft_name }}"
+      </v-card-title>
+    </v-card> 
     <v-card
       max-width="1100"
       class="elevation-5 mt-5 ml-auto mr-auto"
@@ -16,13 +22,10 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title>
-              Шаблон "{{ draft.draft.draft_name }}"
-            </v-toolbar-title>
+            <v-btn icon="mdi-keyboard-backspace" color="primary" to="/drafts"></v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="dialog = true">
-              Добавить оборудование
-            </v-btn>
+            
+            <v-btn icon="mdi-plus" color="primary" @click="dialog = true"></v-btn>
           </v-toolbar>
         </template>
   
@@ -82,6 +85,9 @@
             <v-spacer></v-spacer>
             <v-btn v-if="!sets_view" @click="sets_view = true" class="mb-2" color="red" dark>
               Назад
+            </v-btn>
+            <v-btn v-else @click="dialog = false" class="mb-2" color="black">
+              <v-icon>mdi-window-close</v-icon>
             </v-btn>
           </v-toolbar>
           <v-text-field
