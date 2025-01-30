@@ -33,7 +33,7 @@
           <v-card class="ma-2">
             
             <v-card-title class="text-h6">
-              <v-icon v-if="checkProjects(item.project_id)" color="primary">mdi-camera</v-icon>
+              <v-icon v-if="checkProjects(item.project_id)" color="red-darken-1">mdi-swap-horizontal-bold</v-icon>
               {{ item.project_name }}
             </v-card-title>
 

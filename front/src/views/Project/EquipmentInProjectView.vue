@@ -60,9 +60,9 @@
             ></v-btn>
             <v-icon
               v-if="checkSetName(item.value)"
-              color="blue"
+              color="red-darken-1"
             >
-              mdi-camera
+              mdi-swap-horizontal-bold
             </v-icon>
             <span :class="groupClassify(item)">{{ item.value }}</span> 
                
@@ -81,7 +81,7 @@
       </template>
 
       <template v-slot:item.status="{ item }">
-        <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
+        <v-icon v-if="checkEquipmentID(item.equipment_id)" color="red-darken-1">mdi-swap-horizontal-bold</v-icon>
         <v-icon v-if="item.needs_maintenance" color="orange"
               >mdi-tools</v-icon
             >
@@ -216,7 +216,7 @@
           </template>
 
           <template v-slot:item.status="{ item }">
-            <v-icon v-if="checkSetName(item.equipment_set_name)" color="blue">mdi-camera</v-icon>
+            <v-icon v-if="checkSetName(item.equipment_set_name)" color="red-darken-1">mdi-swap-horizontal-bold</v-icon>
             
 
           </template>
@@ -261,7 +261,7 @@
         >
           
           <template v-slot:item.status="{ item }">
-            <v-icon v-if="checkEquipmentID(item.equipment_id)" color="blue">mdi-camera</v-icon>
+            <v-icon v-if="checkEquipmentID(item.equipment_id)" color="red-darken-1">mdi-swap-horizontal-bold</v-icon>
             <v-icon v-if="item.needs_maintenance" color="orange"
               >mdi-tools</v-icon
             >
