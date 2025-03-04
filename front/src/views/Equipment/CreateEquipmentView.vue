@@ -11,7 +11,7 @@
         <v-form ref="newEquipment" v-model="valid" @submit.prevent="save" max-width="400" class="ml-auto mr-auto">
           <v-container>
             <v-row>
-              <v-col>
+              <v-col cols="12" md="6" sm="6">
                 <v-text-field
                   clearable
                   v-model="newEquipment.equipment_name"
@@ -19,14 +19,14 @@
                   :rules="[rules.required]"
                 />
               </v-col>
-              <v-col>
+              <v-col cols="12" md="6" sm="6">
                 <v-text-field
                   clearable
                   v-model="newEquipment.description"
                   label="Описание"
                 />
               </v-col>
-              <v-col>
+              <v-col cols="12" md="6" sm="6">
                 <v-text-field
                   clearable
                   v-model="newEquipment.serial_number"
@@ -44,7 +44,7 @@
                 ></v-autocomplete>
               </v-col> -->
 
-              <v-col>
+              <v-col cols="12" md="6" sm="6">
                 <v-autocomplete
                   clearable
                   v-model="newEquipment.warehouse_name"
@@ -56,7 +56,7 @@
               <!-- <v-col cols="12" md="6" sm="6">
                 <v-switch v-model="newEquipment.needs_maintenance" label="Требует обслуживания" />
               </v-col> -->
-              <v-col>
+              <v-col cols="12" md="6" sm="6">
                 <v-text-field
                   clearable
                   prepend-icon="mdi-calendar"
@@ -78,7 +78,7 @@
                   </v-card>
                 </v-dialog>
               </v-col>
-              <v-col>
+              <v-col cols="12" md="6" sm="6">
                 <v-text-field
                   clearable
                   v-model="newEquipment.cost_of_purchase"
